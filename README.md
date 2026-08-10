@@ -10,7 +10,7 @@ V3 keeps the proven Freqtrade/Docker operations boundary, but does not inherit t
 - Real-money trading is not configured or authorized.
 - Default leverage is 1x and stake size is fixed.
 - BTC and ETH are the only initial research pairs.
-- V2 and V3 use different container names, ports, databases, model identifiers, logs, and result directories.
+- After V2 retirement, V3 reuses its `freqtrade_kai` container identity and localhost port 8080 so the existing host tunnel and monitoring continue to work. The V3 database, strategy, data, logs, and results remain separate.
 - Machine-learning work is blocked because the deterministic baselines failed the promotion review.
 
 ## First milestone
@@ -29,7 +29,7 @@ cp .env.example .env
 ./scripts/run_walk_forward.sh
 ```
 
-The shadow container is deliberately configured in the `stopped` state. Its current strategy adapter emits zero entries, so research results cannot accidentally activate trading.
+The shadow container runs as a dry-run infrastructure test on the retired V2 endpoint. Its current strategy adapter emits zero entries, so starting the service cannot activate a rejected trading policy.
 
 ## Project layout
 
@@ -51,8 +51,10 @@ Passing research gates does not authorize live trading.
 
 ## Status
 
-Milestone 1 completed on 2026-08-10 with `STOP_BEFORE_CLASSIFIER`. At 0.20% round-trip cost, every active BTC/ETH baseline had negative expectancy, profit factor below 0.67, and zero positive portfolio folds. The fail-closed Freqtrade adapter remains stopped and emits no entries.
+Milestone 1 completed on 2026-08-10 with `STOP_BEFORE_CLASSIFIER`. At 0.20% round-trip cost, every active BTC/ETH baseline had negative expectancy, profit factor below 0.67, and zero positive portfolio folds. The Freqtrade runtime is now active only for infrastructure validation; its fail-closed adapter emits no entries.
 
 See the [Milestone 1 report](research_results/milestone-1/REPORT.md), [Decision 0001](docs/decisions/0001-clean-rebuild.md) for the architecture boundary, and [Decision 0002](docs/decisions/0002-stop-before-classifier.md) for the research stop decision.
 
-The verified host layout and intentionally stopped runtime state are recorded in [Server state](docs/SERVER_STATE.md).
+The verified host migration and fail-closed runtime state are recorded in [Server state](docs/SERVER_STATE.md) and [Decision 0003](docs/decisions/0003-reuse-v2-infrastructure.md).
+
+The full retirement, backup, environment handoff, and rollback boundary are documented in [V2 to V3 infrastructure migration](docs/MIGRATION_V2_TO_V3.md).

@@ -1,41 +1,64 @@
 # Server state — 2026-08-10
 
-## Verified deployment boundary
+## Active runtime
 
-- V3 project path: `/home/kai/freqtrade-v3`
-- V3 container name: `freqtrade_v3_shadow`
-- V3 API binding if deliberately started later: `127.0.0.1:8081`
-- V3 trade database: `user_data/tradesv3_v3.sqlite`
-- V3 strategy: `V3ShadowStrategy`
-- V3 configuration: dry-run, fixed 50 USDT stake, 1x leverage, `initial_state: stopped`
-- Research/runtime image: Freqtrade 2026.7, pinned to image digest `sha256:50720a4a...a35486`
+- Project path: `/home/kai/freqtrade-v3`
+- Container identity: `freqtrade_kai` (inherited from retired V2)
+- Local API binding: `127.0.0.1:8080`
+- Trade database: `user_data/tradesv3_v3.sqlite`
+- Strategy: `V3ShadowStrategy`
+- Configuration: dry-run, fixed 50 USDT stake, 1x leverage, `initial_state: running`
+- Image: Freqtrade 2026.7 pinned to digest `sha256:50720a4a...a35486`
 
-V3 does not reuse the V2 container name, API port, database, strategy, FreqAI identifier, models, predictions, or logs. Exchange and API credentials remain only in the ignored host `.env` file.
+The active service reuses the former V2 host endpoint, restart policy, health-check pattern, and container identity. It does not reuse the V2 database, models, predictions, strategy, market-data path, logs, or FreqAI image.
 
-## Runtime decision
+Verified startup state:
 
-The V3 long-running container is intentionally not started. Milestone 1 returned `STOP_BEFORE_CLASSIFIER`, and the strategy adapter emits zero entries. Starting a shadow service with a rejected signal family would add operational activity without producing valid research evidence.
+- container start: `2026-08-10T05:00:16Z`;
+- worker state: `RUNNING`;
+- Docker health: `healthy`;
+- restart count: `0`;
+- API ping: `{"status":"pong"}`;
+- V3 database: `0` trades, `0` open trades.
 
-The existing V2 container `freqtrade_kai` was not restarted or reconfigured during the V3 build. At final validation it remained running, healthy, and at zero restarts.
+## V2 retirement and backup
+
+V2 was stopped and removed with zero open trades. Its SQLite database passed `PRAGMA integrity_check` immediately after shutdown.
+
+The complete V2 project is preserved only on the server:
+
+- archive: `/home/kai/backups/freqtrade-v2/freqtrade-v2-full-20260810T045545Z.tar.zst`
+- compressed size: `3,615,018,524` bytes
+- SHA-256: `971e4d77ceeebb9b5f1682b8a873ab598d84b5b715338ecd9327141398734bef`
+- permissions: `0600`, owner `kai:kai`
+- validation: zstd stream test and full tar listing both passed
+
+The archive contains runtime configuration and therefore may contain secrets. It must remain server-local and must never be added to Git or copied into research artifacts.
+
+The common exchange and API values were transferred directly from the V2 `.env` into the ignored V3 `.env` without being printed. The prior V3 environment file is retained server-side as `.env.pre-v2-infra-migration-20260810T045545Z`, also with mode `0600`.
+
+## Safety boundary
+
+Milestone 1 remains `STOP_BEFORE_CLASSIFIER`. The running service is an infrastructure/API/health test only: `V3ShadowStrategy` deterministically emits zero long and short entries. No V2 trading logic, FreqAI model, or rejected deterministic candidate is active.
 
 ## Research data and result
 
-The isolated V3 data directory contains complete Binance futures candles from 2025-08-10 through 2026-08-10:
+The isolated V3 research directory contains complete Binance futures candles from 2025-08-10 through 2026-08-10:
 
 - BTC and ETH 15-minute candles: 35,044 rows per pair;
 - BTC and ETH one-hour candles: 8,761 rows per pair;
 - cadence coverage: 100% for all four decision/regime datasets.
 
-The deterministic walk-forward was executed on the server with a fixed artifact timestamp. Outputs are stored in `research_results/milestone-1`, with owner/group-only write permission. Raw candles remain ignored and are not copied to GitHub.
+The final server walk-forward result is stored in `research_results/milestone-1` and remains `STOP_BEFORE_CLASSIFIER`.
 
-## Safe verification commands
+## Verification commands
 
 ```bash
 cd /home/kai/freqtrade-v3
 docker compose config --quiet
-docker compose run --rm --no-deps freqtrade_v3_shadow list-strategies \
-  --config /freqtrade/configs/dry-run.json
-V3_GENERATED_AT=2026-08-10T01:50:01Z ./scripts/run_walk_forward.sh
+docker compose ps
+curl --fail http://127.0.0.1:8080/api/v1/ping
+docker compose logs --tail 100 freqtrade_v3_shadow
 ```
 
-These commands validate configuration, load the stopped strategy in a transient container, and reproduce research; they do not start the long-running trading service. Source tests run locally and in GitHub Actions through `./scripts/run_checks.sh`. Live-capital setup is not part of this project state.
+Source checks run locally and in GitHub Actions through `./scripts/run_checks.sh`. Live-capital configuration is not part of this project state.
