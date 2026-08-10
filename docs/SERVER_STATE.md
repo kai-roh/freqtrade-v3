@@ -35,7 +35,7 @@ The complete V2 project is preserved only on the server:
 
 The archive contains runtime configuration and therefore may contain secrets. It must remain server-local and must never be added to Git or copied into research artifacts.
 
-The common exchange and API values were transferred directly from the V2 `.env` into the ignored V3 `.env` without being printed. The prior V3 environment file is retained server-side as `.env.pre-v2-infra-migration-20260810T045545Z`, also with mode `0600`.
+The common exchange, API, and Telegram report values were transferred directly from the V2 `.env` into the ignored V3 `.env` without being printed. The prior V3 environment files are retained server-side with mode `0600`. The original V2 `.env` was also restricted to mode `0600`.
 
 ## Safety boundary
 
@@ -45,11 +45,22 @@ Milestone 1 remains `STOP_BEFORE_CLASSIFIER`. The running service is an infrastr
 
 The isolated V3 research directory contains complete Binance futures candles from 2025-08-10 through 2026-08-10:
 
-- BTC and ETH 15-minute candles: 35,044 rows per pair;
-- BTC and ETH one-hour candles: 8,761 rows per pair;
+- BTC and ETH 15-minute candles: 35,084 rows per pair, ending at `2026-08-10T10:45:00Z`;
+- BTC and ETH one-hour candles: 8,771 rows per pair, ending at `2026-08-10T10:00:00Z`;
 - cadence coverage: 100% for all four decision/regime datasets.
 
 The final server walk-forward result is stored in `research_results/milestone-1` and remains `STOP_BEFORE_CLASSIFIER`.
+
+The verified full-year scheduled walk-forward is stored under `research_results/scheduled/20260810T110441Z`, with `latest` pointing to that immutable run. It used 180 training days, six 30-day validation folds, and a six-hour embargo, covering `2025-08-15T04:45:00Z` through `2026-08-10T10:45:00Z`. No portfolio was promoted. The strongest active diagnostic was trend-pullback short with profit factor `0.601`, negative expectancy, maximum drawdown `49.0%`, and zero positive folds out of six. This remains a rejection, not a deployable strategy.
+
+## Reports and schedules
+
+The host timezone is verified as `Asia/Seoul`. The host crontab contains only V3 jobs and was installed through `deploy/install_server_cron.sh`, which also creates the private report and log directories:
+
+- daily operations report at `23:00` KST;
+- weekly data refresh, research run, and report at `23:10` KST every Sunday.
+
+Manual daily and weekly Telegram deliveries both succeeded. Host-owned Markdown copies use mode `0600` under `reports/daily` and `reports/weekly`; cron logs use `reports/logs`. Research and report jobs return non-zero on infrastructure or Telegram delivery failure. No job modifies the active strategy or promotes a research candidate.
 
 ## Verification commands
 
@@ -59,6 +70,8 @@ docker compose config --quiet
 docker compose ps
 curl --fail http://127.0.0.1:8080/api/v1/ping
 docker compose logs --tail 100 freqtrade_v3_shadow
+./scripts/run_operations_report.sh daily
+crontab -l
 ```
 
 Source checks run locally and in GitHub Actions through `./scripts/run_checks.sh`. Live-capital configuration is not part of this project state.

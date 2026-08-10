@@ -51,10 +51,14 @@ Passing research gates does not authorize live trading.
 
 ## Status
 
-Milestone 1 completed on 2026-08-10 with `STOP_BEFORE_CLASSIFIER`. At 0.20% round-trip cost, every active BTC/ETH baseline had negative expectancy, profit factor below 0.67, and zero positive portfolio folds. The Freqtrade runtime is now active only for infrastructure validation; its fail-closed adapter emits no entries.
+Milestone 1 completed on 2026-08-10 with `STOP_BEFORE_CLASSIFIER`. A near-full-year run with 180 training days and six 30-day validation folds reached the same decision: the strongest active portfolio had profit factor 0.601, negative expectancy, 49.0% maximum drawdown, and zero positive folds out of six. The Freqtrade runtime is active only for infrastructure validation; its fail-closed adapter emits no entries.
 
 See the [Milestone 1 report](research_results/milestone-1/REPORT.md), [Decision 0001](docs/decisions/0001-clean-rebuild.md) for the architecture boundary, and [Decision 0002](docs/decisions/0002-stop-before-classifier.md) for the research stop decision.
 
 The verified host migration and fail-closed runtime state are recorded in [Server state](docs/SERVER_STATE.md) and [Decision 0003](docs/decisions/0003-reuse-v2-infrastructure.md).
 
 The full retirement, backup, environment handoff, and rollback boundary are documented in [V2 to V3 infrastructure migration](docs/MIGRATION_V2_TO_V3.md).
+
+Daily and weekly Telegram reports, along with the locked weekly one-year walk-forward pipeline, are documented in [Reporting and scheduled research](docs/REPORTING_AND_RESEARCH.md).
+
+[Decision 0004](docs/decisions/0004-report-without-auto-promotion.md) records why scheduled measurement can never promote or deploy a strategy automatically.
