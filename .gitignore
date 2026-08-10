@@ -1,0 +1,11 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+
+user_data/data/
+user_data/logs/
+user_data/tradesv3_v3.sqlite*
+user_data/backtest_results/
+user_data/hyperopt_results/

@@ -1,0 +1,36 @@
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [
+    "user_data/data",
+    "user_data/logs",
+    "user_data/backtest_results",
+    "user_data/hyperopt_results",
+    ".venv",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+    "I",
+    "UP",
+    "B",
+]
+ignore = [
+    "E501",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+extend-exclude = '''
+/(
+    user_data/data
+  | user_data/logs
+  | user_data/backtest_results
+  | user_data/hyperopt_results
+  | \.venv
+)/
+'''

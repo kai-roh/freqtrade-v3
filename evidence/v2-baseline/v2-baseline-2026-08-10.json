@@ -1,0 +1,665 @@
+{
+  "evidence_cutoff": "2026-08-10T00:00:00Z",
+  "evidence_gaps": [],
+  "generated_at": "2026-08-10T00:00:00Z",
+  "local": {
+    "config": {
+      "path": "user_data/config.json",
+      "safe_fields": {
+        "amend_last_stake_amount": true,
+        "api_server": {
+          "CORS_origins": [
+            "http://localhost:8080"
+          ],
+          "enable_openapi": true,
+          "enabled": true,
+          "listen_port": 8080,
+          "verbosity": "error"
+        },
+        "bot_name": "kai_freqtrade",
+        "cancel_open_orders_on_exit": true,
+        "dry_run": true,
+        "dry_run_wallet": 1000,
+        "entry_pricing": {
+          "check_depth_of_market": {
+            "bids_to_ask_delta": 1,
+            "enabled": false
+          },
+          "order_book_top": 1,
+          "price_last_balance": 0.0,
+          "price_side": "same",
+          "use_order_book": true
+        },
+        "exchange": {
+          "name": "binance",
+          "pair_blacklist": [
+            ".*BEAR/.*",
+            ".*BULL/.*",
+            ".*UP/.*",
+            ".*DOWN/.*"
+          ],
+          "pair_whitelist": [
+            "BTC/USDT:USDT",
+            "ETH/USDT:USDT",
+            "SOL/USDT:USDT",
+            "BNB/USDT:USDT",
+            "XRP/USDT:USDT"
+          ]
+        },
+        "exit_pricing": {
+          "order_book_top": 1,
+          "price_side": "same",
+          "use_order_book": true
+        },
+        "fee": 0.00067,
+        "fiat_display_currency": "USD",
+        "force_entry_enable": false,
+        "freqai": {
+          "backtest_period_days": 2,
+          "data_kitchen_thread_count": 4,
+          "data_split_parameters": {
+            "shuffle": false,
+            "test_size": 0.25
+          },
+          "enabled": true,
+          "expiration_hours": 12,
+          "feature_parameters": {
+            "DI_threshold": 0.9,
+            "buffer_train_data_candles": 20,
+            "include_corr_pairlist": [
+              "BTC/USDT:USDT",
+              "ETH/USDT:USDT"
+            ],
+            "include_shifted_candles": 3,
+            "include_timeframes": [
+              "5m",
+              "15m",
+              "1h"
+            ],
+            "indicator_periods_candles": [
+              10,
+              20,
+              50
+            ],
+            "label_period_candles": 12,
+            "noise_standard_deviation": 0.05,
+            "principal_component_analysis": false,
+            "use_SVM_to_remove_outliers": false,
+            "weight_factor": 0.9
+          },
+          "fit_live_predictions_candles": 300,
+          "identifier": "kai_v3_dynamic_score",
+          "live_retrain_hours": 6,
+          "model_training_parameters": {
+            "learning_rate": 0.02,
+            "max_depth": 8,
+            "n_estimators": 800,
+            "num_leaves": 64,
+            "verbose": -1
+          },
+          "purge_old_models": 2,
+          "quality_gate": {
+            "enabled": true,
+            "min_correlation": 0.05,
+            "min_net_edge": 0.0,
+            "min_r2": 0.0,
+            "min_samples": 240,
+            "min_side_samples": 15,
+            "slippage_buffer": 0.0003,
+            "window_candles": 360
+          },
+          "train_period_days": 14
+        },
+        "initial_state": "running",
+        "internals": {
+          "heartbeat_interval": 60,
+          "process_throttle_secs": 5
+        },
+        "margin_mode": "isolated",
+        "max_open_trades": 2,
+        "order_time_in_force": {
+          "entry": "GTC",
+          "exit": "GTC"
+        },
+        "order_types": {
+          "emergency_exit": "market",
+          "entry": "limit",
+          "exit": "limit",
+          "force_entry": "market",
+          "force_exit": "market",
+          "stoploss": "market",
+          "stoploss_on_exchange": true,
+          "stoploss_on_exchange_interval": 60,
+          "stoploss_on_exchange_limit_ratio": 0.99
+        },
+        "pairlists": [
+          {
+            "method": "StaticPairList"
+          }
+        ],
+        "process_only_new_candles": true,
+        "stake_amount": 150,
+        "stake_currency": "USDT",
+        "telegram": {
+          "balance_dust_level": 0.01,
+          "enabled": true,
+          "notification_settings": {
+            "entry": "off",
+            "entry_cancel": "off",
+            "entry_fill": "on",
+            "exit": "off",
+            "exit_cancel": "off",
+            "exit_fill": "on",
+            "protection_trigger": "on",
+            "protection_trigger_global": "on",
+            "show_candle": "off",
+            "startup": "on",
+            "status": "on",
+            "strategy_msg": "off",
+            "warning": "on"
+          },
+          "reload": false
+        },
+        "timeframe": "5m",
+        "tradable_balance_ratio": 0.95,
+        "trading_mode": "futures",
+        "unfilledtimeout": {
+          "entry": 10,
+          "exit": 10,
+          "exit_timeout_count": 0,
+          "unit": "minutes"
+        }
+      },
+      "sha256": "d5a2c15ec31439bbe479b340c0deec5d5eb98b1c6c5f69787c4674bc639b839d"
+    },
+    "evaluation_phase": {
+      "metrics": {
+        "baseline": {
+          "closed_trades": 158,
+          "cumulative_pnl_usdt": -139.62637615
+        },
+        "phase": "state_aware_exit_freqai_quality_v1",
+        "start_kst": "2026-07-13 22:57:21",
+        "start_utc": "2026-07-13 13:57:21",
+        "success_criteria": {
+          "minimum_closed_trades": 30,
+          "net_pnl_min_usdt": 0.0,
+          "profit_factor_min": 1.0
+        }
+      },
+      "path": "user_data/evaluation_phase.json",
+      "sha256": "60274dc1cede8d77753423cc4934d6d98d33096a20526772f047cfc17c82d46d"
+    },
+    "git": {
+      "branch": "agent/freqai-quality-safety",
+      "gaps": [],
+      "is_dirty": false,
+      "path": "/Users/seop/freqtrade-v2",
+      "sha": "ed536bb73f102586bac682983a5c1d3f5cdf4477",
+      "status_short": []
+    },
+    "historic_prediction_artifacts": [
+      {
+        "bytes": 1011112,
+        "mtime_utc": "2026-05-12T16:05:22Z",
+        "path": "user_data/models/kai_v1/historic_predictions.backup.pkl",
+        "sha256": "8beed969b0a3f39f97b39dc238a25a63ef9f22cf5b07922ddca1391d29efe98f"
+      },
+      {
+        "bytes": 1011112,
+        "mtime_utc": "2026-05-12T16:05:22Z",
+        "path": "user_data/models/kai_v1/historic_predictions.pkl",
+        "sha256": "8beed969b0a3f39f97b39dc238a25a63ef9f22cf5b07922ddca1391d29efe98f"
+      }
+    ],
+    "selected_file_hashes": [
+      {
+        "bytes": 5361,
+        "path": "README.md",
+        "sha256": "8471b22f7ca0eed7063e3fd4d4b23bdab37d8c49370df5ca0c52cc748d8d22e1"
+      },
+      {
+        "bytes": 1663,
+        "path": "docker-compose.yml",
+        "sha256": "592ee01d59663ebe04acc2ee803fd2ccc58b8472b1732497e7606897a9fd4503"
+      },
+      {
+        "bytes": 6835,
+        "path": "docs/00_GUIDE.md",
+        "sha256": "44a9a21928f85a0f9273bd0fb0302dbc3a569a3fc0de3931dfa9b175423d99c4"
+      },
+      {
+        "bytes": 3157,
+        "path": "docs/01_DEV_PLAN.md",
+        "sha256": "18891726e6c1aae2b2125abdd67d9d70c9de424ad40c473d01132d0f14af62a6"
+      },
+      {
+        "bytes": 4408,
+        "path": "docs/02_ADAPTIVE_REGIME_STRATEGY.md",
+        "sha256": "cdab268566841eaf1cb98b693b0b3b1feabf6753c5558f4f53f5e481864e0a37"
+      },
+      {
+        "bytes": 4462,
+        "path": "docs/03_IMMEDIATE_STRATEGY_REWORK.md",
+        "sha256": "2ccc907e74011cce2c4494b05b8581fe636830f7359ab8a6bb67ad345cd6233d"
+      },
+      {
+        "bytes": 6857,
+        "path": "docs/04_DEPLOYMENT_VERIFICATION_2026-07-14.md",
+        "sha256": "f3d992ed56c0cbd8ddef9a4ff6f5eadb91274ac661e37920f9691deda76d61ac"
+      },
+      {
+        "bytes": 1159,
+        "path": "pyproject.toml",
+        "sha256": "8bc1a91e492fd09fba224ed5466ef06d2e8af5e5044a62604002371be797ec99"
+      },
+      {
+        "bytes": 185,
+        "path": "pytest.ini",
+        "sha256": "8b072a5bf518b1af26db414fe3e2dde3611cad80b8d4da018d43f8f039ce0637"
+      },
+      {
+        "bytes": 46,
+        "path": "requirements-dev.txt",
+        "sha256": "69b569ad08892d648e8efb5c321733c53d8ebdf6c2eaf0f1122e86df9b25baa0"
+      },
+      {
+        "bytes": 9873,
+        "path": "scripts/backtest_report.py",
+        "sha256": "4416063c49991285919087f3cf05874b34444f5b675de3606ac6eefe4e0e469d"
+      },
+      {
+        "bytes": 3842,
+        "path": "scripts/control.sh",
+        "sha256": "eda9d32a62cf909de393c7b2accc6276b4a3a39b89d33996fede27a872fd47f5"
+      },
+      {
+        "bytes": 33652,
+        "path": "scripts/daily_report.py",
+        "sha256": "6bc528bdc2ef9d5d56efbaf7c33f3095f32d24ad75e6046b8ee3971294074553"
+      },
+      {
+        "bytes": 8951,
+        "path": "scripts/fee_reconciliation.py",
+        "sha256": "8a600837414cc121f139771b488cae69393d4fa1c0f11b389bc1b7145213515b"
+      },
+      {
+        "bytes": 6565,
+        "path": "scripts/hyperopt_report.py",
+        "sha256": "bcc8cfa147d613dd6bd6f459eab71d71f4b584f11ae8bdfa8849b2bd8f3c67cb"
+      },
+      {
+        "bytes": 7059,
+        "path": "scripts/preflight.sh",
+        "sha256": "e9c0afa8714667953fed2b67684eabd381c0345b20857c9da97379ecb61fd369"
+      },
+      {
+        "bytes": 10083,
+        "path": "scripts/run_backtest.sh",
+        "sha256": "252a6d8c5d3ddfb2c4f5e58f06188392aa62867f98f21ad2333a89169bf9a147"
+      },
+      {
+        "bytes": 5949,
+        "path": "scripts/run_hyperopt.sh",
+        "sha256": "b2ca50fd9dcadcd7656e6ffbb543e03fd190596e83ff92671f03a698a7bbb943"
+      },
+      {
+        "bytes": 4507,
+        "path": "scripts/sitecustomize.py",
+        "sha256": "521a2eae0495809faf6e32debc7cc6e5e2a5b64043bd579f73ce5f0e7731eb79"
+      },
+      {
+        "bytes": 3888,
+        "path": "scripts/telegram_notify.py",
+        "sha256": "5eb4e6947f7e490f7ec80c1d9dfd9426fd772a55f61a7c124bb190bfe2a8a359"
+      },
+      {
+        "bytes": 573,
+        "path": "scripts/test.sh",
+        "sha256": "0e4de1e7028b1caeaf20489319aae4280ed6277f70e20aaedb958f8a0165a929"
+      },
+      {
+        "bytes": 0,
+        "path": "tests/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 1727,
+        "path": "tests/conftest.py",
+        "sha256": "530cd4edebd899f425d7a80b801e74d0be13da88d82e1bb1d1cb9e7509760ec6"
+      },
+      {
+        "bytes": 6271,
+        "path": "tests/test_backtest_report.py",
+        "sha256": "ade8bb99d691437f5e5818e79718ba2e4914bc59567aa1b957d049eb54259341"
+      },
+      {
+        "bytes": 1383,
+        "path": "tests/test_backtest_script.py",
+        "sha256": "2ba7127f27262db92f623c3e790f513ef11a2e7e5a726265a91ae0a981f810da"
+      },
+      {
+        "bytes": 4884,
+        "path": "tests/test_claude_client.py",
+        "sha256": "2004ba030df93bae1367e14ee8bb300d11a897911781be052719bcafa45c37fc"
+      },
+      {
+        "bytes": 3847,
+        "path": "tests/test_cost_tracker.py",
+        "sha256": "4d812108ee68c00a6fabb3a80d89d2af2f8f1ccc88f1cb37ff42ac2f2594d322"
+      },
+      {
+        "bytes": 11521,
+        "path": "tests/test_daily_report.py",
+        "sha256": "4837e236cc4fe6a9c77e383944b53a2c55bbdf2dd50774365eee8f90dc17a32a"
+      },
+      {
+        "bytes": 11769,
+        "path": "tests/test_entry_logic.py",
+        "sha256": "8e488ca2cf14f67d59b69e8bb685de0f39508f70ac420ed53081c370dba3971f"
+      },
+      {
+        "bytes": 4834,
+        "path": "tests/test_fee_reconciliation.py",
+        "sha256": "91fe11abe75863e7d7d1da2d58e4600f5b866074c7c1a36469c26b9dec6c99e4"
+      },
+      {
+        "bytes": 5058,
+        "path": "tests/test_hyperopt_report.py",
+        "sha256": "4585cbf6234fad5a5660349c4602216bb9a392df27f3ab395266c05d592f4192"
+      },
+      {
+        "bytes": 5086,
+        "path": "tests/test_news_sources.py",
+        "sha256": "ab7b936da5b5b272edbc20cc04fa5b69a3994f4bd1c0db6481af948bfa9686b9"
+      },
+      {
+        "bytes": 2610,
+        "path": "tests/test_strategy_contract.py",
+        "sha256": "51468438d1b9cc4ab7fd47c4fb0dbeb6ce3af94ddad216f51b25636ff9bad13d"
+      },
+      {
+        "bytes": 3489,
+        "path": "tests/test_telegram_notify.py",
+        "sha256": "8a64f7f151cb09b0d5d664c6a203bd39c26258a8f438fe595f3bbdd5c2908fd3"
+      },
+      {
+        "bytes": 4469,
+        "path": "user_data/config.json",
+        "sha256": "d5a2c15ec31439bbe479b340c0deec5d5eb98b1c6c5f69787c4674bc639b839d"
+      },
+      {
+        "bytes": 336,
+        "path": "user_data/evaluation_phase.json",
+        "sha256": "60274dc1cede8d77753423cc4934d6d98d33096a20526772f047cfc17c82d46d"
+      },
+      {
+        "bytes": 1462,
+        "path": "user_data/freqaimodels/LLMEnhancedModel.py",
+        "sha256": "d0f2722c04dc35810165970d3ca629894b1670c519e1dcb24ee2c6100cf5a9a6"
+      },
+      {
+        "bytes": 0,
+        "path": "user_data/llm/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 10854,
+        "path": "user_data/llm/claude_client.py",
+        "sha256": "4d24f00785f2213b06f8303070e2c8d51304b5878cc3d45e73f7df07d600a2e9"
+      },
+      {
+        "bytes": 5444,
+        "path": "user_data/llm/cost_tracker.py",
+        "sha256": "7e3ef0fd78ed76bad33769511f7f957e54bb70bd672c6a1b6925c4b547d27f76"
+      },
+      {
+        "bytes": 6204,
+        "path": "user_data/llm/news_sources.py",
+        "sha256": "c2688e442cb4ef8375529f00d372ce05717aecc412bc2e7460ee3a6a3c2cd251"
+      },
+      {
+        "bytes": 8954,
+        "path": "user_data/strategies/KaiBacktestVariants.py",
+        "sha256": "6e60915fe8cfac5f3cb7ad9d7e4bccb3758f85f8d03859613048d73b436ad46b"
+      },
+      {
+        "bytes": 49330,
+        "path": "user_data/strategies/KaiBaseStrategy.py",
+        "sha256": "0bb65d6ef68085784e436678c9eaf6dbb14f9b888e0fcf29f11c4e0ecf9bf1df"
+      },
+      {
+        "bytes": 6399,
+        "path": "user_data/strategies/KaiImprovementVariants.py",
+        "sha256": "4de21e50b37fa178761b40aad2887cd99a06fce738efd84ce0eb298b726f8448"
+      },
+      {
+        "bytes": 22829,
+        "path": "user_data/strategies/entry_logic.py",
+        "sha256": "de3763b7c3557814607bb8d26163e8aa51925fe2438382ba6193ef54aa057cf1"
+      }
+    ],
+    "server_config_checksums": [
+      {
+        "bytes": 1663,
+        "path": "docker-compose.yml",
+        "sha256": "592ee01d59663ebe04acc2ee803fd2ccc58b8472b1732497e7606897a9fd4503"
+      },
+      {
+        "bytes": 4469,
+        "path": "user_data/config.json",
+        "sha256": "d5a2c15ec31439bbe479b340c0deec5d5eb98b1c6c5f69787c4674bc639b839d"
+      },
+      {
+        "bytes": 336,
+        "path": "user_data/evaluation_phase.json",
+        "sha256": "60274dc1cede8d77753423cc4934d6d98d33096a20526772f047cfc17c82d46d"
+      }
+    ],
+    "trade_metrics": {
+      "metrics": {
+        "by_pair": [],
+        "by_strategy": [],
+        "summary": {
+          "close_profit_abs_sum": 0.0,
+          "close_profit_avg": 0.0,
+          "first_close_date": null,
+          "first_open_date": null,
+          "last_close_date": null,
+          "last_open_date": null,
+          "open_trade_count": 0,
+          "realized_profit_sum": 0.0,
+          "trade_count": 0
+        }
+      },
+      "path": "user_data/tradesv3.sqlite",
+      "sha256": "25a7eee7af95a25aea34e7abee59777db72ac48d6edc27737beb0914ae2a3c0e"
+    }
+  },
+  "remote": {
+    "gaps": [],
+    "git": {
+      "branch": "main",
+      "is_dirty": true,
+      "sha": "1298ab53cf791db94b0adc4a368be2e451e80260",
+      "status_short": [
+        " M README.md",
+        " M docker-compose.yml",
+        " M docs/00_GUIDE.md",
+        " M docs/01_DEV_PLAN.md",
+        " M docs/02_ADAPTIVE_REGIME_STRATEGY.md",
+        " M scripts/backtest_report.py",
+        " M scripts/daily_report.py",
+        " M scripts/run_backtest.sh",
+        " M tests/test_daily_report.py",
+        " M user_data/config.json",
+        " M user_data/freqaimodels/LLMEnhancedModel.py",
+        " M user_data/strategies/KaiBaseStrategy.py",
+        "?? .codex-backup-20260528-004809/user_data/config.json",
+        "?? .codex-backup-20260528-004809/user_data/strategies/KaiBaseStrategy.py",
+        "?? .codex-backup-20260528-004809/user_data/strategies/entry_logic.py",
+        "?? .codex-backup-20260529-001535/config.json",
+        "?? .codex-backup-20260529-002714/docker-compose.yml",
+        "?? .codex-backup-20260529-002714/scripts/daily_report.py",
+        "?? .codex-backup-20260529-004624/user_data/config.json",
+        "?? .codex-backup-20260529-004624/user_data/strategies/entry_logic.py",
+        "?? .codex-backups/pre-immediate-fixes-20260529-011433.tgz",
+        "?? deploy_backups/20260713T134606Z/user_data/strategies/KaiBaseStrategy.py",
+        "?? deploy_backups/20260713T134606Z/user_data/strategies/entry_logic.py",
+        "?? deploy_backups/20260713T135519Z/scripts/daily_report.py",
+        "?? deploy_backups/20260713T135519Z/user_data/config.json",
+        "?? deploy_backups/20260713T135519Z/user_data/strategies/KaiBaseStrategy.py",
+        "?? deploy_backups/20260713T135519Z/user_data/strategies/entry_logic.py",
+        "?? deploy_backups/20260713T141535Z/final_sync/scripts/backtest_report.py",
+        "?? deploy_backups/20260713T141535Z/final_sync/scripts/daily_report.py",
+        "?? deploy_backups/20260713T141535Z/final_sync/scripts/run_backtest.sh",
+        "?? deploy_backups/20260713T141535Z/final_sync/user_data/strategies/KaiBaseStrategy.py",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/docker-compose.yml",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/scripts/backtest_report.py",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/scripts/daily_report.py",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/scripts/run_backtest.sh",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/scripts/sitecustomize.py",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/user_data/config.json",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/user_data/evaluation_phase.json",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/user_data/freqaimodels/LLMEnhancedModel.py",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/user_data/strategies/KaiBacktestVariants.py",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/user_data/strategies/KaiBaseStrategy.py",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/user_data/strategies/KaiImprovementVariants.py",
+        "?? deploy_backups/20260713T160528Z/github_publish_sync/user_data/strategies/entry_logic.py",
+        "?? docs/03_IMMEDIATE_STRATEGY_REWORK.md",
+        "?? scripts/sitecustomize.py",
+        "?? tests/test_entry_logic.py",
+        "?? tests/test_strategy_contract.py",
+        "?? user_data/backtest_strategies/KaiBacktestVariants.py",
+        "?? user_data/backtest_strategies/KaiImprovementVariants.py",
+        "?? user_data/evaluation_phase.json",
+        "?? user_data/metrics/entry_gates_ADA_USDT_USDT.json",
+        "?? user_data/metrics/entry_gates_AVAX_USDT_USDT.json",
+        "?? user_data/metrics/entry_gates_BNB_USDT_USDT.json",
+        "?? user_data/metrics/entry_gates_BTC_USDT_USDT.json",
+        "?? user_data/metrics/entry_gates_DOGE_USDT_USDT.json",
+        "?? user_data/metrics/entry_gates_ETH_USDT_USDT.json",
+        "?? user_data/metrics/entry_gates_LINK_USDT_USDT.json",
+        "?? user_data/metrics/entry_gates_SOL_USDT_USDT.json",
+        "?? user_data/metrics/entry_gates_TON_USDT_USDT.json",
+        "?? user_data/metrics/entry_gates_XRP_USDT_USDT.json",
+        "?? user_data/strategies/KaiBacktestVariants.py",
+        "?? user_data/strategies/KaiImprovementVariants.py",
+        "?? user_data/strategies/entry_logic.py"
+      ]
+    },
+    "host": "ft-tokyo",
+    "path": "/home/kai/freqtrade-v2",
+    "runtime": {
+      "checksums": [
+        {
+          "path": "docker-compose.yml",
+          "sha256": "592ee01d59663ebe04acc2ee803fd2ccc58b8472b1732497e7606897a9fd4503"
+        },
+        {
+          "path": "user_data/config.json",
+          "sha256": "d5a2c15ec31439bbe479b340c0deec5d5eb98b1c6c5f69787c4674bc639b839d"
+        },
+        {
+          "path": "user_data/evaluation_phase.json",
+          "sha256": "60274dc1cede8d77753423cc4934d6d98d33096a20526772f047cfc17c82d46d"
+        }
+      ],
+      "docker_compose_ps_sha256": "569fcca8dd828a0dd434a4dacff32172840372001d915426a591f8551427d8c5",
+      "docker_compose_ps_text": "NAME            IMAGE                                  COMMAND                  SERVICE     CREATED       STATUS                 PORTS\nfreqtrade_kai   freqtradeorg/freqtrade:stable_freqai   \"freqtrade trade --l\u2026\"   freqtrade   3 weeks ago   Up 3 weeks (healthy)   127.0.0.1:8080->8080/tcp",
+      "docker_ps": [
+        {
+          "id": "0b6556b49120",
+          "image": "freqtradeorg/freqtrade:stable_freqai",
+          "names": "freqtrade_kai",
+          "ports": "127.0.0.1:8080->8080/tcp",
+          "status": "Up 3 weeks (healthy)"
+        }
+      ]
+    },
+    "trade_metrics": {
+      "by_pair": [
+        {
+          "close_profit_abs_sum": 0.47502455,
+          "open_trade_count": 0,
+          "pair": "ADA/USDT:USDT",
+          "trade_count": 6
+        },
+        {
+          "close_profit_abs_sum": -1.84039304,
+          "open_trade_count": 0,
+          "pair": "AVAX/USDT:USDT",
+          "trade_count": 8
+        },
+        {
+          "close_profit_abs_sum": -29.5963886,
+          "open_trade_count": 0,
+          "pair": "BNB/USDT:USDT",
+          "trade_count": 34
+        },
+        {
+          "close_profit_abs_sum": -30.01565311,
+          "open_trade_count": 0,
+          "pair": "BTC/USDT:USDT",
+          "trade_count": 25
+        },
+        {
+          "close_profit_abs_sum": -2.04357542,
+          "open_trade_count": 0,
+          "pair": "DOGE/USDT:USDT",
+          "trade_count": 8
+        },
+        {
+          "close_profit_abs_sum": -50.39805238,
+          "open_trade_count": 0,
+          "pair": "ETH/USDT:USDT",
+          "trade_count": 38
+        },
+        {
+          "close_profit_abs_sum": -2.81756198,
+          "open_trade_count": 0,
+          "pair": "LINK/USDT:USDT",
+          "trade_count": 3
+        },
+        {
+          "close_profit_abs_sum": -27.96054417,
+          "open_trade_count": 0,
+          "pair": "SOL/USDT:USDT",
+          "trade_count": 31
+        },
+        {
+          "close_profit_abs_sum": -1.77417627,
+          "open_trade_count": 0,
+          "pair": "TON/USDT:USDT",
+          "trade_count": 6
+        },
+        {
+          "close_profit_abs_sum": -37.86828806,
+          "open_trade_count": 0,
+          "pair": "XRP/USDT:USDT",
+          "trade_count": 35
+        }
+      ],
+      "exists": true,
+      "path": "user_data/tradesv3.sqlite",
+      "sha256": "9451329c916be324afc0e038edd7926939c70c5319ba2ccca64a7458c0710bc5",
+      "summary": {
+        "close_profit_abs_sum": -183.83960848,
+        "close_profit_avg": -0.00729838,
+        "first_close_date": "2026-05-14 23:08:36.052000",
+        "first_open_date": "2026-05-14 22:35:12.367967",
+        "last_close_date": "2026-08-09 09:25:26.046000",
+        "last_open_date": "2026-08-09 06:30:10.412171",
+        "open_trade_count": 0,
+        "realized_profit_sum": -183.83960848,
+        "trade_count": 194
+      }
+    }
+  },
+  "schema_version": 1,
+  "source": {
+    "local_repo": "/Users/seop/freqtrade-v2",
+    "remote_host": "ft-tokyo",
+    "remote_path": "/home/kai/freqtrade-v2"
+  }
+}
