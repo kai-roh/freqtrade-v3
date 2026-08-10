@@ -2,7 +2,7 @@
 
 ## Outcome
 
-V2 was retired with 194 closed dry-run trades, zero open trades, and cumulative PnL of -183.83960848 USDT. Its container and Compose network were removed after a clean shutdown.
+V2 was retired with 194 closed dry-run trades, zero open trades, and cumulative PnL of -183.83960848 USDT. Its container and Compose network were removed after a clean shutdown. The legacy V2 daily-report cron entry was also removed, leaving no V2 Compose container, timer, or scheduled command active.
 
 V3 takes over the existing localhost port 8080 and container identity `freqtrade_kai`, preserving the host tunnel, restart behavior, and health monitoring. The V3 project remains at `/home/kai/freqtrade-v3` and uses a new database and zero-entry strategy.
 

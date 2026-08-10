@@ -23,7 +23,7 @@ Verified startup state:
 
 ## V2 retirement and backup
 
-V2 was stopped and removed with zero open trades. Its SQLite database passed `PRAGMA integrity_check` immediately after shutdown.
+V2 was stopped and removed with zero open trades. Its SQLite database passed `PRAGMA integrity_check` immediately after shutdown. Its legacy daily-report cron entry was removed; no V2 Compose container, systemd timer, or scheduled command remains active.
 
 The complete V2 project is preserved only on the server:
 
