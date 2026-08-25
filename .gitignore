@@ -11,3 +11,6 @@ user_data/backtest_results/
 user_data/hyperopt_results/
 research_results/scheduled/
 reports/
+
+# Private frozen source evidence; only derived hashes/aggregates may be committed.
+data/v2_frozen/*.sqlite*

@@ -14,9 +14,10 @@ The following values are fixed before looking at a bootstrap result:
 - iteration count and random seed;
 - two-sided test direction and alpha.
 
-`examples/phase0/block-bootstrap.preregister.json` is an input schema, not an
-approved V2 registration. The chosen block length still requires the frozen V2
-exposure chronology and a written sensitivity rule.
+`examples/phase0/block-bootstrap.preregister.json` remains an input schema. The
+approved V2 registration, evidence identity, primary five-day block, and
+sensitivity rule are frozen in `docs/V2_BOOTSTRAP_PREREGISTRATION.md` and the
+`configs/v2-fee-bootstrap-*.json` files.
 
 ## Input Contract
 
@@ -31,10 +32,11 @@ python3 scripts/run_block_bootstrap.py \
   --output evidence/v2-counterfactual/bootstrap-result.json
 ```
 
-The local `/Users/seop/freqtrade-v2/user_data/tradesv3.sqlite` currently has no
-trade rows, so it cannot support the final V2 calculation. A frozen export of
-the 194-trade database must be supplied and hash-checked against the evidence
-record before an actual result is generated.
+The original local `/Users/seop/freqtrade-v2/user_data/tradesv3.sqlite` has no
+trade rows. A private frozen copy containing 194 closed trades and 388 filled
+orders was retrieved from Oracle Tokyo and hash-checked on 2026-08-25. Its raw
+SQLite file is deliberately excluded from Git; only the source hash, structural
+checks, registration, and derived aggregates are versioned.
 
 `scripts/prepare_v2_counterfactual.py` performs that hash and trade-count gate,
 restores the original simulated fee from filled-order costs, applies the

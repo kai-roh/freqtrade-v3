@@ -77,6 +77,9 @@ The Phase 0 final strategy contract and first development slice are recorded in
 The dependent-return validation contract and its remaining V2 evidence blocker
 are documented in [Block Bootstrap Contract](docs/BLOCK_BOOTSTRAP.md).
 
+The V2 daily portfolio bootstrap choices were frozen before execution in
+[V2 Fee-only Block Bootstrap Pre-registration](docs/V2_BOOTSTRAP_PREREGISTRATION.md).
+
 The hash-verified V2 fee-only preparation and the strict boundary between
 fixed-entry exit replay and full-strategy reruns are documented in
 [V2 Fee-only Counterfactual Preparation](docs/V2_COUNTERFACTUAL.md).
