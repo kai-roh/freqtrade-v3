@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from typing import Any
 
@@ -10,6 +11,8 @@ from .instruments import (
     InstrumentPreflightRequest,
     InstrumentPreflightResult,
     check_instrument_conformance,
+    instrument_preflight_policy_from_mapping,
+    instrument_preflight_request_from_mapping,
 )
 
 
@@ -55,6 +58,37 @@ class PreflightResult:
             "instrument": self.instrument.to_dict(),
             "intent": self.intent,
         }
+
+
+def intent_record_from_mapping(data: Mapping[str, Any]) -> IntentRecord:
+    return IntentRecord(
+        entry_reason=_required_intent_text(data, "entry_reason"),
+        target_position=_required_intent_text(data, "target_position"),
+        normal_exit=_required_intent_text(data, "normal_exit"),
+        risk_exit=_required_intent_text(data, "risk_exit"),
+        max_holding_or_review_at=_required_intent_text(data, "max_holding_or_review_at"),
+        cost_and_risk_budget=_required_intent_text(data, "cost_and_risk_budget"),
+    )
+
+
+def _required_intent_text(data: Mapping[str, Any], field_name: str) -> str:
+    value = data[field_name]
+    if not isinstance(value, str):
+        raise TypeError(f"{field_name} must be a string")
+    return value
+
+
+def order_preflight_from_mapping(data: Mapping[str, Any]) -> OrderPreflight:
+    """Build final order admission input from the public JSON preflight schema."""
+
+    intent = data.get("intent")
+    if intent is not None and not isinstance(intent, Mapping):
+        raise TypeError("intent must be a JSON object")
+    return OrderPreflight(
+        instrument=instrument_preflight_request_from_mapping(data),
+        intent=intent_record_from_mapping(intent) if intent is not None else None,
+        policy=instrument_preflight_policy_from_mapping(data.get("policy")),
+    )
 
 
 def validate_order_preflight(preflight: OrderPreflight) -> PreflightResult:

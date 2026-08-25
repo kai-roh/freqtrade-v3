@@ -44,3 +44,14 @@ strategy, isolated database, and image digest before Docker Compose runs.
 An honest Phase 0 result may remain “not testable from current evidence.” No
 control in this decision authorizes live trading or automatic strategy
 promotion.
+
+## Evidence update: 2026-08-25
+
+The previously missing Oracle Tokyo V2 SQLite snapshot was retrieved and
+hash-checked. It contains 194 closed trades and 388 filled closed orders. The
+fee-only block bootstrap was pre-registered in commit `e22dcda` and then run;
+the primary and every registered sensitivity interval were below zero.
+
+This closes the evidence gap recorded above without changing the decision's
+live-trading prohibition. The result gates V2 diagnostic wording, not Phase 1
+simulation plumbing.

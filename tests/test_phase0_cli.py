@@ -151,3 +151,81 @@ def test_hyperliquid_capture_rejects_evidence_path_collisions(tmp_path):
     assert result.returncode == 2
     assert "must be distinct" in result.stderr
     assert raw.read_text() == original
+
+
+def test_hyperliquid_snapshot_can_build_and_validate_order_preflight(tmp_path):
+    raw = tmp_path / "meta.json"
+    raw.write_text(
+        json.dumps(
+            [
+                {"universe": [{"name": "BTC", "szDecimals": 5, "maxLeverage": 40}]},
+                [{"markPx": "60000", "oraclePx": "60001", "funding": "0.0001"}],
+            ]
+        )
+    )
+    snapshot = tmp_path / "snapshot.json"
+    preflight_input = tmp_path / "order-preflight.json"
+
+    capture = _run(
+        "capture_hyperliquid_instruments.py",
+        "--environment",
+        "testnet",
+        "--symbol",
+        "BTC",
+        "--input-response",
+        str(raw),
+        "--fetched-at",
+        "2026-08-25T00:00:00+00:00",
+        "--output",
+        str(snapshot),
+    )
+    build = _run(
+        "build_hyperliquid_preflight_input.py",
+        "--snapshot",
+        str(snapshot),
+        "--instrument",
+        "BTC",
+        "--target-notional",
+        "30",
+        "--observed-leverage",
+        "2",
+        "--quote-age-ms",
+        "100",
+        "--order-reject-probe",
+        "passed",
+        "--require-order-reject-probe",
+        "--entry-reason",
+        "funding spread above threshold",
+        "--target-position",
+        "perp short",
+        "--normal-exit",
+        "spread closes",
+        "--risk-exit",
+        "leverage or quote freshness failure",
+        "--max-holding-or-review-at",
+        "next settlement",
+        "--cost-and-risk-budget",
+        "max legging 5 bps",
+        "--output",
+        str(preflight_input),
+    )
+    check = _run("check_order_preflight.py", "--input", str(preflight_input))
+
+    assert capture.returncode == 0, capture.stderr
+    assert build.returncode == 0, build.stderr
+    assert preflight_input.stat().st_mode & 0o777 == 0o600
+    assert check.returncode == 0, check.stderr
+    result = json.loads(check.stdout)
+    assert result["passed"] is True
+    assert result["intent"]["entry_reason"] == "funding spread above threshold"
+
+
+def test_order_preflight_cli_rejects_missing_intent():
+    result = _run(
+        "check_order_preflight.py",
+        "--input",
+        "examples/phase0/instrument-preflight.json",
+    )
+
+    assert result.returncode == 1
+    assert "intent:" in result.stdout

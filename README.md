@@ -1,6 +1,10 @@
 # freqtrade-v3
 
-Clean-room rebuild of the Kai Freqtrade strategy research stack.
+The repository name is historical. Freqtrade is retained only for legacy
+research comparison and a zero-entry shadow runtime; the Phase 1 execution
+engine is NautilusTrader.
+
+Clean-room rebuild of the Kai crypto strategy research and execution stack.
 
 V3 keeps the proven Freqtrade/Docker operations boundary, but does not inherit the V2 prediction target, feature expansion, entry score, dynamic stake, exit stack, models, or trade database.
 
@@ -57,8 +61,9 @@ Milestone 1 completed on 2026-08-10 with `STOP_BEFORE_CLASSIFIER`. A near-full-y
 Phase 0 foundation development started on 2026-08-25. The repository now has
 an exact cost ledger, seven-field run manifest, instrument/order preflight,
 read-only Hyperliquid metadata capture, pre-registered block-bootstrap runner,
-and a fail-closed check in front of the retained Freqtrade shadow runtime. These
-are infrastructure controls, not a promoted strategy.
+snapshot-to-order preflight generation, and a fail-closed check in front of the
+retained Freqtrade shadow runtime. These are infrastructure controls, not a
+promoted strategy.
 
 See the [Milestone 1 report](research_results/milestone-1/REPORT.md), [Decision 0001](docs/decisions/0001-clean-rebuild.md) for the architecture boundary, and [Decision 0002](docs/decisions/0002-stop-before-classifier.md) for the research stop decision.
 
@@ -74,8 +79,9 @@ The Phase 0 final strategy contract and first development slice are recorded in
 [V3 Strategy Contract - Phase 0 Final](docs/STRATEGY_PHASE0_FINAL.md) and
 [Phase 0 Development Notes](docs/PHASE0_DEVELOPMENT.md).
 
-The dependent-return validation contract and its remaining V2 evidence blocker
-are documented in [Block Bootstrap Contract](docs/BLOCK_BOOTSTRAP.md).
+The dependent-return validation contract and completed V2 result are documented
+in [Block Bootstrap Contract](docs/BLOCK_BOOTSTRAP.md) and
+[V2 Fee-only Block Bootstrap Results](docs/V2_BOOTSTRAP_RESULTS.md).
 
 The V2 daily portfolio bootstrap choices were frozen before execution in
 [V2 Fee-only Block Bootstrap Pre-registration](docs/V2_BOOTSTRAP_PREREGISTRATION.md).
@@ -86,3 +92,9 @@ fixed-entry exit replay and full-strategy reruns are documented in
 
 Execution dependencies and the future NautilusTrader image are governed by the
 [Dependency and Execution-Engine Pinning Policy](docs/DEPENDENCY_POLICY.md).
+
+The approved 6-8 week implementation sequence, simulation-only boundary,
+Binance Demo venue decision, 13-table ledger, 18-transition state machine, and
+fault-injection gates are defined in
+[Phase 1 Carry Execution Infrastructure](docs/PHASE1_IMPLEMENTATION_PLAN.md) and
+[Decision 0006](docs/decisions/0006-phase1-binance-demo-carry.md).

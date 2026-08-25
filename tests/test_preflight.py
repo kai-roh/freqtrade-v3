@@ -7,7 +7,12 @@ from v3.instruments import (
     ProbeStatus,
     VenueEnvironment,
 )
-from v3.preflight import IntentRecord, OrderPreflight, validate_order_preflight
+from v3.preflight import (
+    IntentRecord,
+    OrderPreflight,
+    order_preflight_from_mapping,
+    validate_order_preflight,
+)
 
 
 def _intent() -> IntentRecord:
@@ -86,4 +91,46 @@ def test_intent_rejects_any_blank_required_field():
             risk_exit="delta drift",
             max_holding_or_review_at="settlement",
             cost_and_risk_budget="budget",
+        )
+
+
+def test_order_preflight_mapping_rejects_null_intent_and_string_boolean():
+    payload = {
+        "instrument": {
+            "venue": "binance",
+            "environment": "demo",
+            "instrument_id": "BTCUSDT.BINANCE",
+            "minimum_notional": "10",
+            "minimum_quantity": "0.00001",
+            "quantity_increment": "0.00001",
+            "price_increment": "0.01",
+            "price_significant_digits": 8,
+            "asset_index": 0,
+            "source": "fixture",
+            "active": True,
+        },
+        "order": {
+            "price": "60000",
+            "quantity": "0.0005",
+            "observed_leverage": "2",
+        },
+        "policy": {"require_order_reject_probe": "false"},
+        "intent": {
+            "entry_reason": None,
+            "target_position": "spot long, perp short",
+            "normal_exit": "funding closes",
+            "risk_exit": "delta drift",
+            "max_holding_or_review_at": "next funding",
+            "cost_and_risk_budget": "30 bps",
+        },
+    }
+
+    with pytest.raises(TypeError, match="entry_reason must be a string"):
+        order_preflight_from_mapping({**payload, "policy": {}})
+    with pytest.raises(TypeError, match="require_order_reject_probe must be a boolean"):
+        order_preflight_from_mapping(
+            {
+                **payload,
+                "intent": {**payload["intent"], "entry_reason": "carry"},
+            }
         )

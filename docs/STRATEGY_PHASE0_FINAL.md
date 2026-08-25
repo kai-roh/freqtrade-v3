@@ -57,6 +57,11 @@ Before running a bootstrap, the operator must fix:
 
 The first implementation lives in `v3.bootstrap`.
 
+The V2 run was registered before reading results and then completed on
+2026-08-25. The primary five-day 95% interval and every registered sensitivity
+interval were below zero. The exact evidence and interpretation boundary are in
+`docs/V2_BOOTSTRAP_RESULTS.md`.
+
 ## Instrument Preflight
 
 Standard Hyperliquid perps use a 10 USD minimum notional baseline. The project
@@ -81,10 +86,17 @@ of significant-figure count.
 ## Phase 1 Entry Condition
 
 Phase 1 is an infrastructure verification stage, not a profit gate. It can start
-only after:
+after the following Phase 0 controls are present:
 
-- block bootstrap conclusion is recorded;
 - leverage fail-closed behavior is verified;
 - quote freshness and emergency hedge behavior are verified;
-- agent-wallet reconciliation is verified;
 - cost ledger and reproducibility manifest are attached to the run.
+
+The completed V2 bootstrap gates the V2 diagnostic wording and any future
+V2-style directional revival. It does not gate Binance Demo plumbing, ledger,
+state-machine, or fault-injection work. Credentialed venue checks gate only the
+integration tests that require them.
+
+Phase 1 uses Binance Demo Spot plus USD-M perpetuals. Hyperliquid order
+submission is deferred because its UI BTC spot maps to UBTC on HyperCore and
+would add bridge and UBTC/BTC basis risks to the infrastructure PoC.

@@ -8,11 +8,12 @@ import ssl
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from decimal import Decimal
+from decimal import ROUND_CEILING, Decimal
 from pathlib import Path
 from typing import Any
 from urllib.request import Request, urlopen
 
+from .costs import DecimalInput, as_decimal
 from .instruments import InstrumentSpec, VenueEnvironment
 
 MAINNET_INFO_URL = "https://api.hyperliquid.xyz/info"
@@ -97,10 +98,68 @@ class HyperliquidPerpSnapshot:
         }
 
 
+def build_preflight_input_from_snapshot(
+    snapshot: dict[str, Any],
+    *,
+    instrument_id: str,
+    price: DecimalInput | None = None,
+    price_source: str = "mark",
+    quantity: DecimalInput | None = None,
+    target_notional: DecimalInput | None = None,
+    observed_leverage: DecimalInput | None,
+    quote_age_ms: int | None,
+    order_reject_probe: str = "not_run",
+    policy: dict[str, Any] | None = None,
+    intent: dict[str, str] | None = None,
+) -> dict[str, Any]:
+    """Create order-preflight JSON from a captured Hyperliquid metadata snapshot."""
+
+    instrument = _find_snapshot_instrument(snapshot, instrument_id)
+    resolved_price = _resolve_order_price(instrument, price=price, price_source=price_source)
+    resolved_quantity = _resolve_order_quantity(
+        instrument,
+        price=resolved_price,
+        quantity=quantity,
+        target_notional=target_notional,
+    )
+    return {
+        "instrument": {
+            "venue": instrument["venue"],
+            "environment": instrument["environment"],
+            "instrument_id": instrument["instrument_id"],
+            "minimum_notional": instrument["minimum_notional"],
+            "minimum_quantity": instrument["minimum_quantity"],
+            "quantity_increment": instrument["quantity_increment"],
+            "price_increment": instrument["price_increment"],
+            "price_significant_digits": instrument["price_significant_digits"],
+            "price_max_decimal_places": instrument.get("price_max_decimal_places"),
+            "integer_price_has_no_significant_digit_limit": instrument.get(
+                "integer_price_has_no_significant_digit_limit", False
+            ),
+            "asset_index": instrument.get("asset_index"),
+            "active": instrument.get("active", True),
+            "source": instrument["source"],
+        },
+        "order": {
+            "price": str(resolved_price),
+            "quantity": str(resolved_quantity),
+            "observed_leverage": None
+            if observed_leverage is None
+            else str(as_decimal(observed_leverage, field_name="observed_leverage")),
+            "quote_age_ms": quote_age_ms,
+            "order_reject_probe": order_reject_probe,
+        },
+        "policy": policy or {},
+        "intent": intent,
+    }
+
+
 def endpoint_for(environment: VenueEnvironment) -> str:
     if environment is VenueEnvironment.MAINNET:
         return MAINNET_INFO_URL
-    return TESTNET_INFO_URL
+    if environment is VenueEnvironment.TESTNET:
+        return TESTNET_INFO_URL
+    raise HyperliquidMetadataError("Hyperliquid metadata has no demo environment")
 
 
 def fetch_metadata_response(
@@ -231,6 +290,62 @@ def _decimal_field(data: dict[str, Any], key: str) -> Decimal | None:
 
 def _optional_decimal(value: Decimal | None) -> str | None:
     return None if value is None else str(value)
+
+
+def _find_snapshot_instrument(snapshot: dict[str, Any], instrument_id: str) -> dict[str, Any]:
+    if snapshot.get("venue") != "hyperliquid":
+        raise HyperliquidMetadataError("snapshot venue must be hyperliquid")
+    wanted = instrument_id.strip().upper()
+    if not wanted:
+        raise HyperliquidMetadataError("instrument_id is required")
+    instruments = snapshot.get("instruments")
+    if not isinstance(instruments, list):
+        raise HyperliquidMetadataError("snapshot instruments must be a list")
+    for instrument in instruments:
+        if not isinstance(instrument, dict):
+            raise HyperliquidMetadataError("snapshot instrument must be an object")
+        if str(instrument.get("instrument_id", "")).upper() == wanted:
+            return instrument
+    raise HyperliquidMetadataError(f"instrument not found in snapshot: {instrument_id}")
+
+
+def _resolve_order_price(
+    instrument: dict[str, Any],
+    *,
+    price: DecimalInput | None,
+    price_source: str,
+) -> Decimal:
+    if price is not None:
+        return as_decimal(price, field_name="price")
+    source_key = {"mark": "mark_price", "oracle": "oracle_price"}.get(price_source)
+    if source_key is None:
+        raise HyperliquidMetadataError("price_source must be mark or oracle")
+    source_value = instrument.get(source_key)
+    if source_value is None:
+        raise HyperliquidMetadataError(f"{source_key} is unavailable in snapshot")
+    return as_decimal(source_value, field_name=source_key)
+
+
+def _resolve_order_quantity(
+    instrument: dict[str, Any],
+    *,
+    price: Decimal,
+    quantity: DecimalInput | None,
+    target_notional: DecimalInput | None,
+) -> Decimal:
+    if quantity is not None and target_notional is not None:
+        raise HyperliquidMetadataError("provide quantity or target_notional, not both")
+    if quantity is not None:
+        return as_decimal(quantity, field_name="quantity")
+    if target_notional is None:
+        raise HyperliquidMetadataError("quantity or target_notional is required")
+    notional = as_decimal(target_notional, field_name="target_notional")
+    if notional <= 0:
+        raise HyperliquidMetadataError("target_notional must be positive")
+    increment = as_decimal(instrument["quantity_increment"], field_name="quantity_increment")
+    raw_quantity = notional / price
+    steps = (raw_quantity / increment).to_integral_value(rounding=ROUND_CEILING)
+    return (steps * increment).quantize(increment)
 
 
 def _verified_ssl_context() -> ssl.SSLContext:

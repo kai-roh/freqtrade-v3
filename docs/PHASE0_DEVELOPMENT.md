@@ -20,6 +20,11 @@ The first Phase 0 code slice adds pure, testable primitives:
   preparation for the dependent-return bootstrap.
 - `v3.preflight`: runtime order admission that combines instrument conformance
   with the mandatory six-field intent record.
+- `scripts/build_hyperliquid_preflight_input.py`: converts a captured
+  Hyperliquid evidence snapshot into order-preflight JSON without submitting an
+  order.
+- `scripts/check_order_preflight.py`: validates final order admission including
+  the six-field intent record.
 - `v3.runtime_preflight`: retains the old Freqtrade service only when its
   fail-closed shadow config, strategy, isolated database, and image digest pass.
 
@@ -36,7 +41,8 @@ The new tests intentionally describe behavior rather than implementation:
   headroom, precision, max leverage, quote freshness, reject probes, and intent
   completeness.
 - `tests/test_hyperliquid.py` verifies metadata parsing, response hashing,
-  precision derivation, missing symbols, and delisting state.
+  precision derivation, missing symbols, delisting state, and snapshot-to-order
+  preflight conversion.
 - `tests/test_v2_counterfactual.py` verifies immutable DB identity, trade-count
   gating, fee reconciliation, time-zone grouping, and zero-close calendar days.
 
@@ -52,6 +58,8 @@ python3 scripts/capture_hyperliquid_instruments.py \
   --environment testnet --symbol BTC \
   --raw-output evidence/instruments/hyperliquid-testnet-raw.json \
   --output evidence/instruments/hyperliquid-testnet-btc.json
+python3 scripts/build_hyperliquid_preflight_input.py --help
+python3 scripts/check_order_preflight.py --input examples/phase0/order-preflight.json
 python3 scripts/run_block_bootstrap.py --help
 python3 scripts/prepare_v2_counterfactual.py --help
 python3 scripts/check_shadow_runtime.py
@@ -66,10 +74,17 @@ config, data files, and timerange. It rejects a dirty Git tree unless
 It also rejects loose requirements; `--allow-unlocked-dependencies` records an
 explicitly non-deployable development manifest.
 
-## Next Phase 0 Work
+## Phase 0 Completion Update
 
-- Run the connected V2 fee-only preparation and bootstrap when the frozen
-  194-trade database is available; the current local V2 database has zero rows.
+- The private Oracle Tokyo V2 database was copied, hash-checked, and excluded
+  from Git. It contains 194 closed trades and 388 filled closed orders.
+- The fee-only daily series and pre-registered 1/3/5/7/10-day block bootstrap
+  were generated. All registered 95% intervals are below zero.
+- The baseline implementation is fixed at tag `phase0-baseline`.
+- The bootstrap result does not block Phase 1 simulated execution work.
+
+## Remaining Credentialed Checks
+
 - Add a no-fill reject-code smoke probe after testnet credentials and a dedicated
   account are available. Metadata capture itself is already implemented and
   cannot submit an order.
@@ -77,6 +92,8 @@ explicitly non-deployable development manifest.
 - Implement the fixed-entry V2 exit replay and full-strategy rerun only after
   the frozen V2 artifacts are restored; their causal boundary is already fixed
   in `docs/V2_COUNTERFACTUAL.md`.
-- Select and pin the NautilusTrader version only when the Phase 1 PoC begins;
-  the current Python 3.11-targeted Freqtrade research environment is not the
+- Select and pin the NautilusTrader/Python pair as the first Phase 1A
+  compatibility task; the current Freqtrade research environment is not the
   Nautilus execution environment.
+
+The Phase 1 implementation contract is in `docs/PHASE1_IMPLEMENTATION_PLAN.md`.

@@ -1,0 +1,45 @@
+{
+  "authorization": {
+    "live_orders": false,
+    "real_capital": false
+  },
+  "bootstrap_scope": {
+    "gates_phase1_simulation": false,
+    "gates_v2_conclusion_wording": true,
+    "gates_v2_directional_revival": true
+  },
+  "execution": {
+    "engine": "nautilus_trader",
+    "environment": "demo",
+    "primary_venue": "binance",
+    "product_types": [
+      "spot",
+      "usd_m"
+    ]
+  },
+  "instruments": {
+    "perp": "BTCUSDT-PERP.BINANCE",
+    "spot": "BTCUSDT.BINANCE"
+  },
+  "risk": {
+    "daily_abort_budget_fraction_of_carry_sleeve": "0.005",
+    "daily_loss_fraction_of_total_capital": "0.02",
+    "maximum_abort_cost_bps": "30",
+    "maximum_delta_drift_fraction": "0.05",
+    "maximum_leverage": "2",
+    "minimum_notional_headroom": "3"
+  },
+  "schema_version": 1,
+  "source": {
+    "require_clean_worktree": true,
+    "require_dependency_lock_hash": true,
+    "require_image_digest": true
+  },
+  "synthetic_target": {
+    "allowed_environments": [
+      "demo",
+      "testnet"
+    ],
+    "forbidden_when_live_authorized": true
+  }
+}

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from decimal import Decimal
 from enum import StrEnum
@@ -11,6 +12,7 @@ from .costs import DecimalInput, as_decimal
 
 
 class VenueEnvironment(StrEnum):
+    DEMO = "demo"
     TESTNET = "testnet"
     MAINNET = "mainnet"
 
@@ -136,6 +138,91 @@ class InstrumentPreflightResult:
             "notional": str(self.notional),
             "checks": [check.to_dict() for check in self.checks],
         }
+
+
+def instrument_spec_from_mapping(data: Mapping[str, Any]) -> InstrumentSpec:
+    """Build an instrument spec from the public JSON preflight schema."""
+
+    asset_index = data.get("asset_index")
+    if asset_index is not None and (
+        isinstance(asset_index, bool) or not isinstance(asset_index, int)
+    ):
+        raise TypeError("asset_index must be an integer or null")
+    return InstrumentSpec(
+        venue=_required_text(data, "venue"),
+        environment=VenueEnvironment(str(data["environment"])),
+        instrument_id=_required_text(data, "instrument_id"),
+        minimum_notional=data["minimum_notional"],
+        minimum_quantity=data["minimum_quantity"],
+        quantity_increment=data["quantity_increment"],
+        price_increment=data["price_increment"],
+        price_significant_digits=int(data["price_significant_digits"]),
+        price_max_decimal_places=data.get("price_max_decimal_places"),
+        integer_price_has_no_significant_digit_limit=_optional_bool(
+            data,
+            "integer_price_has_no_significant_digit_limit",
+            False,
+        ),
+        asset_index=asset_index,
+        source=_required_text(data, "source"),
+        is_active=_instrument_active_from_mapping(data),
+    )
+
+
+def instrument_preflight_request_from_mapping(
+    data: Mapping[str, Any],
+) -> InstrumentPreflightRequest:
+    """Build a preflight request from ``{"instrument": ..., "order": ...}`` input."""
+
+    instrument = data["instrument"]
+    order = data["order"]
+    if not isinstance(instrument, Mapping) or not isinstance(order, Mapping):
+        raise TypeError("instrument and order must be JSON objects")
+    return InstrumentPreflightRequest(
+        spec=instrument_spec_from_mapping(instrument),
+        price=order["price"],
+        quantity=order["quantity"],
+        observed_leverage=order.get("observed_leverage"),
+        quote_age_ms=order.get("quote_age_ms"),
+        order_reject_probe=ProbeStatus(order.get("order_reject_probe", "not_run")),
+    )
+
+
+def instrument_preflight_policy_from_mapping(
+    data: Mapping[str, Any] | None,
+) -> InstrumentPreflightPolicy:
+    """Build a policy from the optional public JSON preflight schema."""
+
+    if data is None:
+        data = {}
+    elif not isinstance(data, Mapping):
+        raise TypeError("policy must be a JSON object")
+    return InstrumentPreflightPolicy(
+        maximum_leverage=data.get("maximum_leverage", "2"),
+        minimum_notional_headroom=data.get("minimum_notional_headroom", "3"),
+        maximum_quote_age_ms=data.get("maximum_quote_age_ms"),
+        require_order_reject_probe=_optional_bool(data, "require_order_reject_probe", False),
+    )
+
+
+def _required_text(data: Mapping[str, Any], field_name: str) -> str:
+    value = data[field_name]
+    if not isinstance(value, str) or not value.strip():
+        raise TypeError(f"{field_name} must be a non-blank string")
+    return value
+
+
+def _optional_bool(data: Mapping[str, Any], field_name: str, default: bool) -> bool:
+    value = data.get(field_name, default)
+    if not isinstance(value, bool):
+        raise TypeError(f"{field_name} must be a boolean")
+    return value
+
+
+def _instrument_active_from_mapping(data: Mapping[str, Any]) -> bool:
+    if "active" in data:
+        return _optional_bool(data, "active", True)
+    return _optional_bool(data, "is_active", True)
 
 
 def _aligned(value: Decimal, increment: Decimal) -> bool:

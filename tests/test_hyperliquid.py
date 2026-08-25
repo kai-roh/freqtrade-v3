@@ -4,7 +4,12 @@ from decimal import Decimal
 
 import pytest
 
-from v3.hyperliquid import HyperliquidMetadataError, parse_perp_snapshot
+from v3.hyperliquid import (
+    HyperliquidMetadataError,
+    build_preflight_input_from_snapshot,
+    endpoint_for,
+    parse_perp_snapshot,
+)
 from v3.instruments import VenueEnvironment
 
 
@@ -68,3 +73,51 @@ def test_parse_perp_snapshot_fails_on_missing_symbol_or_misaligned_contexts():
     broken = json.dumps([{"universe": [{"name": "BTC"}]}, []]).encode()
     with pytest.raises(HyperliquidMetadataError, match="equal lengths"):
         parse_perp_snapshot(broken, VenueEnvironment.MAINNET)
+
+
+def test_build_preflight_input_from_snapshot_uses_captured_spec_and_notional_headroom():
+    snapshot = parse_perp_snapshot(_response(), VenueEnvironment.TESTNET).to_dict()
+
+    payload = build_preflight_input_from_snapshot(
+        snapshot,
+        instrument_id="BTC",
+        price="60000",
+        target_notional="30",
+        observed_leverage="2",
+        quote_age_ms=100,
+        order_reject_probe="passed",
+        policy={"maximum_quote_age_ms": 250, "require_order_reject_probe": True},
+        intent={
+            "entry_reason": "funding spread above threshold",
+            "target_position": "perp short",
+            "normal_exit": "spread closes",
+            "risk_exit": "leverage or quote freshness failure",
+            "max_holding_or_review_at": "next settlement",
+            "cost_and_risk_budget": "max legging 5 bps",
+        },
+    )
+
+    assert payload["instrument"]["source"].endswith(snapshot["response_sha256"])
+    assert payload["instrument"]["quantity_increment"] == "0.00001"
+    assert payload["order"]["quantity"] == "0.00050"
+    assert payload["policy"]["require_order_reject_probe"] is True
+
+
+def test_build_preflight_input_from_snapshot_rejects_ambiguous_sizing():
+    snapshot = parse_perp_snapshot(_response(), VenueEnvironment.TESTNET).to_dict()
+
+    with pytest.raises(HyperliquidMetadataError, match="quantity or target_notional"):
+        build_preflight_input_from_snapshot(
+            snapshot,
+            instrument_id="BTC",
+            price="60000",
+            quantity="0.001",
+            target_notional="30",
+            observed_leverage="2",
+            quote_age_ms=100,
+        )
+
+
+def test_hyperliquid_rejects_generic_demo_environment():
+    with pytest.raises(HyperliquidMetadataError, match="no demo environment"):
+        endpoint_for(VenueEnvironment.DEMO)

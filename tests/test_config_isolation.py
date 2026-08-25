@@ -68,6 +68,10 @@ def test_configs_do_not_embed_secrets_or_v2_runtime_identifiers() -> None:
     for path in (ROOT / "configs").glob("*.json"):
         text = path.read_text()
         config = json.loads(text)
+        if not {"exchange", "telegram", "api_server"}.issubset(config):
+            for identifier in V2_IDENTIFIERS:
+                assert identifier not in text
+            continue
 
         assert config["exchange"]["key"] == ""
         assert config["exchange"]["secret"] == ""

@@ -28,8 +28,8 @@ unsorted rows and refuses `individual_trade` as a sample unit.
 ```bash
 python3 scripts/run_block_bootstrap.py \
   --input-csv evidence/v2-counterfactual/daily-net-returns.csv \
-  --registration configs/block-bootstrap.preregister.json \
-  --output evidence/v2-counterfactual/bootstrap-result.json
+  --registration configs/v2-fee-bootstrap-primary.json \
+  --output evidence/v2-counterfactual/bootstrap-primary-5d.json
 ```
 
 The original local `/Users/seop/freqtrade-v2/user_data/tradesv3.sqlite` has no
@@ -43,3 +43,14 @@ restores the original simulated fee from filled-order costs, applies the
 predefined fee-only scenario, and emits every calendar day including zero-close
 days. Its exact assumptions and the separate two-layer exit analysis are
 recorded in `docs/V2_COUNTERFACTUAL.md`.
+
+## Completed Result
+
+The primary five-day interval was
+`[-0.0015174672, -0.0001156719]` in daily-return units. The registered
+1/3/7/10-day sensitivity intervals were also below zero. The sign is robust to
+the registered block lengths.
+
+The full table and narrow interpretation are recorded in
+`docs/V2_BOOTSTRAP_RESULTS.md`. This conclusion does not gate Phase 1 simulated
+execution infrastructure.

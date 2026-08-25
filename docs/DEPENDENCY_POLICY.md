@@ -32,3 +32,12 @@ before replacing the prior image digest.
 The exact Nautilus version remains deliberately unselected in Phase 0; choosing
 it without the execution PoC would create a nominal pin without compatibility
 evidence.
+
+## Phase 1A selection procedure
+
+Phase 1 has selected the Binance Demo adapter path, but not an untested package
+version. The first Phase 1A change must build an ARM64 compatibility matrix for
+the current stable NautilusTrader release and Python 3.12, run the order-free
+Binance Spot/USD-M smoke tests, and then commit the exact resolved version and
+lock hash. No execution entry point may run before that commit is clean and its
+image digest is recorded.
