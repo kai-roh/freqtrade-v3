@@ -13,11 +13,16 @@ for script in scripts/*.sh; do
   bash -n "$script"
 done
 
-python3 -m json.tool configs/research.json >/dev/null
-python3 -m json.tool configs/dry-run.json >/dev/null
+for config in configs/*.json; do
+  python3 -m json.tool "$config" >/dev/null
+done
 
-if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+for example in examples/phase0/*.json; do
+  python3 -m json.tool "$example" >/dev/null
+done
+
+if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
   docker compose config --quiet
 else
-  echo "Docker daemon unavailable; skipped compose runtime validation." >&2
+  echo "Docker Compose unavailable; skipped compose configuration validation." >&2
 fi
