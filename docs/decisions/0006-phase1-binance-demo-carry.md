@@ -35,6 +35,8 @@ position, balance, and commission-rate reconciliation paths.
 ## Constraints
 
 - Demo only; live orders and real capital are not authorized.
+- Mainnet credentials must never be used as an automatic Demo fallback. A read-only
+  cross-check may classify their scope, but cannot promote them to Demo credentials.
 - Spot and USD-M are separate clients and must have separate account/client IDs.
 - Exact commission, leverage, margin mode, symbol filters, funding interval, and
   reject behavior are captured from timestamped venue responses.

@@ -1,10 +1,12 @@
 import copy
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from v3.phase1.policy import load_phase1_policy, policy_from_mapping
 from v3.phase1.risk import CarryRiskContext, evaluate_carry_risk
 
 ROOT = Path(__file__).resolve().parents[1]
+CAPTURED_AT = datetime(2026, 9, 3, 2, 27, 4, 465026, tzinfo=UTC)
 
 
 def _measured_policy():
@@ -61,6 +63,7 @@ def _context(**overrides):
         "environment": "demo",
         "live_orders": False,
         "real_capital": False,
+        "evaluated_at": CAPTURED_AT,
     }
     values.update(overrides)
     return CarryRiskContext(**values)
@@ -73,14 +76,23 @@ def test_measured_safe_context_is_approved():
     assert not decision.reasons
 
 
-def test_unmeasured_fee_and_quote_sla_fail_closed():
+def test_unmeasured_quote_sla_fails_closed_after_fee_measurement():
     policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
 
     decision = evaluate_carry_risk(_context(), policy)
 
     assert not decision.approved
-    assert "credentialed mainnet fee schedule is incomplete" in decision.reasons
     assert "quote-age SLA is unmeasured" in decision.reasons
+
+
+def test_stale_fee_snapshot_fails_closed():
+    decision = evaluate_carry_risk(
+        _context(evaluated_at=CAPTURED_AT + timedelta(hours=25)),
+        _measured_policy(),
+    )
+
+    assert not decision.approved
+    assert "credentialed mainnet fee schedule is stale" in decision.reasons
 
 
 def test_risk_rejects_leverage_budget_duplicate_and_live_boundary():

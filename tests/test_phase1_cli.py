@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_order_free_carry_cli_remains_observational_without_fee_snapshot(tmp_path):
+def test_order_free_carry_cli_uses_fresh_credentialed_fee_policy(tmp_path):
     output = tmp_path / "target.json"
     completed = subprocess.run(
         [
@@ -27,8 +27,8 @@ def test_order_free_carry_cli_remains_observational_without_fee_snapshot(tmp_pat
 
     assert completed.returncode == 0, completed.stderr
     payload = json.loads(output.read_text())
-    assert not payload["actionable"]
-    assert payload["net_expected_bps"] is None
+    assert payload["actionable"]
+    assert payload["net_expected_bps"] == "46.800000"
 
 
 def test_execution_runtime_cli_passes_safe_fixture_and_fails_live_fixture(tmp_path):

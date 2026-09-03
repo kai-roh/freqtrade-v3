@@ -2,7 +2,7 @@
   "architecture": "arm64",
   "built_at": "2026-09-03",
   "image": "freqtrade-v3-phase1-execution:1.231.0",
-  "local_manifest_digest": "sha256:656af9b6f8e7797d8743cf4330af09a19763f4e732c6584e75956630a1252468",
+  "local_manifest_digest": "sha256:b512908098e756d7e4b5b4c172320099bfd2e7bb85c48eebc5aaa9538f4417bd",
   "nautilus_trader_version": "1.231.0",
   "order_submission": "disabled",
   "provenance_attestation": false,

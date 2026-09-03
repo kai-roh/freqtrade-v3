@@ -74,6 +74,26 @@ routing, 13 deterministic fault scenarios, and quote/hedge SLA estimators. It do
 not submit orders. Credentialed Demo connectivity and exchange-observed evidence
 remain explicit integration work.
 
+The read-only Binance probe has confirmed public Demo Spot/USD-M routing and
+classified the protected V2 key as Mainnet-only. It also captured the live account's
+current BTCUSDT fee schedule without recording keys, balances, or account IDs. A
+separate Demo API key is still required before authenticated Demo execution testing.
+
+Run the GET-only scope check on the credential-authorized host:
+
+```bash
+uv run --frozen python scripts/probe_phase1_binance.py \
+  --credentials-env-file /protected/path/.env \
+  --output /tmp/binance-phase1.json \
+  --fee-output /tmp/binance-phase1-fees.json \
+  --location oracle-tokyo \
+  --classify-mainnet-credentials-on-demo
+```
+
+Exit code `3` means the evidence was written but dedicated Demo credentials were not
+validated. The probe source contains no order, cancel, leverage-change, or transfer
+endpoint.
+
 See the [Milestone 1 report](research_results/milestone-1/REPORT.md), [Decision 0001](docs/decisions/0001-clean-rebuild.md) for the architecture boundary, and [Decision 0002](docs/decisions/0002-stop-before-classifier.md) for the research stop decision.
 
 The verified host migration and fail-closed runtime state are recorded in [Server state](docs/SERVER_STATE.md) and [Decision 0003](docs/decisions/0003-reuse-v2-infrastructure.md).

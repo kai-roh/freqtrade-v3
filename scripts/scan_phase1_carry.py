@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 
@@ -37,6 +38,8 @@ def _fee_schedule(path: Path | None) -> FeeSchedule | None:
         perp_taker_bps=Decimal(data["perp_taker_bps"]),
         source=data["source"],
         include_exit_cost=data.get("include_exit_cost") is True,
+        captured_at=datetime.fromisoformat(data["captured_at"]),
+        maximum_age_hours=int(data["maximum_age_hours"]),
     )
 
 
@@ -45,6 +48,7 @@ def main() -> int:
     try:
         policy = load_phase1_policy(args.policy)
         data = json.loads(args.observation.read_text())
+        data["observed_at"] = datetime.fromisoformat(data["observed_at"])
         observation = CarryObservation(**data)
         target = scan_carry(observation, policy, fee_schedule=_fee_schedule(args.fee_snapshot))
         args.output.parent.mkdir(parents=True, exist_ok=True)

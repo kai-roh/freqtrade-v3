@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -56,6 +57,8 @@ class FeeSchedule:
     perp_taker_bps: Decimal | None
     source: str
     include_exit_cost: bool
+    captured_at: datetime | None = None
+    maximum_age_hours: int | None = None
 
     def __post_init__(self) -> None:
         for name in (
@@ -69,6 +72,12 @@ class FeeSchedule:
                 raise ValueError(f"{name} must be non-negative")
         if not self.source.strip():
             raise ValueError("fee source is required")
+        if self.captured_at is not None:
+            if self.captured_at.tzinfo is None or self.captured_at.utcoffset() is None:
+                raise ValueError("fee captured_at must include a timezone")
+            object.__setattr__(self, "captured_at", self.captured_at.astimezone(UTC))
+        if self.maximum_age_hours is not None and self.maximum_age_hours <= 0:
+            raise ValueError("fee maximum_age_hours must be positive")
 
     @property
     def complete(self) -> bool:
@@ -94,6 +103,14 @@ class FeeSchedule:
         if entry is None:
             return None
         return entry * (2 if self.include_exit_cost else 1)
+
+    def is_fresh(self, at: datetime) -> bool:
+        if at.tzinfo is None or at.utcoffset() is None:
+            raise ValueError("fee freshness timestamp must include a timezone")
+        if not self.complete or self.captured_at is None or self.maximum_age_hours is None:
+            return False
+        age = at.astimezone(UTC) - self.captured_at
+        return timedelta(0) <= age <= timedelta(hours=self.maximum_age_hours)
 
 
 @dataclass(frozen=True)
@@ -257,6 +274,53 @@ def policy_from_mapping(data: Mapping[str, Any]) -> Phase1Policy:
         raise ValueError("unmeasured fees must keep the scanner observation-only")
     if costs.get("include_exit_cost") is not True:
         raise ValueError("successful carry economics must include exit cost")
+    fee_values = tuple(
+        costs.get(key)
+        for key in ("spot_maker_bps", "spot_taker_bps", "perp_maker_bps", "perp_taker_bps")
+    )
+    if any(value is not None for value in fee_values) and not all(
+        value is not None for value in fee_values
+    ):
+        raise ValueError("credentialed fee schedule must be entirely measured or entirely null")
+    fee_captured_at = costs.get("snapshot_captured_at")
+    fee_snapshot_evidence = costs.get("snapshot_evidence")
+    fee_maximum_age_hours = costs.get("snapshot_maximum_age_hours")
+    if all(value is not None for value in fee_values):
+        if costs.get("bnb_discount_applied") is not False:
+            raise ValueError(
+                "Phase 1 fee schedule must conservatively exclude optional BNB discount"
+            )
+        if not isinstance(fee_captured_at, str) or not fee_captured_at.strip():
+            raise ValueError("measured fee schedule requires snapshot_captured_at")
+        if (
+            not isinstance(fee_snapshot_evidence, str)
+            or not fee_snapshot_evidence.startswith("evidence/phase1/")
+            or not fee_snapshot_evidence.endswith(".json")
+        ):
+            raise ValueError("measured fee schedule requires a Phase 1 evidence JSON path")
+        if (
+            isinstance(fee_maximum_age_hours, bool)
+            or not isinstance(fee_maximum_age_hours, int)
+            or fee_maximum_age_hours <= 0
+        ):
+            raise ValueError("measured fee schedule requires positive snapshot_maximum_age_hours")
+        entry_cost = _decimal(costs, "normal_entry_cost_bps")
+        round_trip_cost = _decimal(costs, "normal_round_trip_cost_bps")
+        expected_entry = _decimal(costs, "spot_maker_bps") + _decimal(costs, "perp_maker_bps")
+        if entry_cost != expected_entry or round_trip_cost != expected_entry * 2:
+            raise ValueError("declared normal costs differ from measured maker fees")
+    elif any(
+        costs.get(key) is not None
+        for key in (
+            "bnb_discount_applied",
+            "normal_entry_cost_bps",
+            "normal_round_trip_cost_bps",
+            "snapshot_captured_at",
+            "snapshot_evidence",
+            "snapshot_maximum_age_hours",
+        )
+    ):
+        raise ValueError("unmeasured fee schedule metadata must remain null")
     if scanner.get("replace_prior_after_phase") != "3":
         raise ValueError("Demo abort measurements cannot replace the prior before Phase 3")
 
@@ -304,6 +368,14 @@ def policy_from_mapping(data: Mapping[str, Any]) -> Phase1Policy:
             perp_taker_bps=_optional_decimal(costs, "perp_taker_bps"),
             source=str(costs.get("fee_source", "")),
             include_exit_cost=costs.get("include_exit_cost") is True,
+            captured_at=(
+                datetime.fromisoformat(fee_captured_at)
+                if isinstance(fee_captured_at, str)
+                else None
+            ),
+            maximum_age_hours=(
+                fee_maximum_age_hours if isinstance(fee_maximum_age_hours, int) else None
+            ),
         ),
         raw=data,
     )

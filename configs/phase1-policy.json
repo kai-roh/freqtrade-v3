@@ -18,16 +18,19 @@
     "total": "1000"
   },
   "cost_model": {
-    "bnb_discount_applied": null,
+    "bnb_discount_applied": false,
     "demo_fee_treatment": "ignore",
     "fee_source": "credentialed_mainnet_account_query",
     "include_exit_cost": true,
-    "normal_entry_cost_bps": null,
-    "normal_round_trip_cost_bps": null,
-    "perp_maker_bps": null,
-    "perp_taker_bps": null,
-    "spot_maker_bps": null,
-    "spot_taker_bps": null,
+    "normal_entry_cost_bps": "12",
+    "normal_round_trip_cost_bps": "24",
+    "perp_maker_bps": "2",
+    "perp_taker_bps": "5",
+    "snapshot_captured_at": "2026-09-03T02:27:04.465026+00:00",
+    "snapshot_evidence": "evidence/phase1/binance-mainnet-fees-2026-09-03.json",
+    "snapshot_maximum_age_hours": 24,
+    "spot_maker_bps": "10",
+    "spot_taker_bps": "10",
     "unmeasured_behavior": "observe_only"
   },
   "deferred_rules": {

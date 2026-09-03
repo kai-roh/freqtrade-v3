@@ -59,8 +59,9 @@ E[net bps]
 
 `successful round-trip costs`에는 spot/perp 진입과 청산, 예상 impact, funding
 반전, legging, rebalance, requote가 포함된다. Demo 수수료는 무시하고 credentialed
-mainnet account query를 사용한다. 현재 Binance Spot 계정 tier와 BNB 할인 여부가
-확인되지 않았으므로 정책 수수료는 `null`이며 스캐너는 관측 전용이다. 따라서
+mainnet account query를 사용한다. 2026-09-03 조회로 Spot 10/10 bps와 USD-M
+2/5 bps를 확인했고, BNB 할인은 보수적으로 적용하지 않았다. snapshot은 24시간 뒤
+만료되며 재조회에 실패하면 스캐너는 다시 관측 전용으로 돌아간다. 따라서
 “p_abort 50%에서도 항상 양수”나 “월 2.70 USDT 확정”은 Phase 1의 결론이 아니다.
 
 Phase 1의 `p_abort=0.20`은 정책 prior다. Demo에서 측정한 값은 실제 queue 경쟁과
@@ -413,7 +414,7 @@ transition 기록을 assertion한다.
 - 13개 fault scenario 전부 통과
 - Demo hedge-latency 하한과 quote-age SLA의 표본 수와 percentile 기록
 - 수익률을 완료 기준으로 사용하지 않음
-- mainnet payload와 실제 fee tier는 미검증임을 명시
+- mainnet fee snapshot은 24시간 이내이며 출처 evidence와 일치
 
 Phase 1 완료는 Phase 3 실자본 사용 권한이 아니다.
 
@@ -435,14 +436,25 @@ Phase 1 완료는 Phase 3 실자본 사용 권한이 아니다.
 
 ## 12. 아직 자격증명이 필요한 확인
 
-- Binance Demo API key와 Spot/USDT-M 권한
-- BTCUSDT 실제 Demo instrument filters와 주문 reject code
-- credentialed commission rate query 결과
-- 현재 계정의 leverage/margin mode
+- Binance 전용 Demo API key와 Spot/USDT-M 권한
+- Demo 주문 reject code
+- Demo 계정의 leverage/margin mode
 - post-only reject/requote와 hedge latency 실측
 
 이 항목은 구현 차단이 아니라 해당 integration test의 실행 조건이다. 자격증명 없이도
 1A의 image/manifest, 1B의 원장/리스크, 1D의 fixture state machine을 먼저 구현한다.
+
+2026-09-03 읽기 전용 확인으로 다음 항목은 해소됐다.
+
+- Demo 공개 Spot/USD-M ping과 BTCUSDT instrument filter
+- Demo Spot 최소명목 5 USDT, USD-M 최소명목 50 USDT
+- Mainnet 계정 수수료: Spot 10/10 bps, USD-M 2/5 bps
+- V2 키의 환경 범위: Mainnet 유효, Demo 양쪽 `-2015`
+- V2 Mainnet USD-M BTCUSDT 설정: 격리마진 4x
+
+마지막 설정은 Phase 1 정책의 2x 상한을 위반하지만 Mainnet 계정의 관측값이며,
+이번 작업에서 변경하지 않았다. 별도 Demo 키가 준비되기 전에는 Nautilus credentialed
+client 시작, 주문 테스트, internal transfer 테스트를 실행하지 않는다.
 
 ## 13. 공식 근거
 

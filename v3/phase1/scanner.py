@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from v3.costs import DecimalInput, as_decimal
@@ -22,6 +23,7 @@ class CarryObservation:
     funding_interval_minutes: int
     holding_period_hours: int
     instrument_snapshot_id: str
+    observed_at: datetime
     other_success_cost_bps: DecimalInput = Decimal("0")
 
     def __post_init__(self) -> None:
@@ -29,6 +31,9 @@ class CarryObservation:
             object.__setattr__(self, name, as_decimal(getattr(self, name), field_name=name))
         if self.venue != "binance":
             raise ValueError("Phase 1 carry venue must be binance")
+        if self.observed_at.tzinfo is None or self.observed_at.utcoffset() is None:
+            raise ValueError("observed_at must include a timezone")
+        object.__setattr__(self, "observed_at", self.observed_at.astimezone(UTC))
         if not self.instrument_snapshot_id.strip():
             raise ValueError("instrument_snapshot_id is required")
         if self.requested_notional <= 0:
@@ -127,6 +132,16 @@ def scan_carry(
             "observe_only: credentialed mainnet fee schedule is incomplete",
             cost_ledger_id,
         )
+    if not schedule.is_fresh(observation.observed_at):
+        return _zero_target(
+            observation,
+            policy,
+            gross_bps,
+            round_trip_bps,
+            None,
+            "observe_only: credentialed mainnet fee schedule is stale or undated",
+            cost_ledger_id,
+        )
 
     success_cost_bps = round_trip_bps + observation.other_success_cost_bps
     probability = policy.assumed_abort_probability
@@ -204,6 +219,10 @@ def _cost_ledger_id(
         "fee_source": schedule.source,
         "holding_period_hours": observation.holding_period_hours,
         "include_exit_cost": schedule.include_exit_cost,
+        "fee_snapshot_captured_at": (
+            schedule.captured_at.isoformat() if schedule.captured_at is not None else None
+        ),
+        "fee_snapshot_maximum_age_hours": schedule.maximum_age_hours,
         "instrument_snapshot_id": observation.instrument_snapshot_id,
         "other_success_cost_bps": str(observation.other_success_cost_bps),
         "perp_maker_bps": (

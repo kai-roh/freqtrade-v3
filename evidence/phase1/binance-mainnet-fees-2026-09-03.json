@@ -1,0 +1,17 @@
+{
+  "bnb_discount_applied": false,
+  "bnb_discount_available": true,
+  "bnb_discount_factor": "0.75000000",
+  "captured_at": "2026-09-03T02:27:04.465026+00:00",
+  "include_exit_cost": true,
+  "maximum_age_hours": 24,
+  "normal_entry_cost_bps": "12.00000000",
+  "normal_round_trip_cost_bps": "24.00000000",
+  "perp_maker_bps": "2.000000",
+  "perp_taker_bps": "5.000000",
+  "schema_version": 1,
+  "source": "credentialed-mainnet-account-query-from-oracle-tokyo",
+  "spot_maker_bps": "10.00000000",
+  "spot_taker_bps": "10.00000000",
+  "symbol": "BTCUSDT"
+}

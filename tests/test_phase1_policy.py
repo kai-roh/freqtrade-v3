@@ -65,25 +65,40 @@ def test_phase1_policy_allocations_and_derived_abort_budget_are_exact():
     assert policy.maximum_carry_leg_notional == Decimal("300.0")
     assert policy.monthly_abort_budget == Decimal("2.25000")
     assert policy.required_intent_fields == EXPECTED_INTENT_FIELDS
-    assert policy.fee_schedule.complete is False
-    assert policy.fee_schedule.maker_round_trip_bps is None
+    assert policy.fee_schedule.complete is True
+    assert policy.fee_schedule.maker_round_trip_bps == Decimal("24")
 
 
-def test_missing_fee_schedule_keeps_scanner_observational_not_optimistic():
+def test_measured_fee_schedule_is_complete_and_conservative():
     policy = _policy()
 
     assert policy["cost_model"]["unmeasured_behavior"] == "observe_only"
-    assert all(
-        policy["cost_model"][key] is None
-        for key in (
-            "spot_maker_bps",
-            "spot_taker_bps",
-            "perp_maker_bps",
-            "perp_taker_bps",
-            "normal_entry_cost_bps",
-            "normal_round_trip_cost_bps",
-        )
-    )
+    assert policy["cost_model"]["bnb_discount_applied"] is False
+    assert policy["cost_model"]["normal_entry_cost_bps"] == "12"
+    assert policy["cost_model"]["normal_round_trip_cost_bps"] == "24"
+    assert policy["cost_model"]["snapshot_maximum_age_hours"] == 24
+
+
+def test_fee_schedule_can_only_be_cleared_as_one_fail_closed_unit():
+    policy = _policy()
+    for key in (
+        "spot_maker_bps",
+        "spot_taker_bps",
+        "perp_maker_bps",
+        "perp_taker_bps",
+        "normal_entry_cost_bps",
+        "normal_round_trip_cost_bps",
+        "bnb_discount_applied",
+        "snapshot_captured_at",
+        "snapshot_evidence",
+        "snapshot_maximum_age_hours",
+    ):
+        policy["cost_model"][key] = None
+
+    parsed = policy_from_mapping(policy)
+
+    assert not parsed.fee_schedule.complete
+    assert parsed.fee_schedule.maker_round_trip_bps is None
 
 
 @pytest.mark.parametrize(
@@ -132,3 +147,8 @@ def test_policy_parser_rejects_unsafe_types_order_contract_or_missing_exit_cost(
     missing_exit_cost["cost_model"]["include_exit_cost"] = False
     with pytest.raises(ValueError, match="include exit cost"):
         policy_from_mapping(missing_exit_cost)
+
+    inconsistent_cost = copy.deepcopy(policy)
+    inconsistent_cost["cost_model"]["normal_round_trip_cost_bps"] = "12"
+    with pytest.raises(ValueError, match="declared normal costs"):
+        policy_from_mapping(inconsistent_cost)

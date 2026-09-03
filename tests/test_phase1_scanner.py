@@ -1,3 +1,4 @@
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 
@@ -7,6 +8,7 @@ from v3.phase1.policy import FeeSchedule, load_phase1_policy
 from v3.phase1.scanner import CarryObservation, scan_carry
 
 ROOT = Path(__file__).resolve().parents[1]
+CAPTURED_AT = datetime(2026, 9, 3, 2, 27, 4, 465026, tzinfo=UTC)
 
 
 def _observation(rate="0.0001", hours=720, notional="300", venue="binance"):
@@ -19,6 +21,7 @@ def _observation(rate="0.0001", hours=720, notional="300", venue="binance"):
         funding_interval_minutes=480,
         holding_period_hours=hours,
         instrument_snapshot_id="snapshot-1",
+        observed_at=CAPTURED_AT,
     )
 
 
@@ -30,13 +33,16 @@ def _fees():
         perp_taker_bps=Decimal("5"),
         source="credentialed-mainnet-fixture",
         include_exit_cost=True,
+        captured_at=CAPTURED_AT,
+        maximum_age_hours=24,
     )
 
 
-def test_scanner_is_observation_only_until_mainnet_fees_are_known():
+def test_scanner_is_observation_only_when_mainnet_fees_are_unknown():
     policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
+    missing = FeeSchedule(None, None, None, None, "missing-fixture", True)
 
-    target = scan_carry(_observation(), policy)
+    target = scan_carry(_observation(), policy, fee_schedule=missing)
 
     assert not target.actionable
     assert target.net_expected_bps is None
@@ -67,6 +73,8 @@ def test_cost_ledger_identity_changes_with_exit_or_emergency_fee_assumptions():
             perp_taker_bps=Decimal("5"),
             source="credentialed-mainnet-fixture",
             include_exit_cost=False,
+            captured_at=CAPTURED_AT,
+            maximum_age_hours=24,
         ),
     )
     higher_taker = scan_carry(
@@ -79,6 +87,8 @@ def test_cost_ledger_identity_changes_with_exit_or_emergency_fee_assumptions():
             perp_taker_bps=Decimal("5"),
             source="credentialed-mainnet-fixture",
             include_exit_cost=True,
+            captured_at=CAPTURED_AT,
+            maximum_age_hours=24,
         ),
     )
 
@@ -98,6 +108,18 @@ def test_low_funding_or_negative_funding_yields_zero_target():
     assert "not positive" in negative.decision_reason
 
 
+def test_stale_fee_snapshot_keeps_scanner_observational():
+    policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
+    observation = _observation()
+    object.__setattr__(observation, "observed_at", CAPTURED_AT + timedelta(hours=25))
+
+    target = scan_carry(observation, policy, fee_schedule=_fees())
+
+    assert not target.actionable
+    assert target.net_expected_bps is None
+    assert "stale" in target.decision_reason
+
+
 def test_scanner_rejects_unapproved_instrument_or_holding_period():
     policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
     wrong = CarryObservation(
@@ -109,6 +131,7 @@ def test_scanner_rejects_unapproved_instrument_or_holding_period():
         funding_interval_minutes=480,
         holding_period_hours=720,
         instrument_snapshot_id="snapshot-1",
+        observed_at=CAPTURED_AT,
     )
     with pytest.raises(ValueError, match="approved"):
         scan_carry(wrong, policy, fee_schedule=_fees())

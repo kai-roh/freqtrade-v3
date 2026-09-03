@@ -1,5 +1,7 @@
 {
+  "captured_at": "replace-with-ISO8601-timestamp",
   "include_exit_cost": true,
+  "maximum_age_hours": 24,
   "perp_maker_bps": "replace-from-credentialed-query",
   "perp_taker_bps": "replace-from-credentialed-query",
   "source": "credentialed-mainnet-account-query-at-ISO8601",

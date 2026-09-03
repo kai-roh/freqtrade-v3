@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
@@ -30,6 +31,7 @@ class CarryRiskContext:
     environment: str
     live_orders: bool
     real_capital: bool
+    evaluated_at: datetime
 
     def __post_init__(self) -> None:
         for name in (
@@ -46,6 +48,9 @@ class CarryRiskContext:
             raise ValueError("quote_age_ms must be non-negative")
         if self.abort_attempts_this_month < 0 or self.consecutive_aborts < 0:
             raise ValueError("abort counts must be non-negative")
+        if self.evaluated_at.tzinfo is None or self.evaluated_at.utcoffset() is None:
+            raise ValueError("evaluated_at must include a timezone")
+        object.__setattr__(self, "evaluated_at", self.evaluated_at.astimezone(UTC))
         for name in (
             "unexplained_residual_usdt",
             "residual_unclassified_hours",
@@ -62,6 +67,7 @@ class RiskDecision:
     reasons: tuple[str, ...]
     observed_leverage: dict[str, str]
     quote_age_ms: int | None
+    evaluated_at: datetime
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -70,6 +76,7 @@ class RiskDecision:
             "reasons": list(self.reasons),
             "observed_leverage": self.observed_leverage,
             "quote_age_ms": self.quote_age_ms,
+            "evaluated_at": self.evaluated_at.isoformat(),
         }
 
 
@@ -89,6 +96,8 @@ def evaluate_carry_risk(context: CarryRiskContext, policy: Phase1Policy) -> Risk
         reasons.append("cost ledger is incomplete")
     if not policy.fee_schedule.complete:
         reasons.append("credentialed mainnet fee schedule is incomplete")
+    elif not policy.fee_schedule.is_fresh(context.evaluated_at):
+        reasons.append("credentialed mainnet fee schedule is stale")
     if context.leg_notional > policy.maximum_carry_leg_notional:
         reasons.append("leg notional exceeds the carry sleeve collateral boundary")
 
@@ -156,6 +165,7 @@ def evaluate_carry_risk(context: CarryRiskContext, policy: Phase1Policy) -> Risk
         reasons=tuple(reasons),
         observed_leverage=observed_leverage,
         quote_age_ms=context.quote_age_ms,
+        evaluated_at=context.evaluated_at,
     )
 
 
