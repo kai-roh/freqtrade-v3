@@ -8,6 +8,7 @@ import pytest
 
 from v3.phase1.binance_probe import (
     SPOT_DEMO,
+    USDM_DEMO,
     BinanceCredentials,
     BinanceReadOnlyClient,
     fee_snapshot_from_probe,
@@ -133,6 +134,7 @@ def test_probe_records_fees_and_configuration_without_balances_or_secrets():
 
     assert result["conclusion"] == {
         "dedicated_demo_credentials_valid": True,
+        "dedicated_demo_credentials_valid_on_mainnet": False,
         "demo_authenticated_integration_ready": True,
         "mainnet_credentials_valid": True,
         "orders_remain_disabled": True,
@@ -183,6 +185,38 @@ def test_mainnet_cross_check_can_never_promote_demo_credentials():
 
     assert result["demo"]["credential_source"] == "mainnet_cross_check"
     assert result["demo"]["authentication"]["spot_account"]["ok"]
+    assert not result["conclusion"]["dedicated_demo_credentials_valid"]
+    assert not result["conclusion"]["demo_authenticated_integration_ready"]
+
+
+def test_demo_named_mainnet_key_is_detected_without_promotion():
+    def environment_opener(request, **kwargs):
+        url = request.full_url
+        is_demo_account = url.startswith((SPOT_DEMO, USDM_DEMO)) and "/account" in url
+        if is_demo_account:
+            raise HTTPError(
+                url,
+                401,
+                "redacted",
+                {},
+                io.BytesIO(b'{"code":-2015,"msg":"Invalid API-key"}'),
+            )
+        return _fixture_opener(request, **kwargs)
+
+    result = probe_phase1_binance(
+        mainnet_credentials=None,
+        demo_credentials=BinanceCredentials("misissued-live-key", "live-secret"),
+        classify_mainnet_credentials_on_demo=False,
+        classify_demo_credentials_on_mainnet=True,
+        location="fixture",
+        captured_at=datetime(2026, 9, 3, tzinfo=UTC),
+        opener=environment_opener,
+    )
+
+    assert result["demo"]["credential_environment"] == "mainnet"
+    assert result["demo"]["mainnet_cross_check"]["spot_account"]["ok"]
+    assert result["demo"]["mainnet_cross_check"]["usdm_account"]["ok"]
+    assert result["conclusion"]["dedicated_demo_credentials_valid_on_mainnet"]
     assert not result["conclusion"]["dedicated_demo_credentials_valid"]
     assert not result["conclusion"]["demo_authenticated_integration_ready"]
 

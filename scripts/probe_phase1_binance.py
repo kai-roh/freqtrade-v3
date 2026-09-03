@@ -31,6 +31,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Explicitly test the live key against Demo read-only account endpoints.",
     )
+    parser.add_argument(
+        "--classify-demo-credentials-on-mainnet",
+        action="store_true",
+        help="Detect a Mainnet key mistakenly stored in the Demo credential fields.",
+    )
     parser.add_argument("--ca-file", type=Path)
     return parser.parse_args()
 
@@ -51,6 +56,7 @@ def main() -> int:
             mainnet_credentials=mainnet,
             demo_credentials=demo,
             classify_mainnet_credentials_on_demo=args.classify_mainnet_credentials_on_demo,
+            classify_demo_credentials_on_mainnet=(args.classify_demo_credentials_on_mainnet),
             location=args.location,
             ca_file=args.ca_file or _default_ca_file(),
         )
@@ -64,9 +70,11 @@ def main() -> int:
         print(f"Binance probe failed safely: {exc}", file=sys.stderr)
         return 2
     conclusion = result["conclusion"]
+    credential_environment = result["demo"]["credential_environment"]
     print(
         "binance_probe="
         f"{args.output} demo_ready={conclusion['demo_authenticated_integration_ready']} "
+        f"demo_credential_environment={credential_environment} "
         f"mainnet_credentials_valid={conclusion['mainnet_credentials_valid']} "
         "orders_disabled=true"
     )

@@ -16,6 +16,7 @@ Demo 계정 인증에는 사용할 수 없었다. 주문 제출은 계속 비활
 - `uv.lock`과 lock hash 검증
 - Binance Spot/USD-M의 분리된 Demo client 구성
 - GET 전용 allowlist와 비밀·잔고를 기록하지 않는 credential probe
+- Demo 변수에 잘못 저장된 Mainnet 키를 자동 탐지하는 환경 경계 검사
 - Demo Spot/USD-M 공개 ping, BTCUSDT 필터, 펀딩 응답
 - Oracle Tokyo에서 credentialed Mainnet Spot/USD-M 수수료와 선물 계정 설정 조회
 - 14개 테이블 PostgreSQL 순방향·역방향 migration
@@ -111,3 +112,13 @@ registry에 push된 digest를 별도로 기록해야 한다.
 
 연결 증거는 `evidence/phase1/binance-connectivity-oracle-tokyo.json`, 정규화된 비용
 snapshot은 `evidence/phase1/binance-mainnet-fees-2026-09-03.json`에 있다.
+
+## 2026-09-03 신규 키 재검증
+
+신규 발급 키를 `BINANCE_DEMO_*` 변수로 Oracle Tokyo에서 검사했으나 Demo Spot과
+USD-M account endpoint는 모두 HTTP 401, `-2015`를 반환했다. 같은 키를 Mainnet의
+읽기 전용 account endpoint에 대조하자 양쪽 모두 HTTP 200이었다. 따라서 이 키는
+Demo 키가 아니라 Mainnet에서 발급된 별도 실계정 키다. Spot account는 거래 가능
+상태도 반환했으므로 Demo 실행 자격증명으로 사용하지 않으며 주문 경로는 계속
+비활성화한다. Binance Demo Trading 내부의 API Management에서 발급한 키로 교체하기
+전까지 credentialed Demo 시험은 보류한다.

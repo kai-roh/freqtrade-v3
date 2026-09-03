@@ -87,12 +87,14 @@ uv run --frozen python scripts/probe_phase1_binance.py \
   --output /tmp/binance-phase1.json \
   --fee-output /tmp/binance-phase1-fees.json \
   --location oracle-tokyo \
-  --classify-mainnet-credentials-on-demo
+  --classify-mainnet-credentials-on-demo \
+  --classify-demo-credentials-on-mainnet
 ```
 
 Exit code `3` means the evidence was written but dedicated Demo credentials were not
 validated. The probe source contains no order, cancel, leverage-change, or transfer
-endpoint.
+endpoint. The second classification flag also detects a live key accidentally stored
+under the Demo variable names; such a key can never promote Demo readiness.
 
 See the [Milestone 1 report](research_results/milestone-1/REPORT.md), [Decision 0001](docs/decisions/0001-clean-rebuild.md) for the architecture boundary, and [Decision 0002](docs/decisions/0002-stop-before-classifier.md) for the research stop decision.
 

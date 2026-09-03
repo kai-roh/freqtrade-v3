@@ -170,6 +170,7 @@ def probe_phase1_binance(
     demo_credentials: BinanceCredentials | None,
     classify_mainnet_credentials_on_demo: bool,
     location: str,
+    classify_demo_credentials_on_mainnet: bool = False,
     ca_file: Path | None = None,
     captured_at: datetime | None = None,
     opener: OpenUrl = urlopen,
@@ -227,6 +228,33 @@ def probe_phase1_binance(
             ).status_dict(),
         }
 
+    demo_mainnet_cross_check = _not_run_status("demo_mainnet_cross_check_disabled")
+    if demo_credentials is not None and classify_demo_credentials_on_mainnet:
+        demo_live_client = BinanceReadOnlyClient(
+            demo_credentials,
+            ca_file=ca_file,
+            opener=opener,
+        )
+        demo_mainnet_cross_check = {
+            "spot_account": _sanitize_spot_account(
+                demo_live_client.get(
+                    SPOT_LIVE,
+                    "/api/v3/account",
+                    signed=True,
+                    params={"omitZeroBalances": "true"},
+                    server_time_path="/api/v3/time",
+                )
+            ),
+            "usdm_account": _sanitize_usdm_account(
+                demo_live_client.get(
+                    USDM_LIVE,
+                    "/fapi/v3/account",
+                    signed=True,
+                    server_time_path="/fapi/v1/time",
+                )
+            ),
+        }
+
     mainnet = _not_run_status("mainnet_credentials_absent")
     if mainnet_credentials is not None:
         live_client = BinanceReadOnlyClient(
@@ -279,6 +307,15 @@ def probe_phase1_binance(
     dedicated_demo_valid = demo_credential_source == "dedicated_demo" and _both_accounts_ok(
         demo_auth
     )
+    demo_credentials_valid_on_mainnet = _mainnet_credentials_valid(demo_mainnet_cross_check)
+    if dedicated_demo_valid:
+        demo_credential_environment = "demo"
+    elif demo_credentials_valid_on_mainnet:
+        demo_credential_environment = "mainnet"
+    elif demo_credentials is None:
+        demo_credential_environment = "absent"
+    else:
+        demo_credential_environment = "invalid_or_restricted"
     location = location.strip() or "unknown"
     return {
         "schema_version": 1,
@@ -297,7 +334,9 @@ def probe_phase1_binance(
                 "usdm": usdm_public.status_dict(),
             },
             "credential_source": demo_credential_source,
+            "credential_environment": demo_credential_environment,
             "authentication": demo_auth,
+            "mainnet_cross_check": demo_mainnet_cross_check,
             "spot_instrument": _sanitize_instrument(spot_exchange, product="spot"),
             "usdm_instrument": _sanitize_instrument(usdm_exchange, product="usdm"),
             "funding": _sanitize_funding(funding),
@@ -305,6 +344,7 @@ def probe_phase1_binance(
         "mainnet_read_only": mainnet,
         "conclusion": {
             "dedicated_demo_credentials_valid": dedicated_demo_valid,
+            "dedicated_demo_credentials_valid_on_mainnet": (demo_credentials_valid_on_mainnet),
             "demo_authenticated_integration_ready": dedicated_demo_valid,
             "mainnet_credentials_valid": _mainnet_credentials_valid(mainnet),
             "orders_remain_disabled": True,
