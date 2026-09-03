@@ -1,0 +1,11 @@
+{
+  "funding_interval_minutes": 480,
+  "funding_rate": "0.0001",
+  "holding_period_hours": 720,
+  "instrument_snapshot_id": "replace-with-timestamped-snapshot-id",
+  "other_success_cost_bps": "0",
+  "perp_instrument_id": "BTCUSDT-PERP.BINANCE",
+  "requested_notional": "300",
+  "spot_instrument_id": "BTCUSDT.BINANCE",
+  "venue": "binance"
+}

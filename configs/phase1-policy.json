@@ -8,6 +8,36 @@
     "gates_v2_conclusion_wording": true,
     "gates_v2_directional_revival": true
   },
+  "capital": {
+    "basket_sleeve_fraction": "0.20",
+    "carry_sleeve_fraction": "0.45",
+    "legging_hedge_fraction": "0.10",
+    "margin_buffer_fraction": "0.15",
+    "operating_fraction": "0.05",
+    "reserve_fraction": "0.05",
+    "total": "1000"
+  },
+  "cost_model": {
+    "bnb_discount_applied": null,
+    "demo_fee_treatment": "ignore",
+    "fee_source": "credentialed_mainnet_account_query",
+    "include_exit_cost": true,
+    "normal_entry_cost_bps": null,
+    "normal_round_trip_cost_bps": null,
+    "perp_maker_bps": null,
+    "perp_taker_bps": null,
+    "spot_maker_bps": null,
+    "spot_taker_bps": null,
+    "unmeasured_behavior": "observe_only"
+  },
+  "deferred_rules": {
+    "single_venue_capital_cap": {
+      "enforced_from_phase": "3",
+      "reason": "single-venue by design, real_capital false",
+      "suspended_in_phase1": true,
+      "value": "0.70"
+    }
+  },
   "execution": {
     "engine": "nautilus_trader",
     "environment": "demo",
@@ -17,19 +47,68 @@
       "usd_m"
     ]
   },
+  "hard_rule_governance": {
+    "evidence_required": true,
+    "estimated_block_fraction_required": true,
+    "policy_rules_review_after_phase": "1E"
+  },
   "instruments": {
     "perp": "BTCUSDT-PERP.BINANCE",
     "spot": "BTCUSDT.BINANCE"
   },
+  "intent": {
+    "required_fields": [
+      "entry_reason",
+      "target_position",
+      "normal_exit",
+      "risk_exit",
+      "max_holding_or_review_at",
+      "cost_and_risk_budget"
+    ]
+  },
+  "order_types": {
+    "emergency_hedge": "IOC_LIMIT",
+    "perp_post_only": "GTX",
+    "spot_post_only": "LIMIT_MAKER"
+  },
+  "quote_observations": {
+    "enabled_by_default": false,
+    "measurement_phase": "1E",
+    "sampling_interval_seconds": 10
+  },
+  "reconciliation": {
+    "maximum_unexplained_residual_usdt": null,
+    "maximum_unclassified_hours": null,
+    "unmeasured_behavior": "deny"
+  },
   "risk": {
-    "daily_abort_budget_fraction_of_carry_sleeve": "0.005",
+    "abort_budget_scope": "per_month",
+    "consecutive_abort_halt_threshold": 2,
     "daily_loss_fraction_of_total_capital": "0.02",
+    "maximum_abort_attempts_per_month": 3,
     "maximum_abort_cost_bps": "30",
     "maximum_delta_drift_fraction": "0.05",
     "maximum_leverage": "2",
-    "minimum_notional_headroom": "3"
+    "minimum_notional_headroom": "3",
+    "monthly_abort_budget_fraction_of_carry_sleeve": "0.005"
   },
-  "schema_version": 1,
+  "scanner": {
+    "abort_probability_source": "policy_prior",
+    "assumed_abort_probability": "0.20",
+    "maximum_holding_hours": 720,
+    "minimum_expected_net_bps": "20",
+    "minimum_holding_hours": 48,
+    "phase1e_measurement_use": "demo_lower_bound_only",
+    "replace_prior_after_phase": "3"
+  },
+  "schema_version": 2,
+  "sla": {
+    "hedge_latency_demo_median_ms": null,
+    "hedge_latency_demo_p99_ms": null,
+    "maximum_quote_age_ms": null,
+    "quote_age_measured_in_phase": "1E",
+    "unmeasured_behavior": "deny"
+  },
   "source": {
     "require_clean_worktree": true,
     "require_dependency_lock_hash": true,
@@ -41,5 +120,10 @@
       "testnet"
     ],
     "forbidden_when_live_authorized": true
+  },
+  "validation": {
+    "pbo_threshold": "0.2",
+    "phase2_method": "purged_walk_forward",
+    "upgrade_to_cpcv_after": "basket_implementability_confirmed"
   }
 }

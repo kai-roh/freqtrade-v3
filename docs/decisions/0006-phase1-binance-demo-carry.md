@@ -53,7 +53,7 @@ position, balance, and commission-rate reconciliation paths.
 ## Reversal condition
 
 Changing the Phase 1 venue requires a new ADR and evidence that the replacement
-passes the same 13 fault scenarios, 18 transitions, six invariants, quote-age
+passes the same 13 fault scenarios, 21 transitions, six invariants, quote-age
 SLA, restart recovery, fee query, leverage gate, and reconciliation checks.
 
 Hyperliquid spot carry additionally requires account-level proof that UBTC is

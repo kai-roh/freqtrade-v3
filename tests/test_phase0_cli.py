@@ -37,6 +37,8 @@ def test_cost_and_instrument_example_commands_are_machine_readable():
 def test_run_manifest_command_records_source_state_and_allows_development_override(tmp_path):
     data = tmp_path / "snapshot.parquet"
     data.write_bytes(b"immutable-snapshot")
+    unlocked = tmp_path / "unlocked-requirements.txt"
+    unlocked.write_text("numpy\n")
     output = tmp_path / "manifest.json"
 
     result = _run(
@@ -44,7 +46,7 @@ def test_run_manifest_command_records_source_state_and_allows_development_overri
         "--container-image-digest",
         f"sha256:{'a' * 64}",
         "--dependency-lock",
-        "requirements-dev.txt",
+        str(unlocked),
         "--config",
         "configs/research.json",
         "--no-model",

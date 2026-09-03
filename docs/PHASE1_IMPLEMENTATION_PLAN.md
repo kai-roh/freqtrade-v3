@@ -44,6 +44,29 @@ V2 fee-only 반사실의 일별 평균 수익률은 `-0.0778146%`였다. 사전�
 
 통계 결과와 모의 집행 인프라는 인과적으로 다른 검증 대상이다.
 
+### 2.1 캐리 경제성 계산 계약
+
+Abort 비용 30 bps를 모든 진입에 부과하는 계산은 과도하게 보수적이지만, 정상
+진입비용만 빼고 “캐리는 양의 기대값”이라고 확정하는 계산도 불완전하다. 성공한
+에피소드는 진입뿐 아니라 최종 청산 비용을 부담하고, abort 에피소드는 펀딩을
+받지 못한다. Phase 1 스캐너는 다음 식을 사용한다.
+
+```text
+E[net bps]
+  = (1 - p_abort) × (funding gross - successful round-trip costs)
+    - p_abort × abort loss
+```
+
+`successful round-trip costs`에는 spot/perp 진입과 청산, 예상 impact, funding
+반전, legging, rebalance, requote가 포함된다. Demo 수수료는 무시하고 credentialed
+mainnet account query를 사용한다. 현재 Binance Spot 계정 tier와 BNB 할인 여부가
+확인되지 않았으므로 정책 수수료는 `null`이며 스캐너는 관측 전용이다. 따라서
+“p_abort 50%에서도 항상 양수”나 “월 2.70 USDT 확정”은 Phase 1의 결론이 아니다.
+
+Phase 1의 `p_abort=0.20`은 정책 prior다. Demo에서 측정한 값은 실제 queue 경쟁과
+역선택을 포함하지 않으므로 하한 참고치로만 저장하고, Phase 3 소액 실거래 전에는
+prior를 교체하지 않는다.
+
 ## 3. Venue와 실행 환경 결정
 
 ### 3.1 Phase 1 기본 경로
@@ -96,21 +119,25 @@ perp를 확실히 담보한다는 증거가 아니다.
 NautilusTrader다.
 
 기존 Phase 0 모듈은 태그와 import 안정성을 위해 지금 이동하지 않는다. 새로운
-코드는 `v3/` 아래에만 추가한다. 추후 namespace 정리가 필요하면 호환 shim과
-별도 migration commit으로 처리한다.
+코드는 `v3/phase1/` 아래에 추가한다. 기존 `v3/risk.py`를 디렉터리로 바꾸면
+import가 깨지므로 별도 namespace를 쓴다. 추후 namespace 정리가 필요하면 호환
+shim과 별도 migration commit으로 처리한다.
 
 ```text
 v3/
-├── costs.py                     기존 비용 계산 primitive
-├── reproducibility.py           기존 7종 manifest 및 clean-tree gate
-├── instruments.py               기존 instrument conformance
-├── preflight.py                 기존 최종 order admission
-├── ledger/                      Phase 1B
-├── risk/                        Phase 1B
-├── strategies/carry/            Phase 1C
-├── execution/                   Phase 1D
-├── reconciliation/              Phase 1B/1E
-└── adapters/nautilus_binance.py Phase 1A/1D
+├── costs.py                      기존 비용 계산 primitive
+├── reproducibility.py            기존 7종 manifest 및 clean-tree gate
+├── instruments.py                기존 instrument conformance
+├── preflight.py                  기존 최종 order admission
+└── phase1/
+    ├── policy.py                 기계 판독 정책
+    ├── runtime.py                실행 진입 fail-closed 검사
+    ├── ledger.py                 원장 repository 계약
+    ├── migrations/               PostgreSQL migration
+    ├── risk.py                   독립 Phase 1 리스크 결정
+    ├── scanner.py                주문 없는 캐리 target
+    ├── state_machine.py          2-leg aggregate
+    └── adapters.py               Nautilus/Binance 경계
 ```
 
 Freqtrade와 Nautilus는 compose project, network, volume, port, database,
@@ -123,16 +150,15 @@ environment file을 공유하지 않는다.
 ### 산출물
 
 - `Dockerfile.execution`: Oracle ARM64용 전용 이미지
-- Python 3.12와 호환되는 NautilusTrader stable 버전 exact pin
+- Python `3.12.12` ARM64 이미지와 NautilusTrader `1.231.0` exact pin
 - `uv.lock`과 lock SHA-256
 - PostgreSQL 16 exact image reference와 digest
 - Binance Demo Spot/USDT-M 별도 client configuration
 - 실행 진입점의 manifest, image digest, clean-tree gate
 - ARM64 build와 주문 없는 smoke test
 
-정확한 Nautilus 버전은 Phase 1A 첫 compatibility matrix에서 선택한다. 선택 전
-버전 번호를 문서에 임의로 고정하지 않는다. 선택 후에는 floating tag/range와
-자동 업그레이드를 금지한다.
+버전은 2026-09-03 compatibility 확인에서 고정했다. `uv.lock` 없이 실행하거나
+floating tag/range와 자동 업그레이드를 사용하는 경로는 금지한다.
 
 ### 진입 조건
 
@@ -160,7 +186,7 @@ environment file을 공유하지 않는다.
 PostgreSQL `NUMERIC`과 UTC timestamp를 사용한다. 금액과 수량은 binary float로
 저장하지 않는다. schema migration은 순방향/역방향 테스트를 갖는다.
 
-### 6.1 테이블 13개
+### 6.1 테이블 14개
 
 | 테이블 | 역할 |
 |---|---|
@@ -177,6 +203,7 @@ PostgreSQL `NUMERIC`과 UTC timestamp를 사용한다. 금액과 수량은 binar
 | `reconciliation_runs` | 설명된/미설명 잔차와 실행 결과 |
 | `incidents` | 장애 종류, 심각도, 관련 intent, 종결 근거 |
 | `state_transitions` | 성공/거부된 전이 시도, trigger와 guard 결과 |
+| `internal_transfers` | Spot/Futures 지갑 이동 요청·확정·실패와 unique idempotency key |
 
 `run_manifest_id`는 버전 관리된 manifest artifact의 content hash다. 별도 DB
 테이블을 만들지 않고, intent에서 immutable hash를 참조한다.
@@ -199,7 +226,8 @@ PostgreSQL `NUMERIC`과 UTC timestamp를 사용한다. 금액과 수량은 binar
 - intent 필드 또는 cost ledger 누락
 - 거래소와 로컬 포지션 불일치
 - 일 손실이 총자본의 2%에 도달
-- 일 abort 비용이 캐리 슬리브의 0.5%에 도달
+- 월 abort 비용이 캐리 슬리브의 0.5%에 도달
+- 월 abort 시도 3회 도달 또는 연속 abort 2회 도달
 - idempotency key 중복
 - Demo가 아닌 환경 또는 live authorization 감지
 
@@ -239,7 +267,7 @@ class CarryTarget:
     cost_ledger_id: str
 ```
 
-`net_expected_bps <= 0`이면 `target_notional`은 0이다. funding interval은 상수가
+`net_expected_bps < 20`이면 `target_notional`은 0이다. funding interval은 상수가
 아니며 `/fapi/v1/fundingInfo`의 심볼별 `fundingIntervalHours`에서 가져온다.
 credentialed commission query가 실패하면 추정 fee로 승격하지 않고 스캐너를
 관측 전용 상태로 둔다.
@@ -247,19 +275,28 @@ credentialed commission query가 실패하면 추정 fee로 승격하지 않고 
 비용 원장은 leg fee, impact/adverse selection, funding 반전, legging loss,
 rebalance, requote를 포함한다. 각 값에는 출처와 관측시각을 저장한다.
 
+캐리 슬리브는 450 USDT다. Spot 현금 `1N`과 2x 격리 perp 증거금 `0.5N`을
+동시에 수용해야 하므로 leg 명목 상한은 `450 / 1.5 = 300 USDT`다. scanner와
+risk가 이 상한을 각각 독립적으로 거부한다.
+
 ## 8. Phase 1D: 2-leg 집행 상태 머신
 
 예상 기간: 2~3주
 
-첨부안은 “17개 전이”라고 적었지만 전이표에는 18개 행이 있다. 구현 계약은 아래
-18개를 기준으로 하며 테스트도 각 전이마다 하나 이상의 사례를 가져야 한다.
+초안은 18개 전이였다. 지갑 잔고가 충분한 direct path와 부족한 transfer path를
+둘 다 보존하면 `internal_transfers` 반영 후 21개가 된다. 20개로 세는 안은
+`RISK_APPROVED → SUBMITTING` direct path를 잃으므로 채택하지 않는다. 테스트는
+각 전이마다 하나 이상의 사례를 가져야 한다.
 
 | From | To | Trigger/guard 요약 |
 |---|---|---|
 | — | `PLANNED` | 양의 CarryTarget, intent와 비용 원장 존재 |
 | `PLANNED` | `RISK_APPROVED` | 독립 리스크 승인 |
 | `PLANNED` | `ABORTING` | deny 또는 timeout |
-| `RISK_APPROVED` | `SUBMITTING` | 두 leg command와 key를 DB에 먼저 기록 |
+| `RISK_APPROVED` | `SUBMITTING` | 양 지갑 잔고 충분, 두 leg command와 key를 DB에 먼저 기록 |
+| `RISK_APPROVED` | `TRANSFERRING` | 잔고 부족, 지원·승인된 내부이체 요청을 DB에 먼저 기록 |
+| `TRANSFERRING` | `SUBMITTING` | 이체 확인 후 양 지갑 잔고 재검증 |
+| `TRANSFERRING` | `ABORTING` | 이체 실패·timeout·지원 불명; 체결이 없으므로 거래비용 0 |
 | `SUBMITTING` | `PARTIALLY_HEDGED` | 한 leg의 일부 이상 체결 |
 | `SUBMITTING` | `HEDGED` | 두 leg 체결, 명목 괴리 허용치 이내 |
 | `SUBMITTING` | `ABORTING` | 양 leg 미체결 상태로 TTL 만료 |
@@ -300,8 +337,8 @@ rebalance, requote를 포함한다. 각 값에는 출처와 관측시각을 저�
 ### 8.3 Abort와 비상 hedge
 
 - 단건 abort 예산: intent 명목의 30 bps
-- 일간 abort 예산: 캐리 슬리브의 0.5%
-- 일간 상한 도달 시 신규 intent 중단과 incident 생성
+- 월간 abort 예산: 캐리 슬리브의 0.5%
+- 월 3회 또는 연속 2회 abort 시 신규 intent 중단과 incident 생성
 
 30 bps는 초기 정책값이며 성과 통계가 아니다. Demo 실측 전 사후 조정하지 않는다.
 부분체결 이후에는 delta 제거가 비용 예산보다 우선한다. 예산 초과 예상은 hedge를
@@ -354,8 +391,8 @@ transition 기록을 assertion한다.
 - hedge latency: 첫 leg fill venue timestamp부터 반대 leg fill/cancel timestamp
 - quote age: local receipt timestamp - venue timestamp
 - 합성 2-leg 시도 최소 50건
-- quote observation 지속 수집
-- hedge SLA: 관측 p95 + 50% margin
+- quote observation은 1E 동안 10초 표본 또는 위험 결정 시점에만 수집
+- hedge latency: Demo 하한 분포의 median/p99를 기록하되 운영 SLA로 승격하지 않음
 - quote-age SLA: 관측 p99 + 100% margin
 - venue, adapter, instance, network topology 변경 시 재측정
 
@@ -367,14 +404,14 @@ transition 기록을 assertion한다.
 
 - mainnet order 0건, real capital 0
 - unknown leverage 승인 0건, 2x 초과 승인 0건
-- 미설명 reconciliation residual 0
+- 미설명 reconciliation residual은 Phase 1E에서 정한 금액 임계 미만이고 제한시간 내 분류
 - 중복 venue order 0, 고아 fill 0
 - 실패 후 열린 무헤지 노출 0
 - 모든 order command에 intent, cost ledger, manifest 참조 존재
 - 강제 종료 recovery 3회 이상 성공
-- 18개 transition과 6개 invariant 테스트 통과
+- 21개 transition과 6개 invariant 테스트 통과
 - 13개 fault scenario 전부 통과
-- hedge/quote-age SLA의 표본 수와 percentile 기록
+- Demo hedge-latency 하한과 quote-age SLA의 표본 수와 percentile 기록
 - 수익률을 완료 기준으로 사용하지 않음
 - mainnet payload와 실제 fee tier는 미검증임을 명시
 
@@ -388,9 +425,9 @@ Phase 1 완료는 Phase 3 실자본 사용 권한이 아니다.
 |---|---:|---|
 | Phase 0 증거 고정 | 완료 | baseline tag, DB hash, bootstrap result |
 | 1A 실행 환경 | 3~4일 | ARM64 smoke, exact lock, clean/digest gate |
-| 1B 원장·리스크 | 1~1.5주 | migration, repository, deny contract, restart-safe DB tests |
+| 1B 원장·리스크 | 1~1.5주 | 14-table migration, repository, deny contract, restart-safe DB tests |
 | 1C 스캐너 | 4~5일 | 주문 없는 target/zero-reason과 비용 원장 |
-| 1D 상태 머신 | 2~3주 | 18개 전이, 6개 불변식, restart recovery |
+| 1D 상태 머신 | 2~3주 | 21개 전이, 6개 불변식, restart recovery |
 | 1E 장애·SLA | 1~1.5주 | 13개 시나리오와 SLA evidence |
 
 각 단계는 테스트가 통과하고 working tree가 clean인 Lore commit에서 종료한다.

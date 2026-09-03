@@ -1,8 +1,9 @@
 # Dependency and Execution-Engine Pinning Policy
 
-Phase 0 does not install NautilusTrader. The current Python environment belongs
-to the retained Freqtrade research and shadow tooling; it is not evidence that
-the future Nautilus execution path is ready.
+Phase 0 did not install NautilusTrader. Phase 1A now has a separate, exact-pinned
+execution dependency set for the Binance Demo path. A successful local import is
+necessary compatibility evidence, but it is not proof of credentialed connectivity
+or permission to submit orders.
 
 ## Deployment rule
 
@@ -12,15 +13,14 @@ A deployable run manifest requires both:
   `Pipfile.lock`, or exact `package==version` requirements); and
 - the SHA-256 of that file in the seven-field run manifest.
 
-`requirements-dev.txt` is intentionally loose and is not a deployment lock.
-The manifest command rejects it unless
-`--allow-unlocked-dependencies` is explicitly used; that output remains marked
-non-deployable.
+`uv.lock` is the canonical deployment lock. `requirements-dev.txt` mirrors the
+top-level exact pins for bootstrap convenience but is not the transitive deployment
+record. The execution manifest must reference the SHA-256 of `uv.lock`.
 
 ## NautilusTrader policy
 
-When the Phase 1 PoC begins, the selected NautilusTrader release and Python
-minor version will be exact-pinned together in a dedicated execution image.
+Phase 1A pins NautilusTrader `1.231.0` with Python `3.12.12` in the dedicated
+execution image.
 The image itself will be referenced by digest. No floating `latest`, compatible
 range, or automatic dependency upgrade is allowed in the order path.
 
@@ -29,15 +29,14 @@ order submit/cancel/modify, delayed-fill reconciliation, liquidation/ADL,
 restart recovery, leverage fail-closed, quote-age, and emergency-hedge tests
 before replacing the prior image digest.
 
-The exact Nautilus version remains deliberately unselected in Phase 0; choosing
-it without the execution PoC would create a nominal pin without compatibility
-evidence.
+## Phase 1A selection evidence
 
-## Phase 1A selection procedure
+- Python: `3.12.12`
+- NautilusTrader: `1.231.0`
+- PostgreSQL: `16.14-bookworm`, pinned by ARM64 manifest digest
+- Resolver: `uv.lock`, checked with `uv lock --check`
+- Adapter smoke: distinct Binance Spot and USD-M `DEMO` data/execution configs
 
-Phase 1 has selected the Binance Demo adapter path, but not an untested package
-version. The first Phase 1A change must build an ARM64 compatibility matrix for
-the current stable NautilusTrader release and Python 3.12, run the order-free
-Binance Spot/USD-M smoke tests, and then commit the exact resolved version and
-lock hash. No execution entry point may run before that commit is clean and its
-image digest is recorded.
+The checked-in Dockerfile is buildable before registry publication, but runtime
+admission remains closed until the deployed image's immutable registry digest is
+recorded. A local image ID is not a substitute for that digest.

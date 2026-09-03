@@ -10,7 +10,7 @@ V3 keeps the proven Freqtrade/Docker operations boundary, but does not inherit t
 
 ## Safety state
 
-- Research and dry-run only.
+- Research and Binance Demo only.
 - Real-money trading is not configured or authorized.
 - Default leverage is 1x and stake size is fixed.
 - BTC and ETH are the only initial research pairs.
@@ -40,9 +40,10 @@ The shadow container runs as a dry-run infrastructure test on the retired V2 end
 ```text
 configs/                 Isolated research and dry-run configuration
 examples/phase0/         Non-authoritative Phase 0 CLI input schemas
+examples/phase1/         Order-free Phase 1 observation/preflight fixtures
 evidence/                Hashes and aggregate metrics; never raw secrets/runtime data
 user_data/strategies/    Thin Freqtrade adapter
-v3/                      Pure features, baseline, risk, metrics, and validation logic
+v3/phase1/               Carry policy, scanner, ledger, risk, state, recovery, and SLA logic
 scripts/                 Evidence, data, walk-forward, and verification entry points
 tests/                   Causal, isolation, and reproducibility tests
 docs/decisions/          Decision records and stop conditions
@@ -58,12 +59,20 @@ Passing research gates does not authorize live trading.
 
 Milestone 1 completed on 2026-08-10 with `STOP_BEFORE_CLASSIFIER`. A near-full-year run with 180 training days and six 30-day validation folds reached the same decision: the strongest active portfolio had profit factor 0.601, negative expectancy, 49.0% maximum drawdown, and zero positive folds out of six. The Freqtrade runtime is active only for infrastructure validation; its fail-closed adapter emits no entries.
 
-Phase 0 foundation development started on 2026-08-25. The repository now has
+Phase 0 foundation development started on 2026-08-25. The repository has
 an exact cost ledger, seven-field run manifest, instrument/order preflight,
 read-only Hyperliquid metadata capture, pre-registered block-bootstrap runner,
 snapshot-to-order preflight generation, and a fail-closed check in front of the
 retained Freqtrade shadow runtime. These are infrastructure controls, not a
 promoted strategy.
+
+Phase 1's credential-free implementation now includes the exact-pinned
+NautilusTrader Binance Demo adapter configuration, a 14-table PostgreSQL schema,
+an order-free carry scanner, independent deny-by-default risk decisions, a
+21-transition two-leg state machine, restart recovery contracts, internal-transfer
+routing, 13 deterministic fault scenarios, and quote/hedge SLA estimators. It does
+not submit orders. Credentialed Demo connectivity and exchange-observed evidence
+remain explicit integration work.
 
 See the [Milestone 1 report](research_results/milestone-1/REPORT.md), [Decision 0001](docs/decisions/0001-clean-rebuild.md) for the architecture boundary, and [Decision 0002](docs/decisions/0002-stop-before-classifier.md) for the research stop decision.
 
@@ -90,11 +99,14 @@ The hash-verified V2 fee-only preparation and the strict boundary between
 fixed-entry exit replay and full-strategy reruns are documented in
 [V2 Fee-only Counterfactual Preparation](docs/V2_COUNTERFACTUAL.md).
 
-Execution dependencies and the future NautilusTrader image are governed by the
+Execution dependencies and the pinned NautilusTrader image are governed by the
 [Dependency and Execution-Engine Pinning Policy](docs/DEPENDENCY_POLICY.md).
 
 The approved 6-8 week implementation sequence, simulation-only boundary,
-Binance Demo venue decision, 13-table ledger, 18-transition state machine, and
+Binance Demo venue decision, 14-table ledger, 21-transition state machine, and
 fault-injection gates are defined in
 [Phase 1 Carry Execution Infrastructure](docs/PHASE1_IMPLEMENTATION_PLAN.md) and
 [Decision 0006](docs/decisions/0006-phase1-binance-demo-carry.md).
+
+The exact implementation boundary and remaining credential-gated checks are in
+[Phase 1 Implementation Status](docs/PHASE1_IMPLEMENTATION_STATUS.md).

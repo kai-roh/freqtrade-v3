@@ -1,6 +1,11 @@
+import copy
 import json
 from decimal import Decimal
 from pathlib import Path
+
+import pytest
+
+from v3.phase1.policy import EXPECTED_INTENT_FIELDS, load_phase1_policy, policy_from_mapping
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -28,6 +33,11 @@ def test_phase1_policy_is_binance_demo_only_and_cannot_authorize_live_orders():
     }
     assert "live" not in policy["synthetic_target"]["allowed_environments"]
     assert policy["synthetic_target"]["forbidden_when_live_authorized"] is True
+    assert policy["order_types"] == {
+        "emergency_hedge": "IOC_LIMIT",
+        "perp_post_only": "GTX",
+        "spot_post_only": "LIMIT_MAKER",
+    }
 
 
 def test_phase1_policy_freezes_source_and_risk_guards():
@@ -38,3 +48,87 @@ def test_phase1_policy_freezes_source_and_risk_guards():
     assert Decimal(policy["risk"]["minimum_notional_headroom"]) >= 3
     assert Decimal(policy["risk"]["maximum_delta_drift_fraction"]) <= Decimal("0.05")
     assert policy["bootstrap_scope"]["gates_phase1_simulation"] is False
+    assert policy["risk"]["abort_budget_scope"] == "per_month"
+    assert "daily_abort_budget_fraction_of_carry_sleeve" not in policy["risk"]
+    assert policy["scanner"]["replace_prior_after_phase"] == "3"
+    assert policy["scanner"]["phase1e_measurement_use"] == "demo_lower_bound_only"
+    assert policy["sla"]["unmeasured_behavior"] == "deny"
+    assert policy["cost_model"]["demo_fee_treatment"] == "ignore"
+    assert policy["cost_model"]["include_exit_cost"] is True
+
+
+def test_phase1_policy_allocations_and_derived_abort_budget_are_exact():
+    policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
+
+    assert policy.total_capital == Decimal("1000")
+    assert policy.carry_sleeve_capital == Decimal("450.00")
+    assert policy.maximum_carry_leg_notional == Decimal("300.0")
+    assert policy.monthly_abort_budget == Decimal("2.25000")
+    assert policy.required_intent_fields == EXPECTED_INTENT_FIELDS
+    assert policy.fee_schedule.complete is False
+    assert policy.fee_schedule.maker_round_trip_bps is None
+
+
+def test_missing_fee_schedule_keeps_scanner_observational_not_optimistic():
+    policy = _policy()
+
+    assert policy["cost_model"]["unmeasured_behavior"] == "observe_only"
+    assert all(
+        policy["cost_model"][key] is None
+        for key in (
+            "spot_maker_bps",
+            "spot_taker_bps",
+            "perp_maker_bps",
+            "perp_taker_bps",
+            "normal_entry_cost_bps",
+            "normal_round_trip_cost_bps",
+        )
+    )
+
+
+@pytest.mark.parametrize(
+    ("environment", "live_orders", "real_capital"),
+    [("live", False, False), ("demo", True, False), ("demo", False, True)],
+)
+def test_synthetic_target_is_rejected_outside_simulation_boundary(
+    environment, live_orders, real_capital
+):
+    policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
+
+    assert policy.synthetic_target_reasons(
+        environment=environment,
+        live_orders=live_orders,
+        real_capital=real_capital,
+    )
+
+
+def test_policy_parser_rejects_capital_drift_or_phase1e_abort_prior_replacement():
+    policy = _policy()
+    bad_allocation = copy.deepcopy(policy)
+    bad_allocation["capital"]["reserve_fraction"] = "0.06"
+    with pytest.raises(ValueError, match="sum to 1"):
+        policy_from_mapping(bad_allocation)
+
+    bad_prior = copy.deepcopy(policy)
+    bad_prior["scanner"]["replace_prior_after_phase"] = "1E"
+    with pytest.raises(ValueError, match="before Phase 3"):
+        policy_from_mapping(bad_prior)
+
+
+def test_policy_parser_rejects_unsafe_types_order_contract_or_missing_exit_cost():
+    policy = _policy()
+
+    string_authorization = copy.deepcopy(policy)
+    string_authorization["authorization"]["live_orders"] = "false"
+    with pytest.raises(ValueError, match="explicit JSON false"):
+        policy_from_mapping(string_authorization)
+
+    unsafe_order_type = copy.deepcopy(policy)
+    unsafe_order_type["order_types"]["spot_post_only"] = "LIMIT"
+    with pytest.raises(ValueError, match="order types"):
+        policy_from_mapping(unsafe_order_type)
+
+    missing_exit_cost = copy.deepcopy(policy)
+    missing_exit_cost["cost_model"]["include_exit_cost"] = False
+    with pytest.raises(ValueError, match="include exit cost"):
+        policy_from_mapping(missing_exit_cost)
