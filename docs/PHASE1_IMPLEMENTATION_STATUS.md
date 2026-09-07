@@ -1,12 +1,14 @@
 # Phase 1 구현 상태
 
-기준일: 2026-09-03 KST
+기준일: 2026-09-08 KST
 
 ## 판정
 
-Phase 1의 로컬·결정론적 범위와 Binance의 읽기 전용 공개 Demo 연결은 완료됐다.
-V2의 보호된 자격증명을 Oracle Tokyo에서 대조한 결과 해당 키는 Mainnet 전용이며
-Demo 계정 인증에는 사용할 수 없었다. 주문 제출은 계속 비활성화되어 있다. 따라서
+Phase 1의 로컬·결정론적 범위와 Binance Demo Spot·USD-M 계정 인증은 완료됐다.
+2026-09-08 신규 Demo 키의 인증과 Mainnet 거부를 확인했다. Spot 주문 검증 API는
+통과했으나 USD-M의 HTTP 200 응답은 비어 있는 주문 필드여서 판정을 보류했다.
+Demo Futures 사용 가능 USDT는 0이며 BTCUSDT 레버리지는 20x다.
+매칭 엔진에 제출하는 주문 경로는 계속 비활성화되어 있다. 따라서
 이 상태는 실거래 또는 Phase 3 승격 허가가 아니다.
 
 ## 구현 완료
@@ -32,7 +34,6 @@ Demo 계정 인증에는 사용할 수 없었다. 주문 제출은 계속 비활
 
 다음 항목은 자격증명 또는 실거래 시장 미시구조가 없으면 증명할 수 없다.
 
-- Binance Demo Spot/USD-M의 인증된 account snapshot
 - Demo의 post-only reject, partial fill, cancel, reconnect, recovery 배관
 - Binance Demo에서 universal internal transfer가 실제 지원되는지 여부
 - 실제 queue position, fill rate, adverse selection과 live hedge latency
@@ -122,3 +123,46 @@ Demo 키가 아니라 Mainnet에서 발급된 별도 실계정 키다. Spot acco
 상태도 반환했으므로 Demo 실행 자격증명으로 사용하지 않으며 주문 경로는 계속
 비활성화한다. Binance Demo Trading 내부의 API Management에서 발급한 키로 교체하기
 전까지 credentialed Demo 시험은 보류한다.
+
+## 2026-09-08 신규 Demo 키 인증 및 주문 검증
+
+사용자가 기존 실계정 키를 `BINANCE_API_*`로 유지하고 별도 신규 키를
+`BINANCE_DEMO_API_*`로 등록했다. 최신 로컬 두 키 쌍을 SSH 표준입력으로만
+Oracle의 보호된 `.env`에 병합했고 양쪽 파일 권한은 `0600`이다.
+이전 키 폐기는 요청하지 않으며 Mainnet 주문 권한을 새로 부여하지 않는다.
+
+| 검사 | 결과 |
+|---|---|
+| 신규 Demo 키 → Demo Spot·USD-M account | 양쪽 HTTP 200, 계정 응답 구조 확인 |
+| 신규 Demo 키 → Mainnet Spot·USD-M account | 양쪽 HTTP 401, -2015 |
+| 일반 Binance 키 → Mainnet account | 유효, 수수료 조회 성공 |
+| Demo Spot LIMIT_MAKER `/api/v3/order/test` | HTTP 200, 빈 JSON 객체로 검증 통과 |
+| Demo Futures GTX `/fapi/v1/order/test` | HTTP 200, symbol/type/side/수량 등이 빈 템플릿: 의미적 검증 보류 |
+| Demo Spot USDT | 300 USDT 이상 사용 가능 |
+| Demo Futures USDT | 사용 가능 잔고 0 |
+| Demo BTCUSDT 선물 | CROSSED, 20x, One-way; 열린 주문·포지션 0 |
+
+`/order/test`는 매칭 엔진에 주문을 보내지 않는다. HTTP 200이나 주문 형태의
+응답을 체결 증거로 취급하지 않는다. 가격·수량은 실행 시 공개 호가 및 tick/step으로
+계산하며, 테스트 도구는 Demo host 두 개와 테스트 endpoint만 호출할 수 있다.
+리다이렉트는 거부하고 키·잔고·주문 ID는 결과에 기록하지 않는다.
+
+선물 Demo 자금은 Binance Demo UI의 Assets → Futures → Reset 경로로 준비해야
+한다. 공식 문서에서 확인한 경로는 UI이며 이번 구현에는 잔고 초기화 API가 없다.
+실제 주문 시험 전에 2x 이하 레버리지, 자금, 실행 이미지·원장·리스크 조건도
+충족해야 한다. 이번 REST 진단은 Nautilus node start/stop 또는 1D/1E 통과 증거가 아니다.
+
+증거:
+
+- `evidence/phase1/binance-connectivity-2026-09-08.json`
+- `evidence/phase1/binance-mainnet-fees-2026-09-08.json`
+- `evidence/phase1/demo-order-validation-2026-09-08.json`
+
+공식 근거:
+
+- [Binance Demo 사용 및 자금 초기화](https://www.binance.com/en-NZ/support/faq/detail/9be58f73e5e14338809e3b705b9687dd)
+- [Spot Test new order](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade)
+- [USD-M Test Order](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade)
+
+검증: 전체 `193 passed`, Ruff lint/format 통과, Oracle ARM64 Python 3.12에서
+실제 GET 및 Demo `/order/test` 진단 수행. Nautilus 주문·체결·재시작 대사는 미검증이다.

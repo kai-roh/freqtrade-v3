@@ -76,8 +76,11 @@ remain explicit integration work.
 
 The read-only Binance probe has confirmed public Demo Spot/USD-M routing and
 classified the protected V2 key as Mainnet-only. It also captured the live account's
-current BTCUSDT fee schedule without recording keys, balances, or account IDs. A
-separate Demo API key is still required before authenticated Demo execution testing.
+current BTCUSDT fee schedule without recording keys, balances, or account IDs.
+On 2026-09-08, replacement Demo credentials passed both Spot and USD-M authentication
+and were rejected by Mainnet. Spot `/order/test` validation passed. USD-M returned
+HTTP 200 with empty order fields, which remains inconclusive. Its available USDT
+balance was zero and BTCUSDT leverage was 20x, so matching-engine tests remain blocked.
 
 Run the GET-only scope check on the credential-authorized host:
 
@@ -95,6 +98,18 @@ Exit code `3` means the evidence was written but dedicated Demo credentials were
 validated. The probe source contains no order, cancel, leverage-change, or transfer
 endpoint. The second classification flag also detects a live key accidentally stored
 under the Demo variable names; such a key can never promote Demo readiness.
+
+Validate request formatting without sending orders to the matching engine:
+
+```bash
+python3 scripts/validate_phase1_demo_orders.py \
+  --credentials-env-file /protected/path/.env \
+  --output /new/path/demo-order-validation.json
+```
+
+This diagnostic only uses Demo GET endpoints and the two signed `/order/test`
+endpoints; it has no real-order, cancellation, transfer, or configuration-write path.
+It is not the Nautilus execution engine and does not prove fills or recovery.
 
 See the [Milestone 1 report](research_results/milestone-1/REPORT.md), [Decision 0001](docs/decisions/0001-clean-rebuild.md) for the architecture boundary, and [Decision 0002](docs/decisions/0002-stop-before-classifier.md) for the research stop decision.
 
