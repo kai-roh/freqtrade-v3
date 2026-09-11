@@ -5,6 +5,20 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+# Nautilus 1.231.0 admits one execution client per venue. Keep the research/
+# policy IDs stable and translate explicitly at the Nautilus boundary.
+NAUTILUS_INSTRUMENT_IDS = {
+    "BTCUSDT.BINANCE": "BTCUSDT.BINANCE_SPOT_DEMO",
+    "BTCUSDT-PERP.BINANCE": "BTCUSDT-PERP.BINANCE_USDM_DEMO",
+}
+
+
+def canonical_instrument_id(nautilus_id: str) -> str:
+    for canonical, runtime in NAUTILUS_INSTRUMENT_IDS.items():
+        if nautilus_id == runtime:
+            return canonical
+    raise ValueError("unknown runtime instrument ID")
+
 
 @dataclass(frozen=True)
 class BinanceClientSpec:
@@ -49,24 +63,30 @@ def build_nautilus_client_configs(
             BinanceExecClientConfig,
             BinanceInstrumentProviderConfig,
         )
+        from nautilus_trader.model.identifiers import InstrumentId, Venue
     except ImportError as exc:
         raise RuntimeError("install the locked execution dependencies first") from exc
 
-    provider = BinanceInstrumentProviderConfig(
-        load_all=False,
-        filters={"symbols": ["BTCUSDT"]},
-        query_commission_rates=True,
-    )
     data_clients: dict[str, Any] = {}
     execution_clients: dict[str, Any] = {}
     for spec in phase1_binance_client_specs():
         account_type = getattr(BinanceAccountType, spec.account_type)
+        instrument = "BTCUSDT.BINANCE" if spec.account_type == "SPOT" else "BTCUSDT-PERP.BINANCE"
+        runtime_instrument = NAUTILUS_INSTRUMENT_IDS[instrument]
+        # A filter alone does not trigger provider loading. Explicit IDs also avoid
+        # the unhashable list-valued filter in Nautilus' cached provider factory.
+        provider = BinanceInstrumentProviderConfig(
+            load_all=False,
+            load_ids=frozenset({InstrumentId.from_str(runtime_instrument)}),
+            query_commission_rates=True,
+        )
         common = {
             "api_key": api_key,
             "api_secret": api_secret,
             "account_type": account_type,
             "environment": BinanceEnvironment.DEMO,
             "instrument_provider": provider,
+            "venue": Venue(runtime_instrument.rsplit(".", 1)[1]),
         }
         data_clients[spec.client_id] = BinanceDataClientConfig(**common)
         execution_clients[spec.client_id] = BinanceExecClientConfig(**common)

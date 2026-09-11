@@ -7,13 +7,13 @@ import argparse
 import json
 import sys
 from datetime import datetime
-from decimal import Decimal
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from v3.phase1.fee_input import load_fee_snapshot  # noqa: E402
 from v3.phase1.policy import FeeSchedule, load_phase1_policy  # noqa: E402
 from v3.phase1.scanner import CarryObservation, scan_carry  # noqa: E402
 
@@ -30,17 +30,7 @@ def parse_args() -> argparse.Namespace:
 def _fee_schedule(path: Path | None) -> FeeSchedule | None:
     if path is None:
         return None
-    data = json.loads(path.read_text())
-    return FeeSchedule(
-        spot_maker_bps=Decimal(data["spot_maker_bps"]),
-        spot_taker_bps=Decimal(data["spot_taker_bps"]),
-        perp_maker_bps=Decimal(data["perp_maker_bps"]),
-        perp_taker_bps=Decimal(data["perp_taker_bps"]),
-        source=data["source"],
-        include_exit_cost=data.get("include_exit_cost") is True,
-        captured_at=datetime.fromisoformat(data["captured_at"]),
-        maximum_age_hours=int(data["maximum_age_hours"]),
-    )
+    return load_fee_snapshot(path)
 
 
 def main() -> int:

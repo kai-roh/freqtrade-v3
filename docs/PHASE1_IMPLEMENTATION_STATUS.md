@@ -1,13 +1,14 @@
 # Phase 1 구현 상태
 
-기준일: 2026-09-08 KST
+기준일: 2026-09-09 KST
 
 ## 판정
 
 Phase 1의 로컬·결정론적 범위와 Binance Demo Spot·USD-M 계정 인증은 완료됐다.
 2026-09-08 신규 Demo 키의 인증과 Mainnet 거부를 확인했다. Spot 주문 검증 API는
 통과했으나 USD-M의 HTTP 200 응답은 비어 있는 주문 필드여서 판정을 보류했다.
-Demo Futures 사용 가능 USDT는 0이며 BTCUSDT 레버리지는 20x다.
+사용자의 모의자금 준비 후 Demo Futures 사용 가능 USDT 300 이상을 확인했고,
+BTCUSDT 무포지션·미체결 주문 0 상태에서 격리마진·2x로 설정 후 재조회했다.
 매칭 엔진에 제출하는 주문 경로는 계속 비활성화되어 있다. 따라서
 이 상태는 실거래 또는 Phase 3 승격 허가가 아니다.
 
@@ -32,7 +33,8 @@ Demo Futures 사용 가능 USDT는 0이며 BTCUSDT 레버리지는 20x다.
 
 ## 의도적으로 보류
 
-다음 항목은 자격증명 또는 실거래 시장 미시구조가 없으면 증명할 수 없다.
+아래 항목은 아직 구현/통합 검증이 남아 있다. Demo 자격증명과 자금 부족은
+더 이상 보류 사유가 아니다. 실제 시장 집행 품질만 Phase 3의 별도 검증 대상이다.
 
 - Demo의 post-only reject, partial fill, cancel, reconnect, recovery 배관
 - Binance Demo에서 universal internal transfer가 실제 지원되는지 여부
@@ -166,3 +168,29 @@ Oracle의 보호된 `.env`에 병합했고 양쪽 파일 권한은 `0600`이다.
 
 검증: 전체 `193 passed`, Ruff lint/format 통과, Oracle ARM64 Python 3.12에서
 실제 GET 및 Demo `/order/test` 진단 수행. Nautilus 주문·체결·재시작 대사는 미검증이다.
+
+## 2026-09-11 연결 계층 검증 완료 — Phase 1 전체는 진행 중
+
+- 실제 PostgreSQL 원장과 별도 위험 검사 프로세스를 연결했다. migration checksum,
+  중복 체결 차단, 역순 주문 상태 방어, 최신 위험 거부, 오래된 요청 거부를 검증했다.
+- fixture 관측 → 비용 원장 → 위험 거부 → CLOSED 통합 테스트를 실제 DB와
+  subprocess에서 통과했다. 주문 명령은 생성하지 않았다.
+- Oracle ARM64의 고정 Nautilus 1.231.0에서 Binance Demo Spot·Futures 동시 연결,
+  private stream 구독, 계정 2개·상품 2개 및 venue별 계정 매핑을 확인했다.
+- 기본 Spot HMAC 인증 실패를 signed subscription 호환 경로로 해결했다.
+  의도적 종료 시 재구독하는 경로도 차단하고 원격에서 재검증했다.
+- 검증 결과: **243 tests passed**, PostgreSQL 통합 포함·skip 없음,
+  Ruff lint/format 및 diff whitespace 검사 통과.
+- 이번 진단의 매칭 엔진 주문은 **0건**이다. Mainnet 주문이나 실자본 투입은 없다.
+
+증거: `evidence/phase1/node-smoke-hmac-2026-09-11.json`.
+공개 관측과 이전 계정 준비 증거는 각각 `public-market-2026-09-09.json`,
+`demo-account-preparation-2026-09-08.json`이며 현재 시점의 잔고/호가로 재사용하지 않는다.
+원격 검증은 기존 고정 이미지에 소스를 읽기 전용으로 연결한 진단이다.
+검증된 새 불변 이미지의 운영 배포나 실시간 전체 주문 흐름 완료를 뜻하지 않는다.
+
+남은 핵심 작업은 원장·최신 위험 승인·Nautilus 주문 제출의 단일 gateway,
+실시간 호가 시각 기반 SLA, 두 레그 부분체결/취소/재시작 대사, 실제 Demo
+50회 에피소드·3회 재시작 및 Phase 1E 관측기간이다. 신규 호환 계층의
+네트워크 장애 후 복구도 이 시험에서 확인해야 한다.
+상세 절차와 증거 경계는 `docs/PHASE1_INTEGRATION_RUNBOOK.md`를 따른다.

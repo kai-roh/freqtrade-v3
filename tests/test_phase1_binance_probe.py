@@ -69,6 +69,14 @@ def _fixture_opener(request, **_kwargs):
                 "time": 1_777_777_777_000,
             }
         )
+    if "bookTicker" in url:
+        return _Response(
+            {
+                "symbol": "BTCUSDT",
+                "bidPrice": "100000.00",
+                "askPrice": "100001.00",
+            }
+        )
     if "account/commission" in url:
         return _Response(
             {

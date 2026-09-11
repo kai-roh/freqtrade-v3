@@ -10,7 +10,7 @@ from datetime import UTC, datetime
 from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
-from urllib.request import HTTPRedirectHandler, HTTPSHandler, Request, build_opener
+from urllib.request import Request
 
 from .binance_probe import (
     SPOT_DEMO,
@@ -20,17 +20,8 @@ from .binance_probe import (
     _exchange_error_code,
     _sanitize_symbol_config,
 )
-
-
-class RejectRedirects(HTTPRedirectHandler):
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
-        raise HTTPError(req.full_url, code, "redirect forbidden", headers, fp)
-
-
-def secure_open(request, *, timeout, context):
-    return build_opener(RejectRedirects(), HTTPSHandler(context=context)).open(
-        request, timeout=timeout
-    )
+from .http import RejectRedirects as RejectRedirects
+from .http import secure_open
 
 
 def validate_test_order(credentials, *, product, quantity, price, opener=secure_open):

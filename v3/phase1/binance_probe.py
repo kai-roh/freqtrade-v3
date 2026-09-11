@@ -14,7 +14,9 @@ from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+from urllib.request import Request
+
+from .http import secure_open
 
 SPOT_DEMO = "https://demo-api.binance.com"
 USDM_DEMO = "https://demo-fapi.binance.com"
@@ -42,9 +44,18 @@ ALLOWED_REQUESTS = frozenset(
         (SPOT_LIVE, "/api/v3/account", True),
         (SPOT_LIVE, "/api/v3/account/commission", True),
         (USDM_LIVE, "/fapi/v1/time", False),
+        (USDM_LIVE, "/fapi/v1/fundingInfo", False),
+        (USDM_LIVE, "/fapi/v1/fundingRate", False),
         (USDM_LIVE, "/fapi/v3/account", True),
         (USDM_LIVE, "/fapi/v1/commissionRate", True),
         (USDM_LIVE, "/fapi/v1/symbolConfig", True),
+    }
+)
+
+ALLOWED_DEMO_POSTS = frozenset(
+    {
+        (USDM_DEMO, "/fapi/v1/leverage"),
+        (USDM_DEMO, "/fapi/v1/marginType"),
     }
 )
 
@@ -91,7 +102,7 @@ class BinanceReadOnlyClient:
         *,
         timeout_seconds: float = 10,
         ca_file: Path | None = None,
-        opener: OpenUrl = urlopen,
+        opener: OpenUrl = secure_open,
     ) -> None:
         self.credentials = credentials
         self.timeout_seconds = timeout_seconds
@@ -170,6 +181,87 @@ class BinanceReadOnlyClient:
             )
 
 
+class BinanceDemoConfigClient(BinanceReadOnlyClient):
+    """Signed Demo-only configuration client.
+
+    This intentionally supports only non-order USD-M configuration endpoints used
+    by Phase 1 preflight. It cannot transfer funds or address matching-engine
+    order endpoints.
+    """
+
+    def post(
+        self,
+        base_url: str,
+        path: str,
+        *,
+        params: Mapping[str, str | int],
+        server_time_path: str,
+    ) -> ProbeResponse:
+        if (base_url, path) not in ALLOWED_DEMO_POSTS:
+            raise ValueError("Binance Demo config request is not on the POST allowlist")
+        expected = (
+            {"symbol": "BTCUSDT", "marginType": "ISOLATED"}
+            if path == "/fapi/v1/marginType"
+            else {"symbol": "BTCUSDT", "leverage": 2}
+        )
+        if dict(params) != expected or server_time_path != "/fapi/v1/time":
+            raise ValueError("Demo preparation only permits BTCUSDT isolated 2x")
+        if self.credentials is None:
+            raise ValueError("signed Binance Demo config requires credentials")
+        clock = self.get(base_url, server_time_path)
+        if not clock.ok or not isinstance(clock.data, Mapping):
+            return ProbeResponse(
+                ok=False,
+                http_status=clock.http_status,
+                exchange_code=clock.exchange_code,
+                network_error=clock.network_error or "server_time_unavailable",
+            )
+        server_time = clock.data.get("serverTime")
+        if isinstance(server_time, bool) or not isinstance(server_time, int):
+            return ProbeResponse(False, clock.http_status, network_error="invalid_server_time")
+        query: dict[str, str | int] = dict(params)
+        query["timestamp"] = server_time
+        query["recvWindow"] = 5000
+        payload = urlencode(query)
+        query["signature"] = hmac.new(
+            self.credentials.api_secret.encode(),
+            payload.encode(),
+            hashlib.sha256,
+        ).hexdigest()
+        request = Request(
+            base_url + path,
+            data=urlencode(query).encode(),
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-MBX-APIKEY": self.credentials.api_key,
+            },
+            method="POST",
+        )
+        try:
+            with self._opener(
+                request,
+                timeout=self.timeout_seconds,
+                context=self._ssl_context,
+            ) as response:
+                return ProbeResponse(
+                    ok=True,
+                    http_status=response.status,
+                    data=json.loads(response.read() or b"{}"),
+                )
+        except HTTPError as exc:
+            return ProbeResponse(
+                ok=False,
+                http_status=exc.code,
+                exchange_code=_exchange_error_code(exc.read()),
+            )
+        except (TimeoutError, URLError) as exc:
+            return ProbeResponse(
+                ok=False,
+                http_status=None,
+                network_error=type(exc).__name__,
+            )
+
+
 def probe_phase1_binance(
     *,
     mainnet_credentials: BinanceCredentials | None,
@@ -179,7 +271,7 @@ def probe_phase1_binance(
     classify_demo_credentials_on_mainnet: bool = False,
     ca_file: Path | None = None,
     captured_at: datetime | None = None,
-    opener: OpenUrl = urlopen,
+    opener: OpenUrl = secure_open,
 ) -> dict[str, Any]:
     """Capture only non-secret facts needed for the Phase 1 admission decision."""
 

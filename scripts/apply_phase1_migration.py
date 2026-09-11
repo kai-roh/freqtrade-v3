@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
 MIGRATION_ROOT = PROJECT_ROOT / "v3" / "phase1" / "migrations"
 
 
@@ -35,14 +36,15 @@ def main() -> int:
         print("install the locked execution dependencies first", file=sys.stderr)
         return 2
 
-    migration = MIGRATION_ROOT / f"0001_phase1_ledger.{args.direction}.sql"
     try:
         with psycopg.connect(dsn, autocommit=True) as connection:
-            connection.execute(migration.read_text())
-    except (OSError, psycopg.Error) as exc:
-        print(f"migration failed: {exc}", file=sys.stderr)
+            from v3.phase1.postgres import apply_migrations
+
+            migrations = apply_migrations(connection, direction=args.direction)
+    except (OSError, ValueError, psycopg.Error) as exc:
+        print(f"migration failed: {type(exc).__name__}", file=sys.stderr)
         return 2
-    print(f"migration={migration.name}")
+    print("migrations=" + ",".join(migrations))
     return 0
 
 
