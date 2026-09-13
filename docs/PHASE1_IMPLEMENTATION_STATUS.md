@@ -194,3 +194,30 @@ Oracle의 보호된 `.env`에 병합했고 양쪽 파일 권한은 `0600`이다.
 50회 에피소드·3회 재시작 및 Phase 1E 관측기간이다. 신규 호환 계층의
 네트워크 장애 후 복구도 이 시험에서 확인해야 한다.
 상세 절차와 증거 경계는 `docs/PHASE1_INTEGRATION_RUNBOOK.md`를 따른다.
+
+## 2026-09-13 Phase 1D 전송·체결 복구 기반 추가
+
+이번 변경은 로컬 구현 및 PostgreSQL 통합 시험이다. Oracle 배포, Demo 주문 제출,
+실시간 실행 callback 연결은 하지 않았다. Phase 1 전체는 여전히 미완료다.
+
+- `dispatch.py`: 전송 시도 예약을 먼저 commit하고 command당 재전송을 차단한다.
+  최신 승인·호가 나이·상태를 재확인하며, 단순 enqueue를 거래소 성공으로 취급하지 않는다.
+  두 DB connection이 동시에 요청해도 한 번만 예약되는 것을 검증했다.
+- 고정 Nautilus 주문 객체 생성: canonical/runtime ID, client ID, post-only를 보존한다.
+  아직 전송 gateway가 아니며, runtime의 주문 금지 검사를 변경하지 않았다.
+- `fill_ingestion.py`: 실제 Nautilus 자료형의 fixture를 DB에 반영해 부분체결,
+  중복·역순 이벤트, 취소 후 늦은 체결, 수수료 중복 방지를 검증했다.
+- `fill_inbox.py`: 정규화 체결 데이터를 처리 전에 보존한다. 초과 체결 등 불일치는
+  BLOCKED/incident로 남기고 신규 예약을 차단한다. 재시작 후 저장된 receipt를 재처리한다.
+- `record_order`: 첫 upsert도 command 잠금으로 직렬화하고 command/client ID 및 수량을 검증한다.
+- `quote_timing.py`: 현물 호가의 합성 `ts_event=ts_init`을 0ms 측정으로 오인하지 않도록
+  원문 시각 기반 계산을 추가했다. 실제 스트림 hook과 장시간 표본 수집은 미완료다.
+
+검증: **272 tests passed**, 실제 PostgreSQL 통합 포함·skip 없음.
+Ruff lint/format 및 diff 검사 통과. 이번 시험을 실제 Demo 체결 에피소드로 계상하지 않는다.
+
+다음 순서는 (1) 실시간 이벤트/호가 수신과 inbox consumer 연결,
+(2) 실행 이미지·정책·수수료·위험 요청을 정확한 주문 payload에 결합한 gateway,
+(3) 두 레그 cancel/hedge 및 거래소 조회 기반 복구,
+(4) Demo 반복 시험과 Phase 1E 관측이다. 정책의 미측정 호가 SLA와 오래된 fee snapshot을
+임의 값으로 대체해 주문을 활성화하지 않는다.

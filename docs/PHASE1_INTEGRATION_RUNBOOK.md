@@ -1,6 +1,6 @@
 # Phase 1 연결 검증과 남은 집행 작업
 
-기준일: 2026-09-11 KST. 실자본 및 Mainnet 주문은 금지한다.
+기준일: 2026-09-13 KST. 실자본 및 Mainnet 주문은 금지한다.
 
 ## 이번 연결 범위
 
@@ -77,6 +77,60 @@ DSN이 없으면 DB 통합 검증은 skip되므로 전체 통합 통과로 보�
 이 진단을 주문 실행의 clean-tree/태그/이미지 게이트 우회 경로로 사용하지 않는다.
 
 ## 다음 집행 착수 조건
+
+### 2026-09-13: 전송·체결 영속화 기본 모듈
+
+`dispatch.py`와 migration 0003은 command당 전송 시도를 한 번만 예약한다.
+전용 DB connection이 이미 transaction 안에 있으면 거부한다. 따라서 예약이 실제로
+commit되기 전에 외부 전송을 시작하는 문제가 없다. 최신 승인 ID·결정 나이·승인 후
+증가한 호가 나이·SUBMITTING 상태·활성 command를 확인한다.
+
+상태 의미:
+
+- `CLAIMED`: 전송 시도 예약이 저장됨. 프로세스 중단 후에도 재전송 금지.
+- `ENQUEUED`: 로컬 제출 함수가 반환됨. 거래소 접수/체결 성공이 아님.
+- `UNKNOWN`: 전송 예외. 오류 종류만 보관하고 원문에는 자격증명이 있을 수 있어 저장하지 않음.
+- `OBSERVED`: 동일 client ID·제품 venue·venue order ID의 영속 주문 증거가 확인됨.
+
+주문 조회 결과가 없다는 사실은 재전송 권한이 아니다. `OBSERVED` 역시 주문 재사용이나
+2-leg 완료를 뜻하지 않는다. 재시작 시 미해결 예약을 먼저 조회하고 신규 주문을 막아야 한다.
+증거가 있는 journal은 down migration으로 삭제할 수 없다.
+
+`fill_ingestion.py`는 실제 Nautilus `OrderFilled` 자료형을 받아 command 잠금 아래
+주문·체결·누적 수량을 하나의 transaction으로 반영한다. 제품 venue와 symbol별 trade ID를
+함께 사용한다. 중복 이벤트는 재합산하지 않고, 늦은 부분체결은 취소 상태를 다시 열지 않는다.
+Demo commission은 관측 증거로만 보존한다. Mainnet 비용 원장과 혼합하지 않는다.
+
+`fill_inbox.py`와 migration 0004는 정규화된 `OrderFilled` 필드를 먼저 commit한다.
+처리 전 재시작해도 receipt로 재처리할 수 있다. 실패 시 해당 체결 반영만 rollback하고
+inbox는 BLOCKED, incident는 open으로 남긴다. PENDING/BLOCKED receipt가 있으면
+dispatch 예약을 거부한다. 이는 정규화 이벤트 보관이며 원본 WebSocket packet이나
+임의 `info` 메타데이터 보관이 아니다. liquidation 메타데이터의 별도 연결은 미완료다.
+DB 장애 시 예외를 숨기지 않고 PENDING 기록을 유지한다. runner는 이런 예외에서도
+신규 주문을 중단해야 한다.
+inbox receipt 수는 수신 횟수이며 체결 수가 아니다. 재전달도 별도 receipt로 보존하여
+동일 trade ID의 상충 payload를 잃지 않는다. 체결 수·수량·수수료 보고는 중복 제거된
+`fills`에서 계산하고, receipt 수를 Phase 1E 에피소드 수로 합산하지 않는다.
+
+이 모듈들은 **완성된 주문 gateway가 아니다**. 실행 runner에 연결하지 않았으며,
+runtime의 주문 금지 검사를 완화하지 않았다. 실제 활성화 전 반드시 다음이 필요하다:
+
+1. 정책·이미지·fee·wallet·instrument 검증과 독립 위험 요청을 정확한 주문 payload에 결합.
+2. 예약 commit 직후 전송 전 재검증, 순차 두 레그 coordinator, bounded cancel/hedge.
+3. live callback → 영속 inbox → 단일 consumer 연결. 수량 초과나 불일치는 BLOCKED로
+   보존하고 재시작 시 먼저 복구한다. 직접 ingestion 함수를 호출해 오류를 삼키면 안 된다.
+4. accepted/rejected/canceled 이벤트 및 거래소 조회 결과 수집. 현재는 fill 정규화 경로만 있다.
+5. 새 불변 이미지·배포 검증 후 Demo 매칭 엔진 시험. 이번 단위/DB 시험은 Demo 에피소드가 아니다.
+
+### 호가 시각 추가 제약
+
+설치된 Nautilus 1.231.0의 `BinanceQuoteData.parse_to_quote_tick`은 원문 `T`가 없으면
+`ts_event=ts_init`로 대체한다. Spot `bookTicker`의 이 값을 0ms 지연 표본으로 쓰면 안 된다.
+`quote_timing.py`는 원문 시각에서만 나이를 계산하고 부재는 None, 미래 시각은 오류로 남긴다.
+raw stream hook에는 아직 연결하지 않았다. 따라서 이 함수 추가만으로 호가 SLA를 측정했다고
+보고하거나 현재 정책의 `maximum_quote_age_ms=null`을 바꾸지 않는다.
+
+### 남은 종료 조건
 
 1. 고정 버전으로 두 계정의 private stream 구독과 정상 종료를 실제 확인한다.
 2. 주문 전 원장 commit, 최신 위험 승인, canonical/runtime ID 변환을 하나의

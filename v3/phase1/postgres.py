@@ -341,14 +341,34 @@ class PostgresPhase1Ledger:
         updated_at: datetime | None = None,
     ) -> None:
         with self.connection.transaction():
+            command = self.connection.execute(
+                """
+                SELECT id, idempotency_key, quantity
+                FROM order_commands
+                WHERE id=%s
+                FOR UPDATE
+                """,
+                (_uuidish(command_id),),
+            ).fetchone()
+            if command is None:
+                raise ValueError("order references an unknown command")
+            if command[1] != client_order_id:
+                raise ValueError("order client_order_id must match its command idempotency key")
             current = self.connection.execute(
-                "SELECT venue,client_order_id,filled_quantity,status,updated_at,venue_order_id FROM orders WHERE command_id=%s FOR UPDATE",
-                (command_id,),
+                """
+                SELECT venue,client_order_id,filled_quantity,status,updated_at,venue_order_id
+                FROM orders
+                WHERE command_id=%s
+                FOR UPDATE
+                """,
+                (_uuidish(command_id),),
             ).fetchone()
             quantity = as_decimal(filled_quantity, field_name="filled_quantity")
             timestamp = _utc(updated_at or datetime.now(UTC), field_name="updated_at")
             if quantity < 0:
                 raise ValueError("filled_quantity cannot be negative")
+            if quantity > command[2]:
+                raise ValueError("filled_quantity cannot exceed command quantity")
             if current:
                 if (
                     current[0] != venue

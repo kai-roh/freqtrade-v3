@@ -132,7 +132,32 @@ def test_postgres_repository_enforces_idempotency_when_dsn_is_available():
                 timestamp_source="rest_received_at",
             )
         )
+        with pytest.raises(ValueError, match="unknown command"):
+            ledger.record_order(
+                order_id=str(uuid4()),
+                command_id=str(uuid4()),
+                venue="binance",
+                client_order_id="k" * 32,
+                status="NEW",
+            )
         ledger.add_command(OrderCommandRow(command_id, intent_id, "spot", "k" * 32, "0.1", "100"))
+        with pytest.raises(ValueError, match="client_order_id"):
+            ledger.record_order(
+                order_id=str(uuid4()),
+                command_id=command_id,
+                venue="binance",
+                client_order_id="x" * 32,
+                status="NEW",
+            )
+        with pytest.raises(ValueError, match="command quantity"):
+            ledger.record_order(
+                order_id=str(uuid4()),
+                command_id=command_id,
+                venue="binance",
+                client_order_id="k" * 32,
+                status="PARTIALLY_FILLED",
+                filled_quantity="0.10001",
+            )
         ledger.record_order(
             order_id=str(uuid4()),
             command_id=command_id,
