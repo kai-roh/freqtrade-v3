@@ -1,4 +1,5 @@
 .env
+.phase1-database.env
 .venv/
 __pycache__/
 .pytest_cache/

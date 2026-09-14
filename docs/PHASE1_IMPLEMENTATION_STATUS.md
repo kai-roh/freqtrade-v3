@@ -221,3 +221,32 @@ Ruff lint/format 및 diff 검사 통과. 이번 시험을 실제 Demo 체결 에
 (3) 두 레그 cancel/hedge 및 거래소 조회 기반 복구,
 (4) Demo 반복 시험과 Phase 1E 관측이다. 정책의 미측정 호가 SLA와 오래된 fee snapshot을
 임의 값으로 대체해 주문을 활성화하지 않는다.
+
+## 2026-09-14 실시간 원장 연결 원격 검증
+
+- 전용 PostgreSQL을 Oracle에 구성했다. 외부 포트는 공개하지 않았고 기존
+  `freqtrade_kai` 컨테이너는 변경하지 않았다. DB 자격증명은 별도 0600 파일에 둔다.
+- `demo_node.py`와 `demo_collector.py`가 현물·선물 스트림을 실제 원장에 연결한다.
+  수집기는 주문 HTTP 경로를 별도로 차단한다. 체결 callback은 durable inbox에
+  연결했으나 **실제 체결 이벤트 수신은 아직 0건**이며 해당 부분은 fixture 검증만 있다.
+- 60초 수집: 현물 55건, 선물 38건 저장. 이번 진단 세션 누계는 현물 75건,
+  선물 51건이다. 현물 exchange age는 전부 NULL, 주문 명령·체결은 각각 0건이다.
+- 배포 경로에서 발견한 macOS resource-fork migration 오인식과 실행 중인
+  event loop를 dispose하는 종료 오류를 수정하고 회귀 테스트를 추가했다.
+- Demo 계정 재조회: 양쪽 시험자금, 격리마진, 2배 이하, 선물 flat,
+  BTC 미체결 주문 없음 조건 모두 통과. Mainnet fee는 GET으로 갱신했다.
+- Telegram의 `[DEMO][PHASE1]` 연결 시험 알림 전달을 확인했다.
+- 검증: **289 tests passed**, 실제 PostgreSQL 통합 포함·skip 없음,
+  Ruff 및 diff whitespace 검사 통과.
+
+증거: `evidence/phase1/demo-stream-2026-09-14.json`,
+`demo-readiness-2026-09-14.json`, `binance-mainnet-fees-2026-09-14.json`.
+이는 고정 의존성 이미지와 임시 소스를 이용한 제한 시간 진단이며 거래 배포가 아니다.
+전용 DB는 증거 보존을 위해 남아 있고 수집기는 종료됐다.
+
+**Phase 1 전체 및 일주일 자동매매는 아직 시작/완료되지 않았다.**
+다음 필수 연결은 payload-bound 독립 위험 승인 → durable claim → Demo 제출,
+두 레그의 제한된 취소·헤지·종료와 거래소 조회 기반 재시작 대사다.
+주문 gateway가 없는 상태에서 `orders_enabled`를 켜거나 미측정 경제성 게이트를
+우회하지 않는다. 합성 시험은 별도 engineering-only 정책으로 명시하고
+수익성·실전 체결 품질의 증거와 분리해야 한다.

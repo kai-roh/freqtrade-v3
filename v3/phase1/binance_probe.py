@@ -38,6 +38,10 @@ ALLOWED_REQUESTS = frozenset(
         (USDM_DEMO, "/fapi/v1/positionSide/dual", True),
         (USDM_DEMO, "/fapi/v1/openOrders", True),
         (SPOT_DEMO, "/api/v3/openOrders", True),
+        (SPOT_DEMO, "/api/v3/order", True),
+        (SPOT_DEMO, "/api/v3/myTrades", True),
+        (USDM_DEMO, "/fapi/v1/order", True),
+        (USDM_DEMO, "/fapi/v1/userTrades", True),
         (SPOT_DEMO, "/api/v3/ticker/bookTicker", False),
         (USDM_DEMO, "/fapi/v1/ticker/bookTicker", False),
         (SPOT_LIVE, "/api/v3/time", False),
@@ -94,7 +98,7 @@ OpenUrl = Callable[..., Any]
 
 
 class BinanceReadOnlyClient:
-    """Minimal signed GET client which cannot address order or transfer endpoints."""
+    """Minimal signed GET client; Demo order queries only, never mutation or transfer."""
 
     def __init__(
         self,

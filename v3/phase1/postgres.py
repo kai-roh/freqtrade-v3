@@ -619,7 +619,9 @@ class PostgresPhase1Ledger:
 def migration_paths(direction: str = "up") -> tuple[Path, ...]:
     if direction not in {"up", "down"}:
         raise ValueError("direction must be up or down")
-    paths = sorted(MIGRATION_ROOT.glob(f"*.{direction}.sql"))
+    paths = sorted(
+        path for path in MIGRATION_ROOT.glob(f"*.{direction}.sql") if not path.name.startswith(".")
+    )
     return tuple(paths if direction == "up" else reversed(paths))
 
 
