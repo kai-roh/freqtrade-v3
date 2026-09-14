@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import psycopg  # noqa: E402
 
 from v3.phase1.binance_probe import load_dotenv_credentials  # noqa: E402
-from v3.phase1.matching_probe import run_matching_probe  # noqa: E402
+from v3.phase1.matching_probe import reconcile_matching_probe, run_matching_probe  # noqa: E402
 from v3.phase1.notifications import Phase1Notification, send_phase1_telegram  # noqa: E402
 from v3.phase1.postgres import apply_migrations  # noqa: E402
 
@@ -23,7 +23,9 @@ def main():
     parser.add_argument("--credentials-env-file", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--product", required=True, choices=("spot", "perp"))
-    parser.add_argument("--execute-demo-probe", action="store_true", required=True)
+    action = parser.add_mutually_exclusive_group(required=True)
+    action.add_argument("--execute-demo-probe", action="store_true")
+    action.add_argument("--reconcile-client-id")
     args = parser.parse_args()
     result = {
         "environment": "demo",
@@ -38,15 +40,20 @@ def main():
         with psycopg.connect(os.environ["PHASE1_DATABASE_DSN"]) as connection:
             apply_migrations(connection)
             connection.commit()
-            result.update(
-                run_matching_probe(
-                    credentials,
-                    connection,
-                    product=args.product,
-                    source_sha=os.environ["PHASE1_BUILD_SOURCE_SHA"],
-                    image_digest=os.environ["PHASE1_IMAGE_DIGEST"],
+            if args.reconcile_client_id:
+                result.update(
+                    reconcile_matching_probe(credentials, connection, args.reconcile_client_id)
                 )
-            )
+            else:
+                result.update(
+                    run_matching_probe(
+                        credentials,
+                        connection,
+                        product=args.product,
+                        source_sha=os.environ["PHASE1_BUILD_SOURCE_SHA"],
+                        image_digest=os.environ["PHASE1_IMAGE_DIGEST"],
+                    )
+                )
     except Exception as exc:
         result["error_type"] = type(exc).__name__
     values = {}

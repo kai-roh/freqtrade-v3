@@ -204,5 +204,45 @@ def test_reservation_survives_unknown_submission_and_never_retries(monkeypatch, 
                         image_digest="sha256:" + "b" * 64,
                     )
                 assert calls == ["POST", "DELETE"]
+                uncertain = False
+                resolved = module.reconcile_matching_probe(
+                    None, connection, report["client_order_id"]
+                )
+                assert resolved["passed"]
+                assert resolved["initial_report"]["passed"] is False
+                assert calls == ["POST", "DELETE"]
         finally:
             connection.execute(sql.SQL("DROP SCHEMA {} CASCADE").format(sql.Identifier(schema)))
+
+
+def test_delayed_cancel_confirmation_uses_only_bounded_reads(monkeypatch):
+    from types import SimpleNamespace
+
+    from v3.phase1 import matching_probe as module
+
+    calls = []
+    monkeypatch.setattr(module.time, "sleep", lambda _: None)
+
+    def read(*_args):
+        calls.append(True)
+        return {"status": "NEW" if len(calls) < 3 else "CANCELED", "executedQty": "0"}
+
+    order = module.query_terminal(SimpleNamespace(order=read), "spot", CLIENT)
+    assert order["status"] == "CANCELED"
+    assert len(calls) == 3
+
+
+def test_read_lag_never_means_unbounded_polling(monkeypatch):
+    from types import SimpleNamespace
+
+    from v3.phase1 import matching_probe as module
+
+    calls = []
+    monkeypatch.setattr(module.time, "sleep", lambda _: None)
+
+    def read(*_args):
+        calls.append(True)
+        return {"status": "NEW", "executedQty": "0"}
+
+    assert module.query_terminal(SimpleNamespace(order=read), "spot", CLIENT)["status"] == "NEW"
+    assert len(calls) == 10

@@ -9,6 +9,7 @@ import hmac
 import json
 import re
 import ssl
+import time
 from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 from urllib.parse import urlencode
 from urllib.request import Request
@@ -19,6 +20,23 @@ from .demo_inspector import DemoInspector
 from .http import secure_open
 
 MAX_NOTIONAL = Decimal("180")
+
+
+def query_terminal(inspector, product, client_id, venue_order_id=None):
+    """Allow bounded read-model lag after cancel; never repeat the mutation."""
+    prefix = "/api/v3" if product == "spot" else "/fapi/v1"
+    for attempt in range(10):
+        if venue_order_id is None:
+            order = inspector.order(product, client_id)
+        else:
+            order = inspector.get(
+                product, prefix + "/order", {"symbol": "BTCUSDT", "orderId": venue_order_id}
+            )
+        if order["status"] not in {"NEW", "PARTIALLY_FILLED"} or Decimal(order["executedQty"]) != 0:
+            return order
+        if attempt < 9:
+            time.sleep(0.25)
+    return order
 
 
 def probe_payload(product, instrument, quote, client_id):
@@ -200,12 +218,7 @@ def run_matching_probe(credentials, connection, *, product, source_sha, image_di
         if venue_order_id is not None:
             report["venue_order_id"] = venue_order_id
         try:
-            if venue_order_id is None:
-                order = inspector.order(product, client_id)
-            else:
-                order = inspector.get(
-                    product, prefix + "/order", {"symbol": "BTCUSDT", "orderId": venue_order_id}
-                )
+            order = query_terminal(inspector, product, client_id, venue_order_id)
             if (
                 order["symbol"] != "BTCUSDT"
                 or order["clientOrderId"] not in accepted_client_ids
@@ -246,3 +259,54 @@ def run_matching_probe(credentials, connection, *, product, source_sha, image_di
     finally:
         with connection.transaction():
             connection.execute("SELECT pg_advisory_unlock(31092027)")
+
+
+def reconcile_matching_probe(credentials, connection, client_id):
+    """Resolve a stored probe using GET only, retaining its initial failed report."""
+    from psycopg.rows import dict_row
+
+    with connection.transaction(), connection.cursor(row_factory=dict_row) as cursor:
+        row = cursor.execute(
+            "SELECT * FROM demo_matching_probes WHERE id=%s FOR UPDATE", (client_id,)
+        ).fetchone()
+        if not row:
+            raise ValueError("unknown probe")
+        if row["state"] == "CANCELED":
+            return row["report"]
+        inspector = DemoInspector(credentials)
+        venue_id = row["report"].get("venue_order_id")
+        order = query_terminal(inspector, row["product"], client_id, venue_id)
+        payload = row["payload"]
+        if order["symbol"] != "BTCUSDT" or order["side"] != payload["side"]:
+            raise ValueError("reconciliation identity mismatch")
+        if venue_id is not None:
+            if str(order["orderId"]) != str(venue_id):
+                raise ValueError("reconciliation venue identity mismatch")
+        elif order["clientOrderId"] != client_id:
+            raise ValueError("reconciliation client identity mismatch")
+        if Decimal(order["origQty"]) != Decimal(payload["quantity"]) or Decimal(
+            order["price"]
+        ) != Decimal(payload["price"]):
+            raise ValueError("reconciliation payload mismatch")
+        account = inspector.account()
+        if (
+            order["status"] != "CANCELED"
+            or Decimal(order["executedQty"]) != 0
+            or account["open_orders"]
+            or account["perp_qty"] != 0
+        ):
+            raise ValueError("probe still unresolved; do not submit another order")
+        report = dict(
+            row["report"],
+            initial_report=row["report"],
+            passed=True,
+            status="CANCELED",
+            executed_quantity=order["executedQty"],
+            venue_order_id=str(order["orderId"]),
+            reconciled_read_only=True,
+        )
+        cursor.execute(
+            "UPDATE demo_matching_probes SET state='CANCELED',report=%s::jsonb,updated_at=clock_timestamp() WHERE id=%s",
+            (json.dumps(report), client_id),
+        )
+        return report
