@@ -16,7 +16,12 @@ RUN uv sync --frozen --no-dev
 
 COPY v3 ./v3
 COPY scripts/check_phase1_imports.py ./scripts/check_phase1_imports.py
+COPY scripts/run_phase1_matching_probe.py ./scripts/run_phase1_matching_probe.py
 COPY configs/phase1-policy.json ./configs/phase1-policy.json
+
+ARG SOURCE_SHA
+ENV PHASE1_BUILD_SOURCE_SHA=${SOURCE_SHA}
+LABEL org.opencontainers.image.revision=${SOURCE_SHA}
 
 USER 65532:65532
 
