@@ -137,6 +137,10 @@ def test_reservation_survives_unknown_submission_and_never_retries(monkeypatch, 
                 executedQty="0",
             )
 
+        def get(self, product, path, params):
+            assert params == {"symbol": "BTCUSDT", "orderId": "123"}
+            return self.order(product, "cancel-id")
+
     class Reader:
         def get(self, base, path, **kwargs):
             from types import SimpleNamespace
@@ -166,6 +170,18 @@ def test_reservation_survives_unknown_submission_and_never_retries(monkeypatch, 
                     )
                     if uncertain:
                         raise TimeoutError()
+                    return {
+                        "symbol": "BTCUSDT",
+                        "clientOrderId": payload["newClientOrderId"],
+                        "orderId": 123,
+                    }
+                if not uncertain:
+                    return {
+                        "symbol": "BTCUSDT",
+                        "origClientOrderId": payload["origClientOrderId"],
+                        "clientOrderId": "cancel-id",
+                        "orderId": 123,
+                    }
                 return {}
 
             monkeypatch.setattr(module, "mutate_demo", mutate)

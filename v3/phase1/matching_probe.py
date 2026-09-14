@@ -148,8 +148,15 @@ def run_matching_probe(credentials, connection, *, product, source_sha, image_di
                 (client_id, source_sha, image_digest, product, json.dumps(payload)),
             )
         errors = []
+        venue_order_id = None
+        accepted_client_ids = {client_id}
         try:
-            mutate_demo(credentials, product, "POST", payload)
+            acknowledgment = mutate_demo(credentials, product, "POST", payload)
+            if (
+                acknowledgment.get("clientOrderId") == client_id
+                and acknowledgment.get("symbol") == "BTCUSDT"
+            ):
+                venue_order_id = str(acknowledgment["orderId"])
         except Exception as exc:
             errors.append(type(exc).__name__)  # Never retry uncertain submission.
         finally:
@@ -160,12 +167,26 @@ def run_matching_probe(credentials, connection, *, product, source_sha, image_di
                         "UPDATE demo_matching_probes SET state='CANCEL_PENDING',updated_at=clock_timestamp() WHERE id=%s",
                         (client_id,),
                     )
-                mutate_demo(
+            except Exception as exc:
+                errors.append(type(exc).__name__)
+            try:
+                cancellation = mutate_demo(
                     credentials,
                     product,
                     "DELETE",
                     {"symbol": "BTCUSDT", "origClientOrderId": client_id},
                 )
+                # Spot cancellation can replace clientOrderId with a cancel ID.
+                # Bind that ID to our original ID and immutable venue order ID.
+                if cancellation.get("symbol") == "BTCUSDT" and (
+                    cancellation.get("origClientOrderId") == client_id
+                    or (product == "perp" and cancellation.get("clientOrderId") == client_id)
+                ):
+                    cancel_order_id = str(cancellation["orderId"])
+                    if venue_order_id is not None and venue_order_id != cancel_order_id:
+                        raise ValueError("cancel order identity mismatch")
+                    venue_order_id = cancel_order_id
+                    accepted_client_ids.add(cancellation["clientOrderId"])
             except Exception as exc:
                 errors.append(type(exc).__name__)
         report = {
@@ -176,12 +197,20 @@ def run_matching_probe(credentials, connection, *, product, source_sha, image_di
             "strategy_started": False,
             "passed": False,
         }
+        if venue_order_id is not None:
+            report["venue_order_id"] = venue_order_id
         try:
-            order = inspector.order(product, client_id)
-            if (order["symbol"], order["clientOrderId"], order["side"]) != (
-                "BTCUSDT",
-                client_id,
-                payload["side"],
+            if venue_order_id is None:
+                order = inspector.order(product, client_id)
+            else:
+                order = inspector.get(
+                    product, prefix + "/order", {"symbol": "BTCUSDT", "orderId": venue_order_id}
+                )
+            if (
+                order["symbol"] != "BTCUSDT"
+                or order["clientOrderId"] not in accepted_client_ids
+                or order["side"] != payload["side"]
+                or (venue_order_id is not None and str(order["orderId"]) != venue_order_id)
             ):
                 raise ValueError("order identity mismatch")
             if Decimal(order["origQty"]) != Decimal(payload["quantity"]) or Decimal(
