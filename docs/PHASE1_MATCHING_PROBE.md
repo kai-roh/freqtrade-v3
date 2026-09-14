@@ -35,3 +35,35 @@ Official API references:
 Any successful run only proves Demo account order acceptance and cancellation via
 the bounded REST probe. The production-intended Nautilus approval/dispatch/recovery
 path and a week-long automatic trading run remain separate unfinished work.
+
+## Actual Oracle Demo results — 2026-09-14
+
+| Product | Venue order ID | Quantity BTC | Limit USDT | Outcome |
+|---|---|---:|---:|---|
+| Spot BUY LIMIT_MAKER | 64634141675 | 0.00020000 | 76950.72 | CANCELED, zero fill |
+| USD-M SELL LIMIT GTX | 28585069232 | 0.0008 | 78574.30 | CANCELED, zero fill |
+
+Spot's first order query returned NEW even though the open-order snapshot was empty.
+The probe correctly blocked further orders. A subsequent GET confirmed CANCELED;
+the read-only reconciler resolved its ledger row and preserved the initial failed
+report. No duplicate POST was sent. The updated probe allows up to ten bounded GET
+reads after cancellation; unresolved states still block, rather than imply success.
+
+Both probe rows are CANCELED in PostgreSQL. Both runs confirmed unchanged BTC
+inventory, zero BTC open orders and flat BTC futures. Telegram delivery succeeded.
+The probe containers exited; only PostgreSQL and the unchanged old bot remain up.
+
+Execution source/image:
+
+- Spot: `219c657d9f6704aa5dc46cb581f751924fa05bb2`,
+  `sha256:c18c8e852546feb304b1c7142674e8be4df1117591260f774ed325900861d5c1`.
+- Read-only resolution and Futures: `b32ee678a7665e67c1a196cd822989d6d17d0fa2`,
+  `sha256:8ad6fa2c6a838417c024315faf50b9eeffe1b665d36d1a9a7e98147b555510d4`.
+
+Evidence under `evidence/phase1/`: `matching-spot-initial-2026-09-14.json`,
+`matching-spot-reconciled-2026-09-14.json`, `matching-perp-2026-09-14.json`.
+Verification: 301 tests passed including PostgreSQL, Ruff passed.
+
+There were **2 actual Demo order submissions, 0 fills, 0 strategy episodes**.
+These results do not establish the Nautilus risk/dispatch connection, hedging,
+partial-fill recovery, autonomous trading, or Phase 1 completion.
