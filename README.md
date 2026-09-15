@@ -57,6 +57,27 @@ Passing research gates does not authorize live trading.
 
 ## Status
 
+### Latest verified progress — 2026-09-15
+
+Phase 1 has executed four actual Binance Demo fills: Spot entry, futures hedge,
+futures close, and Spot close after a timestamp-precision fix and close-only
+deployment takeover. This was one engineering-triggered episode, not four
+episodes or an economically approved carry strategy.
+
+**Continuous automatic trading is stopped.** The final account check showed
+zero futures exposure and zero open BTC orders, with `0.00000715 BTC` Spot dust.
+The intent remains `ABORTING / DUST_REMAINS`; it is not falsely marked flat or
+complete. Phase 1E and the week run remain unfinished. Last code verification:
+382 tests passed, including PostgreSQL integration; Ruff passed.
+
+Next: preserve residual ownership across episodes, verify cancellation/partial-fill
+and restart handling, then enable bounded repetition and the observation run.
+See [current implementation status](docs/PHASE1_IMPLEMENTATION_STATUS.md),
+[actual execution record](docs/PHASE1_DEMO_AUTO_RUNBOOK.md), and
+[week-run gates](docs/PHASE1_WEEK_RUN.md).
+
+### Earlier research and integration milestones
+
 Milestone 1 completed on 2026-08-10 with `STOP_BEFORE_CLASSIFIER`. A near-full-year run with 180 training days and six 30-day validation folds reached the same decision: the strongest active portfolio had profit factor 0.601, negative expectancy, 49.0% maximum drawdown, and zero positive folds out of six. The Freqtrade runtime is active only for infrastructure validation; its fail-closed adapter emits no entries.
 
 Phase 0 foundation development started on 2026-08-25. The repository has
@@ -66,13 +87,13 @@ snapshot-to-order preflight generation, and a fail-closed check in front of the
 retained Freqtrade shadow runtime. These are infrastructure controls, not a
 promoted strategy.
 
-Phase 1's credential-free implementation now includes the exact-pinned
+The initial Phase 1 credential-free implementation included the exact-pinned
 NautilusTrader Binance Demo adapter configuration, a 14-table PostgreSQL schema,
 an order-free carry scanner, independent deny-by-default risk decisions, a
 21-transition two-leg state machine, restart recovery contracts, internal-transfer
-routing, 13 deterministic fault scenarios, and quote/hedge SLA estimators. It does
-not submit orders. Credentialed Demo connectivity and exchange-observed evidence
-remain explicit integration work.
+routing, 13 deterministic fault scenarios, and quote/hedge SLA estimators. That
+initial stage did not submit orders; subsequent exchange-observed execution is
+documented in the latest progress section above.
 
 The read-only Binance probe has confirmed public Demo Spot/USD-M routing and
 classified the protected V2 key as Mainnet-only. It also captured the live account's
@@ -80,7 +101,8 @@ current BTCUSDT fee schedule without recording keys, balances, or account IDs.
 On 2026-09-08, replacement Demo credentials passed both Spot and USD-M authentication
 and were rejected by Mainnet. Spot `/order/test` validation passed. USD-M returned
 HTTP 200 with empty order fields, which remains inconclusive. Its available USDT
-balance was zero and BTCUSDT leverage was 20x, so matching-engine tests remain blocked.
+balance was zero and BTCUSDT leverage was 20x, so matching-engine tests were blocked
+at that time. Those funding/configuration blockers were subsequently resolved.
 
 Run the GET-only scope check on the credential-authorized host:
 

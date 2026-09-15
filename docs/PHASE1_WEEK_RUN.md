@@ -1,9 +1,27 @@
 # Phase 1 Demo Week Run
 
-기준일: 2026-09-14 KST
+기준일: 2026-09-15 KST
 
 Status: planned, **not running**. The bounded streaming collector and Telegram
 connection test have passed; neither authorizes or starts the week trading run.
+
+The 2026-09-15 engineering run produced four actual fills in one episode, with
+a timestamp fix and close-only takeover between the futures and Spot exits.
+It stopped with `0.00000715 BTC` residual inventory. Futures and open orders
+were zero at the final account check. This is not an uninterrupted completed
+episode, a week-run start, or four episodes toward the count below.
+
+Before starting the week run:
+
+1. Define and implement residual ownership/accounting without resetting the
+   baseline or falsely declaring flat; specify when another entry is allowed.
+2. Complete bounded cancellation, partial-fill and restart recovery verification.
+3. Record Telegram delivery results and implement the corresponding pause rule.
+4. Explicitly revise the current one-episode engineering runner for bounded
+   repetition. Do not repeatedly change run IDs to bypass its guards.
+
+See [latest status](PHASE1_IMPLEMENTATION_STATUS.md) and
+[execution evidence and recovery](PHASE1_DEMO_AUTO_RUNBOOK.md).
 
 ## Scope
 
@@ -62,8 +80,9 @@ Stop the Demo runner and preserve evidence when any of these occur:
   complete.
 - A timestamp required by the configured SLA path becomes unavailable. Spot
   bookTicker has no exchange timestamp by design: retain NULL exchange age and
-  measure receive-gap separately. A future engineering-only trial policy must
-  explicitly authorize that freshness basis; do not invent a Spot SLA result.
+  measure receive-gap separately. The single-episode engineering policy now
+  explicitly uses receive-gap; this does not establish the economic strategy's
+  Spot exchange-age SLA or authorize the week run.
 - Telegram delivery repeatedly fails while the runner is otherwise healthy.
 
 The last condition is an observability failure, not a trading failure. It should

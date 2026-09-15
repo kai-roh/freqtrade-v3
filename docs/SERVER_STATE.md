@@ -1,4 +1,31 @@
-# Server state — 2026-08-10
+# Server state
+
+## Latest verified Phase 1 state — 2026-09-15
+
+This section records the last verified state, not a fresh server inspection
+performed during the documentation update.
+
+- Project path: `/home/kai/freqtrade-v3`; Phase 1 uses its own PostgreSQL and
+  Nautilus Demo execution containers, not the legacy Freqtrade order path.
+- `phase1-demo-auto-20260915`: exited 2 after a REST/stream timestamp conflict.
+- `phase1-demo-auto-recovery-20260915`: exited 0 after close-only recovery and
+  residual detection. Exit 0 does not mean flat or continuous trading enabled.
+- Four strategy orders were FILLED/OBSERVED; all four fill-inbox receipts applied.
+  Three blocked recovery checks were resolved with the original evidence retained.
+- Final Demo account GET: futures `0 BTC`, open BTC orders `0`, Spot
+  `0.00000715 BTC`; intent `ABORTING / DUST_REMAINS`. Automatic entries are stopped.
+- `phase1-postgres` remained running. The existing `freqtrade_kai` service was not
+  modified by this work. The older service description below is historical.
+- Source/images, execution times and recovery details:
+  [Demo auto runbook](PHASE1_DEMO_AUTO_RUNBOOK.md).
+- Evidence: [final account](../evidence/phase1/demo-auto-final-account-20260915.json),
+  [initial run](../evidence/phase1/demo-auto-initial-20260915.json),
+  [recovery](../evidence/phase1/demo-auto-recovery-20260915.json).
+
+## Historical server snapshot — 2026-08-10
+
+The remaining sections preserve the original dated snapshot. They are not proof
+of current container configuration, credentials, schedules, or backup contents.
 
 ## Active runtime
 
