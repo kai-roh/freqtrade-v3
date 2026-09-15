@@ -9,6 +9,11 @@
 - Deliberate restart 1 at 12:25:56 UTC: now running as
   `phase1-demo-week-run-20260915-restart1` on image `freqtrade-v3-demo-auto:81999bd`
   (`sha256:b5f2ebf7…`, source `81999bd`); the first container exited 137 by design.
+- Deliberate mid-episode restarts 2 and 3 fired at 14:31:18 and 16:36:43 UTC
+  (`scripts/phase1_deliberate_restart.sh`); both resumed the open episode and
+  closed it cleanly. Now running as `phase1-demo-week-run-20260915-restart3`;
+  `-restart1` and `-restart2` exited 137 by design. Ledger at 16:52 UTC: 7 intents
+  all `CLOSED`, 30 fills, 0 rejected transitions, 0 unresolved recovery.
 - `phase1-telegram-bot` (same image, `--restart unless-stopped`, read-only) serves
   the Telegram commands; menu registered for bot `kais_freqtrade_bot`.
 - No auto-restart for the runner. Restart with the same `--started-at` and a new

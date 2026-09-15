@@ -210,8 +210,19 @@ hash, run identity, and config. The new container must resume the open episode
 (`RESUMING`) and close it without re-hedging. Each run appends to
 `<evidence-dir>/deliberate-restarts.log` and writes `run-<label>.json`.
 
-Scheduled on 2026-09-15 (KST evening): `restart2` and `restart3` were queued on
-the host with a 4-hour wait budget each, so both fire during the next two
-episodes' holding windows. Together with the version restart at 21:25 KST this
-gives the three forced-termination recoveries the Phase 1E gate requires, all
-recorded in the ledger and evidence files.
+Executed on 2026-09-15 (UTC), each while the open episode was `HEDGE_REQUIRED`
+(Spot long held, perp short filled, sub-lot remainder unhedged by design):
+
+| Restart | Killed at | Resumed at | Outcome |
+|---|---|---|---|
+| 1 (version change, between episodes) | 12:25 | 12:25:56 | new manifest; started its own episode 1 |
+| 2 (`restart2`, mid-hold) | 14:31:18 | 14:31:27 `RESUMING` | perp closed in 3 IOC partial fills (0.0010+0.0010+0.0008), Spot sold, residual 0.00000712 settled, CLOSED |
+| 3 (`restart3`, mid-hold) | 16:36:43 | 16:36:52 `RESUMING` | perp closed in one fill, Spot sold, residual 0.00000713 settled, CLOSED |
+
+After restart 3 the ledger held 7 intents all `CLOSED`, 30 fills, zero rejected
+transitions, zero unresolved recovery checks, zero unapplied inbox rows, zero
+active commands. No re-hedge or duplicate entry occurred on any resume. Restart 2
+also exercised the IOC partial-fill re-plan path for real. This satisfies the
+"three forced-termination recoveries" item of the Phase 1E gate; the episode
+count (50) and the end-of-run aggregation remain.
+Log: `evidence/phase1/demo-week-run-20260915/deliberate-restarts.log`.
