@@ -84,8 +84,12 @@ runner gained bounded repetition with resume and a Telegram pause rule, and a
 two-episode Demo verification with one forced kill and restart completed
 cleanly (8 fills, automatic residual settlement, zero rejected transitions).
 
-Next: start the week observation run on an explicit operator command, add two
-more deliberate restarts, and evaluate the Phase 1E gates.
+The week observation run started on 2026-09-15 at 21:07 KST on the user's
+instruction (60 bounded synthetic episodes, 2-hour interval, 7-day window). It
+is a Demo infrastructure observation, not a profitability test.
+
+Next: add two more deliberate restarts during the run, then evaluate the
+Phase 1E gates from the ledger.
 See [current implementation status](docs/PHASE1_IMPLEMENTATION_STATUS.md),
 [actual execution record](docs/PHASE1_DEMO_AUTO_RUNBOOK.md), and
 [week-run gates](docs/PHASE1_WEEK_RUN.md).

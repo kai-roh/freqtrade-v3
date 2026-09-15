@@ -72,13 +72,15 @@ Telegram 전달 확인. 증거: `evidence/phase1/residual-settlement-20260915.js
   상세는 [반복·재시작 검증](PHASE1_DEMO_AUTO_RUNBOOK.md#반복재시작-검증--2026-09-15-kst).
 - 로컬 검증: `415 passed`(PostgreSQL 포함), Ruff 통과.
 
-**1주 관측 실행은 시작하지 않았다.** 시작 절차와 조건은
-[PHASE1_WEEK_RUN.md](PHASE1_WEEK_RUN.md#starting-the-week-run)에 있다.
+**1주 관측 실행을 2026-09-15 21:07 KST에 사용자 지시로 시작했다.** 컨테이너
+`phase1-demo-week-run-20260915`, 소스 `20a581d`, 설정 `configs/phase1-week-run.json`.
+첫 에피소드 진입·헤지와 알림 전달을 확인했다. 상태와 재시작 절차는
+[PHASE1_WEEK_RUN.md](PHASE1_WEEK_RUN.md)에 있다. 이는 Demo 관측이며 수익성 검증이 아니다.
 
 ### 다음 작업 순서
 
-1. 운영자 판단으로 1주 관측 실행 시작(`configs/phase1-week-run.json`). 기간 중 의도적
-   재시작 2회 이상 추가(Phase 1E 게이트 3회), 에피소드 50회 이상 집계.
+1. 관측 기간 중 같은 `--started-at`으로 의도적 재시작 2회 이상 추가(Phase 1E 게이트 3회),
+   에피소드 50회 이상 집계. 정지 이벤트(`telegram_pause`, 오류) 발생 시 원인 확인 후 재시작.
 2. 관측 종료 후 SLA·헤지 지연 표본 재집계와 Phase 1E 종료 게이트 판정.
 3. (참고) IOC 미체결/부분체결, 취소 응답 유실, 재접속·재시작을 실제 Demo에서 검증한다.
    확인되지 않은 명령 재전송 금지와 close-only 인수 이력을 유지한다.

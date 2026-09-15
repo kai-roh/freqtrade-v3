@@ -2,10 +2,20 @@
 
 기준일: 2026-09-15 KST
 
-Status: prerequisites completed on 2026-09-15 (see "Readiness" below); the week
-run itself starts only on an explicit operator command. The bounded streaming
-collector and Telegram connection test have passed; neither authorizes or starts
-the week trading run.
+Status: **running** since 2026-09-15 12:07:24 UTC (21:07 KST) on explicit user
+instruction after Telegram order notifications were confirmed on every event of
+the verification run.
+
+- Container `phase1-demo-week-run-20260915`, source `20a581d`, image
+  `freqtrade-v3-demo-auto:20a581d` (`sha256:8db85012…`), config
+  `configs/phase1-week-run.json` (60 episodes, 2 h interval, 7-day window, hold 300 s,
+  leg about 220 USDT, Telegram pause after 3 consecutive failures).
+- Run identity `--started-at 2026-09-15T12:07:24+00:00` is stored in
+  `evidence/phase1/demo-week-run-20260915/started-at.txt` on the host and must be
+  reused for every deliberate restart.
+- Episode 1 entered and hedged at 12:07:30–37 UTC with all notifications delivered.
+- Still required during the run: at least two more deliberate restarts (three
+  total for the Phase 1E gate), then the final SLA and episode aggregation.
 
 ## Readiness — 2026-09-15
 

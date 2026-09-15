@@ -1,6 +1,16 @@
 # Server state
 
-## Latest verified Phase 1 state — 2026-09-15 21:01 KST
+## Week observation run — started 2026-09-15 21:07 KST
+
+- Container `phase1-demo-week-run-20260915` running image
+  `freqtrade-v3-demo-auto:20a581d` (`sha256:8db85012…`), source `20a581d`, config
+  `configs/phase1-week-run.json`; run identity in
+  `evidence/phase1/demo-week-run-20260915/started-at.txt`; events in `run.json`.
+- No auto-restart. Restart with the same `--started-at` and a new container name
+  (see `docs/PHASE1_WEEK_RUN.md`). Do not run any other program or manual order on
+  the Demo BTCUSDT account while it runs.
+
+## Latest verified Phase 1 state before the week run — 2026-09-15 21:01 KST
 
 - Image `freqtrade-v3-demo-auto:66bf69d` (`sha256:41fb5c67…`) and test image built
   from source `66bf69d`; host-side suite against an isolated schema:
