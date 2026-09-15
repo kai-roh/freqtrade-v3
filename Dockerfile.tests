@@ -6,6 +6,8 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 USER root
+# git is required by the run-manifest CLI tests; it is not part of the runtime image.
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
 RUN uv sync --frozen
 COPY . /app
 RUN chown -R 65532:65532 /app
