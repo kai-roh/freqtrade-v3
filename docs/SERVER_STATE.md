@@ -18,6 +18,15 @@
   (insufficient). Policy unchanged. Evidence: `evidence/phase1/sla-evidence-20260915.json`.
 - The non-git working copy at `/home/kai/freqtrade-v3` used by the cron jobs was
   synced to the same tracked source (`.env`, reports, and data untouched).
+- Walk-forward validation of the updated research code on the server's one-year
+  data (180 training days, six 30-day folds, validation 2026-03-17 → 2026-09-13):
+  `STOP_BEFORE_CLASSIFIER`, unchanged. Trade counts are identical to the
+  2026-09-13 scheduled run; profit factors moved by at most 0.005 from resolving
+  fold-boundary exits; drawdowns are now 2.2%–4.2% on the 5%-of-capital basis
+  instead of 45%–85% on the 100%-per-trade basis. Profit factor (0.52–0.57),
+  negative expectancy, and 0–1 positive folds remain the binding rejections.
+  Result: `research_results/validation-b6d3bbd/`. The scheduled `latest` link
+  was not changed.
 - `phase1-postgres` and `freqtrade_kai` were not modified. No new trading run.
 
 ## Phase 1 state before the settlement — 2026-09-15

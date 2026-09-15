@@ -35,7 +35,9 @@ The original milestone used 90 training days. The scheduled full-year monitoring
   so drawdown is a portfolio measure. Earlier reports assumed 100% of capital per
   trade and are not comparable on drawdown or expectancy; profit factor is unaffected.
   Fold-boundary trades now resolve exits on later causal candles instead of closing
-  at the fold's last candle.
+  at the fold's last candle. The first run on this basis
+  (`research_results/validation-b6d3bbd/`) kept `STOP_BEFORE_CLASSIFIER` with
+  identical trade counts and drawdowns of 2.2%–4.2%.
 
 This requires the latest 360 days and six hours from the one-year store. A small leading overlap remains so candle boundaries and weekly refreshes do not make the run fail at the minimum-span edge.
 
