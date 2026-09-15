@@ -34,6 +34,7 @@ def submit_engineering_entry(
     observed_ns,
     hold_seconds=300,
     allow_test_transport=False,
+    maximum_episodes=1,
 ):
     manifest.assert_deployable()
     if not isinstance(risk_service, ActionRiskService):
@@ -85,10 +86,18 @@ def submit_engineering_entry(
                 raise ValueError("entry quote expired")
             if connection.execute("SELECT 1 FROM intents WHERE state<>'CLOSED' LIMIT 1").fetchone():
                 raise ValueError("existing episode blocks entry")
-            if connection.execute(
-                "SELECT 1 FROM intents WHERE run_manifest_id=%s LIMIT 1", (manifest.manifest_id,)
-            ).fetchone():
-                raise ValueError("one engineering episode per manifest; never replay entry")
+            # Bounded repetition: at most maximum_episodes intents per manifest, and
+            # never while any episode is open. Entry is never replayed for an intent.
+            if (
+                connection.execute(
+                    "SELECT count(*) FROM intents WHERE run_manifest_id=%s",
+                    (manifest.manifest_id,),
+                ).fetchone()[0]
+                >= maximum_episodes
+            ):
+                raise ValueError(
+                    "episode budget for this manifest is exhausted; never replay entry"
+                )
             if (
                 connection.execute(
                     "SELECT 1 FROM order_recovery_checks WHERE status IN ('PENDING','BLOCKED') LIMIT 1"

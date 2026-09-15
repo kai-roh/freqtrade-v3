@@ -22,6 +22,8 @@ COPY scripts/settle_phase1_residual.py ./scripts/settle_phase1_residual.py
 COPY scripts/summarize_phase1_sla.py ./scripts/summarize_phase1_sla.py
 COPY configs/phase1-policy.json ./configs/phase1-policy.json
 COPY configs/phase1-engineering.json ./configs/phase1-engineering.json
+COPY configs/phase1-week-run.json ./configs/phase1-week-run.json
+COPY configs/phase1-verify-repeat.json ./configs/phase1-verify-repeat.json
 
 ARG SOURCE_SHA
 ENV PHASE1_BUILD_SOURCE_SHA=${SOURCE_SHA}

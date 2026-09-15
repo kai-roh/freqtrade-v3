@@ -67,3 +67,57 @@ def test_engineering_entry_is_bounded_and_never_replayed(failure):
             with pytest.raises(ValueError, match="existing episode"):
                 submit_engineering_entry(**kwargs)
             assert len(runtime.submitted) == 1
+
+
+def test_episode_budget_allows_bounded_repetition_only_after_close():
+    dsn = os.getenv("PHASE1_TEST_DATABASE_DSN")
+    if not dsn:
+        pytest.skip("PHASE1_TEST_DATABASE_DSN not set")
+    account = dict(
+        spot_total_btc="0.25",
+        spot_btc="0.25",
+        perp_qty="0",
+        spot_usdt="1000",
+        perp_usdt="1000",
+        observed_ns=time.time_ns(),
+        leverage=2,
+        margin_type="ISOLATED",
+        open_orders=[],
+    )
+    with _isolated_database(dsn) as db, ActionRiskService() as risk:
+        apply_migrations(db)
+        runtime = FakeStrategy()
+        kwargs = dict(
+            connection=db,
+            runtime=runtime,
+            risk_service=risk,
+            manifest=_manifest(),
+            account=account,
+            limits=EpisodeLimits("0.00001", "0.001", "5", "50", "60000", "60000", "60000", "60001"),
+            quantity=Decimal("0.0036"),
+            price=Decimal("60000"),
+            receive_gap_ms=(0, 0),
+            observed_ns=time.time_ns(),
+            hold_seconds=300,
+            allow_test_transport=True,
+            maximum_episodes=2,
+        )
+        first = submit_engineering_entry(**kwargs)
+        assert first["submitted"]
+        with pytest.raises(ValueError, match="existing episode"):
+            submit_engineering_entry(**kwargs)
+        # Test-only shortcut standing in for an audited close; production closes
+        # through the lifecycle or residual settlement.
+        db.execute("UPDATE intents SET state='CLOSED' WHERE id=%s", (first["intent_id"],))
+        db.execute("UPDATE order_commands SET active=false")
+        kwargs["observed_ns"] = time.time_ns()
+        kwargs["account"] = account | {"observed_ns": time.time_ns()}
+        second = submit_engineering_entry(**kwargs)
+        assert second["submitted"] and second["intent_id"] != first["intent_id"]
+        db.execute("UPDATE intents SET state='CLOSED' WHERE id=%s", (second["intent_id"],))
+        db.execute("UPDATE order_commands SET active=false")
+        kwargs["observed_ns"] = time.time_ns()
+        kwargs["account"] = account | {"observed_ns": time.time_ns()}
+        with pytest.raises(ValueError, match="episode budget"):
+            submit_engineering_entry(**kwargs)
+        assert len(runtime.submitted) == 2

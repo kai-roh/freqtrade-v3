@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Run one durable Demo carry engineering episode, including timed automatic exit.
+"""Run bounded Demo carry engineering episodes, each with a timed automatic exit.
 
 This is a synthetic engineering trigger, NOT approval of a profitable strategy.
 No mainnet credentials, transfers, or unbounded replacement. Closing dust below
 the Spot minimum order is settled as an audited owned residual, never sold or hidden.
+Repetition is bounded by the engineering config: episode count, interval, total
+run window, and a Telegram delivery pause rule. An open episode is always resumed
+before any new entry, and any error halts new orders.
 """
 
 import argparse
@@ -38,6 +41,7 @@ from v3.phase1.observations import capture_binance_carry_market_observation  # n
 from v3.phase1.position_gateway import account_execution_lock  # noqa: E402
 from v3.phase1.postgres import PostgresPhase1Ledger, apply_migrations  # noqa: E402
 from v3.phase1.rest_recovery import recover_tracked_order  # noqa: E402
+from v3.phase1.run_control import RunAction, decide_next_episode, load_run_bounds  # noqa: E402
 from v3.reproducibility import (  # noqa: E402
     NO_MODEL_ARTIFACT_SHA256,
     RunManifest,
@@ -47,12 +51,13 @@ from v3.reproducibility import (  # noqa: E402
 
 
 async def execute(args, runtimes):
-    policy_path = Path("configs/phase1-engineering.json")
+    policy_path = args.engineering_config
     policy = json.loads(policy_path.read_text())
     if policy["environment"] != "demo" or policy["real_capital"] or policy["economic_approval"]:
         raise ValueError("Demo engineering policy required")
-    if policy["maximum_episodes"] != 1 or not policy["synthetic_trigger"]:
-        raise ValueError("only one explicit engineering episode is authorized")
+    if not policy["synthetic_trigger"]:
+        raise ValueError("engineering episodes must be explicit synthetic triggers")
+    bounds = load_run_bounds(policy_path)
     started = datetime.fromisoformat(args.started_at).astimezone(UTC)
     manifest = RunManifest(
         os.environ["PHASE1_BUILD_SOURCE_SHA"],
@@ -75,23 +80,28 @@ async def execute(args, runtimes):
             telegram[name.strip()] = value.strip().strip("\"'")
 
     history = []
+    telegram_failures = {"consecutive": 0}
 
-    async def report(kind, detail):
-        event = dict(at=datetime.now(UTC).isoformat(), kind=kind, **detail)
-        history.append(event)
+    def write_output():
         args.output.write_text(
             json.dumps(
                 dict(
                     environment="demo",
                     economic_approval=False,
                     manifest=manifest.to_dict(),
+                    run_bounds=bounds.__dict__,
                     events=history,
                 ),
                 indent=2,
             )
             + "\n"
         )
-        await asyncio.to_thread(
+
+    async def report(kind, detail):
+        event = dict(at=datetime.now(UTC).isoformat(), kind=kind, **detail)
+        history.append(event)
+        write_output()
+        delivery = await asyncio.to_thread(
             send_phase1_telegram,
             Phase1Notification(
                 kind,
@@ -103,6 +113,13 @@ async def execute(args, runtimes):
             token=telegram.get("TELEGRAM_TOKEN", ""),
             chat_id=telegram.get("TELEGRAM_CHAT_ID", ""),
         )
+        # Delivery is evidence, never a trading input: it cannot retry or alter orders.
+        event["telegram_delivered"] = delivery.delivered
+        event["telegram_error_type"] = delivery.error_type
+        telegram_failures["consecutive"] = (
+            0 if delivery.delivered else telegram_failures["consecutive"] + 1
+        )
+        write_output()
 
     observation = await asyncio.to_thread(
         capture_binance_carry_market_observation, BinanceReadOnlyClient()
@@ -112,7 +129,7 @@ async def execute(args, runtimes):
     with (
         psycopg.connect(dsn, autocommit=True) as control,
         psycopg.connect(dsn, autocommit=True) as stream,
-        ActionRiskService() as risk,
+        ActionRiskService(config_path=policy_path) as risk,
     ):
         apply_migrations(control)
         # Dedicated process-lifetime ownership, separate from per-order/account locks.
@@ -202,52 +219,17 @@ async def execute(args, runtimes):
                 time.time_ns(),
             )
 
+        account_box = {}
+
         class SnapshotInspector:
             def account(self):
-                return account
+                return account_box["account"]
 
             def __getattr__(self, name):
                 return getattr(inspector, name)
 
-        try:
-            await runtime.start()
-            await report(
-                "start",
-                dict(status="RUNNING", strategy_started=True, hold_seconds=policy["hold_seconds"]),
-            )
-            existing = control.execute(
-                "SELECT id FROM intents WHERE run_manifest_id=%s", (manifest.manifest_id,)
-            ).fetchall()
-            if len(existing) > 1:
-                raise ValueError("ambiguous engineering episode")
-            if existing:
-                intent_id = str(existing[0][0])
-            else:
-                if args.resume_intent:
-                    raise ValueError("close-only takeover must never create an entry")
-                account = await asyncio.to_thread(inspector.account)
-                limits, gaps, ns = market()
-                # Exact Spot lot. Independent risk rechecks fee-adjusted hedge headroom.
-                qty = (
-                    Decimal(policy["target_leg_usdt"]) / limits.spot_ask / spot.lot_size
-                ).to_integral_value(rounding=ROUND_FLOOR) * spot.lot_size
-                entry = submit_engineering_entry(
-                    connection=control,
-                    runtime=runtime,
-                    risk_service=risk,
-                    manifest=manifest,
-                    account=account,
-                    limits=limits,
-                    quantity=qty,
-                    price=limits.spot_ask,
-                    receive_gap_ms=gaps,
-                    observed_ns=ns,
-                    hold_seconds=policy["hold_seconds"],
-                )
-                await report("trade", entry)
-                if "intent_id" not in entry:
-                    raise ValueError("engineering entry denied")
-                intent_id = entry["intent_id"]
+        async def run_episode(intent_id):
+            """Manage one episode to CLOSED (exact flat or settled residual)."""
             deadline = time.monotonic() + policy["maximum_run_seconds"]
             failures = 0
             while time.monotonic() < deadline:
@@ -280,7 +262,7 @@ async def execute(args, runtimes):
                         raise ValueError("three read-only recovery failures; entry will not replay")
                     continue
                 failures = 0
-                account = await asyncio.to_thread(inspector.account)
+                account_box["account"] = await asyncio.to_thread(inspector.account)
                 result = manage_episode_once(
                     connection=control,
                     inspector=SnapshotInspector(),
@@ -290,7 +272,7 @@ async def execute(args, runtimes):
                     intent_id=intent_id,
                     market_evidence=market,
                     # Bounded engineering budget: the leg cap held unhedged for the
-                    # whole run window. Exceeding it is an invariant failure.
+                    # whole episode window. Exceeding it is an invariant failure.
                     unhedged_budget_notional_ms=Decimal(policy["maximum_leg_usdt"])
                     * policy["maximum_run_seconds"]
                     * 1000,
@@ -298,8 +280,7 @@ async def execute(args, runtimes):
                 if result.get("command_id"):
                     await report("trade", result)
                 elif result.get("status") == "CLOSED":
-                    await report("stop", result | {"completed_episode": True})
-                    return
+                    return result | {"completed_episode": True, "exact_flat": True}
                 elif result.get("status") == "DUST_REMAINS":
                     # Matched-with-dust may hold until the deadline. Closing dust is
                     # settled as an audited owned residual only when futures are flat
@@ -315,15 +296,92 @@ async def execute(args, runtimes):
                         settled = settle_episode_residual(
                             control, intent_id=intent_id, account=account, limits=limits
                         )
-                        await report(
-                            "stop",
-                            result | settled | {"completed_episode": True, "exact_flat": False},
-                        )
-                        return
+                        return result | settled | {"completed_episode": True, "exact_flat": False}
                 elif result.get("status") not in {"WAIT"}:
                     await report("error", result)
                     raise ValueError("management action blocked; no replacement submitted")
-            raise ValueError("bounded run deadline exceeded; inventory requires reconciliation")
+            raise ValueError("bounded episode deadline exceeded; inventory requires reconciliation")
+
+        try:
+            await runtime.start()
+            await report(
+                "start",
+                dict(
+                    status="RUNNING",
+                    strategy_started=True,
+                    hold_seconds=policy["hold_seconds"],
+                    maximum_episodes=bounds.maximum_episodes,
+                ),
+            )
+            last_closed_at = None
+            while True:
+                rows = control.execute(
+                    "SELECT id,state,created_at FROM intents WHERE run_manifest_id=%s "
+                    "ORDER BY created_at",
+                    (manifest.manifest_id,),
+                ).fetchall()
+                decision = decide_next_episode(
+                    intents=[(str(r[0]), r[1], r[2]) for r in rows],
+                    now=datetime.now(UTC),
+                    started_at=started,
+                    bounds=bounds,
+                    last_closed_at=last_closed_at,
+                    consecutive_telegram_failures=telegram_failures["consecutive"],
+                )
+                if decision.action == RunAction.STOP:
+                    await report(
+                        "stop",
+                        dict(
+                            status="STOPPED",
+                            reason=decision.reason,
+                            episodes_closed=sum(1 for r in rows if r[1] == "CLOSED"),
+                            continuous_auto_trading_running=False,
+                        ),
+                    )
+                    return
+                if decision.action == RunAction.WAIT:
+                    await asyncio.sleep(min(decision.wait_seconds, 30))
+                    if (
+                        runtime.strategy.failure
+                        or not runtime.node.kernel.exec_engine.check_connected()
+                    ):
+                        raise ValueError("stream disconnected while idle; no new orders")
+                    continue
+                if decision.action == RunAction.RESUME_EPISODE:
+                    intent_id = decision.intent_id
+                    await report("start", dict(status="RESUMING", intent_id=intent_id))
+                else:
+                    if args.resume_intent:
+                        raise ValueError("close-only takeover must never create an entry")
+                    account = await asyncio.to_thread(inspector.account)
+                    limits, gaps, ns = market()
+                    # Exact Spot lot. Independent risk rechecks fee-adjusted hedge headroom.
+                    qty = (
+                        Decimal(policy["target_leg_usdt"]) / limits.spot_ask / spot.lot_size
+                    ).to_integral_value(rounding=ROUND_FLOOR) * spot.lot_size
+                    entry = submit_engineering_entry(
+                        connection=control,
+                        runtime=runtime,
+                        risk_service=risk,
+                        manifest=manifest,
+                        account=account,
+                        limits=limits,
+                        quantity=qty,
+                        price=limits.spot_ask,
+                        receive_gap_ms=gaps,
+                        observed_ns=ns,
+                        hold_seconds=policy["hold_seconds"],
+                        maximum_episodes=bounds.maximum_episodes,
+                    )
+                    await report("trade", entry | {"episode_reason": decision.reason})
+                    if "intent_id" not in entry:
+                        raise ValueError("engineering entry denied")
+                    intent_id = entry["intent_id"]
+                outcome = await run_episode(intent_id)
+                last_closed_at = datetime.now(UTC)
+                await report("stop", outcome | {"intent_id": intent_id})
+                if args.resume_intent:
+                    return
         except Exception as exc:
             await report(
                 "error",
@@ -351,6 +409,12 @@ def main():
     )
     parser.add_argument("--previous-manifest")
     parser.add_argument("--execute-demo-auto", action="store_true", required=True)
+    parser.add_argument(
+        "--engineering-config",
+        type=Path,
+        default=Path("configs/phase1-engineering.json"),
+        help="Bounded synthetic-trigger config; the manifest config hash binds to it",
+    )
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     loop, runtimes = asyncio.new_event_loop(), []
