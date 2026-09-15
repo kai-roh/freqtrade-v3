@@ -116,8 +116,8 @@ def main():
         delivery = send_phase1_telegram(
             Phase1Notification(
                 "stop" if result["passed"] else "error",
-                "데모 잔량 정산",
-                "최소 주문 미만 현물 잔량을 감사 기록으로 정산; 주문·매도 없음, 수익성 검증 아님",
+                "잔량 정산",
+                "매도 없이 소유 잔량으로 기록",
                 datetime.now(UTC),
                 {
                     "passed": result["passed"],

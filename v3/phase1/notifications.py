@@ -14,12 +14,13 @@ import urllib.parse
 import urllib.request
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from .http import RejectRedirects
 
 TELEGRAM_API_HOST = "api.telegram.org"
+KST = timezone(timedelta(hours=9), "KST")
 TELEGRAM_SEND_TIMEOUT_SECONDS = 5.0
 TELEGRAM_MESSAGE_LIMIT = 4096
 PHASE1_EVENT_TYPES = frozenset({"start", "stop", "trade", "error"})
@@ -71,17 +72,15 @@ def phase1_notification_from_env(
 def format_phase1_notification(notification: Phase1Notification) -> str:
     """Build a compact Telegram body with a prominent Demo marker."""
 
-    observed = notification.observed_at.astimezone(UTC).isoformat()
+    observed = notification.observed_at.astimezone(KST).strftime("%m-%d %H:%M:%S KST")
     lines = [
         f"[DEMO][PHASE1][{notification.event_type.upper()}] {notification.title}",
-        notification.summary,
-        f"observed_at_utc: {observed}",
+        f"{notification.summary} · {observed}",
     ]
     safe_details = redact_sensitive(notification.details)
     if safe_details:
-        lines.append("details:")
         for key in sorted(safe_details):
-            lines.append(f"- {key}: {_format_detail_value(safe_details[key])}")
+            lines.append(f"{key}: {_format_detail_value(safe_details[key])}")
     return "\n".join(lines)
 
 

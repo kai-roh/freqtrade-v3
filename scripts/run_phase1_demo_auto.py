@@ -42,6 +42,7 @@ from v3.phase1.position_gateway import account_execution_lock  # noqa: E402
 from v3.phase1.postgres import PostgresPhase1Ledger, apply_migrations  # noqa: E402
 from v3.phase1.rest_recovery import recover_tracked_order  # noqa: E402
 from v3.phase1.run_control import RunAction, decide_next_episode, load_run_bounds  # noqa: E402
+from v3.phase1.telegram_text import compact_event  # noqa: E402
 from v3.reproducibility import (  # noqa: E402
     NO_MODEL_ARTIFACT_SHA256,
     RunManifest,
@@ -101,15 +102,10 @@ async def execute(args, runtimes):
         event = dict(at=datetime.now(UTC).isoformat(), kind=kind, **detail)
         history.append(event)
         write_output()
+        title, summary, compact = compact_event(kind, detail)
         delivery = await asyncio.to_thread(
             send_phase1_telegram,
-            Phase1Notification(
-                kind,
-                "데모 자동 캐리 실행",
-                "합성 진입·자동 헤지·시간 청산; 수익성 검증 아님",
-                datetime.now(UTC),
-                detail,
-            ),
+            Phase1Notification(kind, title, summary or "-", datetime.now(UTC), compact),
             token=telegram.get("TELEGRAM_TOKEN", ""),
             chat_id=telegram.get("TELEGRAM_CHAT_ID", ""),
         )

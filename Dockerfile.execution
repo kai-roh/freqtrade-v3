@@ -21,6 +21,7 @@ COPY scripts/run_phase1_demo_auto.py ./scripts/run_phase1_demo_auto.py
 COPY scripts/settle_phase1_residual.py ./scripts/settle_phase1_residual.py
 COPY scripts/summarize_phase1_sla.py ./scripts/summarize_phase1_sla.py
 COPY scripts/check_phase1_demo_readiness.py ./scripts/check_phase1_demo_readiness.py
+COPY scripts/run_phase1_telegram_bot.py ./scripts/run_phase1_telegram_bot.py
 COPY configs/phase1-policy.json ./configs/phase1-policy.json
 COPY configs/phase1-engineering.json ./configs/phase1-engineering.json
 COPY configs/phase1-week-run.json ./configs/phase1-week-run.json
