@@ -85,10 +85,16 @@ class DispatchJournal:
         if type(maximum_decision_age_ms) is not int or not 0 < maximum_decision_age_ms <= 5000:
             raise ValueError("decision age limit must be in 1..5000ms")
         with self.connection.transaction(), self.connection.cursor(row_factory=dict_row) as cursor:
+            # Serialize receipt admission with recovery before inspecting its gate.
+            cursor.execute("SELECT pg_advisory_xact_lock(31092028)")
             if cursor.execute(
                 "SELECT 1 FROM fill_event_inbox WHERE status <> 'APPLIED' LIMIT 1"
             ).fetchone():
                 raise ValueError("unprocessed fill evidence blocks new dispatch")
+            if cursor.execute(
+                "SELECT 1 FROM order_recovery_checks WHERE status IN ('PENDING','BLOCKED') LIMIT 1"
+            ).fetchone():
+                raise ValueError("unresolved order recovery blocks new dispatch")
             # Match the parent-first lock order used by risk decision admission.
             intent = cursor.execute(
                 "SELECT i.id, i.state FROM intents i JOIN order_commands c ON c.intent_id=i.id "

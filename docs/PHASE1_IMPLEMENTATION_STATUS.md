@@ -267,3 +267,37 @@ Ruff lint/format 및 diff 검사 통과. 이번 시험을 실제 Demo 체결 에
 실제 체결 에피소드·부분체결 헤지·재시작 복구·일주일 운영은 미완료이며,
 전략의 주문 금지 정책도 유지된다. 상세 결과와 이미지 SHA는
 `docs/PHASE1_MATCHING_PROBE.md`에 기록했다.
+
+## 2026-09-15 주문 연결·복구 코드 충돌 정리
+
+- 독립 위험 프로세스와 manifest/config 정책 해시를 결합한 진입 gateway를 추가했다.
+  양 레그는 같은 BTC 수량으로 평가하고 위험 명목은 큰 쪽을 사용한다.
+  현물 한 레그만 제출하며 선물은 pending으로 반환한다. 접수 결과가 불명확하면
+  UNKNOWN을 기록하고 주문 활성화를 해제한다. 이는 완성된 2-leg runner가 아니다.
+- 잘못된 검토시각을 자동 수정하거나 지갑 부족을 통과시키지 않는다.
+  현재 경제성 정책의 미측정 Spot exchange age와 불완전 비용은 계속 진입 거부다.
+- `rest_recovery.py`는 GET 전에 PENDING 증거를 커밋하고 주문→체결→주문 재조회를
+  검증한다. Futures buyer/maker 필드, canonical fill key, 동일 체결 중복 제거,
+  전체 체결 수량 대사, terminal 주문에 한한 command 비활성화를 처리한다.
+  오류가 해결돼도 최초 BLOCKED snapshot/error와 해결 receipt 연결은 보존한다.
+- 복구 증거 등록과 dispatch 입장은 동일 PostgreSQL advisory transaction lock을 쓴다.
+  PENDING/BLOCKED 복구 증거가 있으면 신규 제출이 거부된다.
+- 순수 두 레그 계획기는 양쪽 거래소 잔고 증거를 필수로 요구한다. 수수료 차감 후
+  소유한 Spot만 계산하며 최소 주문 미만 잔량이나 sub-lot 불일치를 flat으로 숨기지 않는다.
+
+검증: **340 tests passed**, 실제 로컬 PostgreSQL 포함·skip 없음.
+변경 파일 Ruff 및 diff whitespace 검사 통과. 서버 연결/기존 컨테이너 상태만
+조회했으며, 이 변경은 아직 Oracle 실행 이미지로 배포하거나 신규 Demo 주문으로 검증하지 않았다.
+
+### 자동 운영을 막는 남은 실행 연결
+
+1. 첫 레그의 최종 체결·수수료에 맞춰 pending 선물 수량을 재평가하고 새로운 위험
+   승인을 받는 coordinator. 기존 pending 수량을 그대로 재전송하면 안 된다.
+2. 위험 축소용 IOC/reduce-only 종료 gateway 및 부분체결/취소 timeout 처리.
+   일반 entry dispatch는 Spot BUY / Perp SELL만 허용하므로 종료에 재사용할 수 없다.
+3. 기동 시 원장·계좌 대사, 단일 실행자 잠금, 종료/장애 알림과 반복 실행 lifecycle.
+4. 합성 데모 시험의 별도 engineering-only 정책: receive-gap을 exchange age로
+   둔갑시키지 않고, 경제성 승인을 받았다는 기록도 남기지 않는다.
+5. 고정 이미지에서 실제 두 레그 진입→종료→재시작 검증을 거친 후 일주일 관측 시작.
+
+**자동매매 및 Phase 1E 일주일 운영은 아직 시작하지 않았다.**
