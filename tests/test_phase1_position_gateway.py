@@ -428,3 +428,29 @@ def test_closing_dust_is_settled_as_owned_residual_and_next_episode_inherits_it(
         (successor["intent_id"],),
     ).fetchone()
     assert baseline == (Decimal("0.250005"), Decimal("0.000005"))
+
+
+def test_lifecycle_enforces_unhedged_notional_duration_invariant(episode):
+    db, _, _, _, entry, limits = episode
+    time.sleep(0.01)
+    # A single owned Spot leg without a hedge accrues exposure; a tiny budget must fail closed.
+    with pytest.raises(ValueError, match="invariant violated.*unhedged"):
+        reconcile_episode_state(
+            db,
+            intent_id=entry.intent_id,
+            account=_account(),
+            limits=limits,
+            unhedged_budget_notional_ms=Decimal("1"),
+        )
+    assert (
+        db.execute("SELECT state FROM intents WHERE id=%s", (entry.intent_id,)).fetchone()[0]
+        == "SUBMITTING"
+    )
+    generous = reconcile_episode_state(
+        db,
+        intent_id=entry.intent_id,
+        account=_account(),
+        limits=limits,
+        unhedged_budget_notional_ms=Decimal("300") * 900 * 1000,
+    )
+    assert generous["state"] == "HEDGE_REQUIRED"

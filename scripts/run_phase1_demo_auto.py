@@ -289,6 +289,11 @@ async def execute(args, runtimes):
                     manifest=manifest,
                     intent_id=intent_id,
                     market_evidence=market,
+                    # Bounded engineering budget: the leg cap held unhedged for the
+                    # whole run window. Exceeding it is an invariant failure.
+                    unhedged_budget_notional_ms=Decimal(policy["maximum_leg_usdt"])
+                    * policy["maximum_run_seconds"]
+                    * 1000,
                 )
                 if result.get("command_id"):
                     await report("trade", result)

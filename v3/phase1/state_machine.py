@@ -111,7 +111,7 @@ class InvariantSnapshot:
     venue_fill_keys: tuple[tuple[str, str], ...]
     has_approved_risk_decision: bool
     unhedged_notional_milliseconds: DecimalInput
-    maximum_unhedged_notional_milliseconds: DecimalInput
+    maximum_unhedged_notional_milliseconds: DecimalInput | None
 
     def __post_init__(self) -> None:
         for name in (
@@ -120,9 +120,17 @@ class InvariantSnapshot:
             "maximum_delta_drift_fraction",
             "rounding_tolerance",
             "unhedged_notional_milliseconds",
-            "maximum_unhedged_notional_milliseconds",
         ):
             object.__setattr__(self, name, as_decimal(getattr(self, name), field_name=name))
+        if self.maximum_unhedged_notional_milliseconds is not None:
+            object.__setattr__(
+                self,
+                "maximum_unhedged_notional_milliseconds",
+                as_decimal(
+                    self.maximum_unhedged_notional_milliseconds,
+                    field_name="maximum_unhedged_notional_milliseconds",
+                ),
+            )
 
 
 def invariant_violations(snapshot: InvariantSnapshot) -> tuple[str, ...]:
@@ -158,7 +166,11 @@ def invariant_violations(snapshot: InvariantSnapshot) -> tuple[str, ...]:
         and not snapshot.has_approved_risk_decision
     ):
         violations.append("submitting state has no approved risk decision")
-    if snapshot.unhedged_notional_milliseconds > snapshot.maximum_unhedged_notional_milliseconds:
+    if (
+        snapshot.maximum_unhedged_notional_milliseconds is not None
+        and snapshot.unhedged_notional_milliseconds
+        > snapshot.maximum_unhedged_notional_milliseconds
+    ):
         violations.append("unhedged notional-duration budget exceeded")
     return tuple(violations)
 

@@ -9,12 +9,118 @@ from .episode_plan import EpisodeActionType, EpisodePhase, plan_episode_action
 from .ledger import CostLedgerEntryRow, IncidentRow
 from .position_gateway import _account_fresh, _safe_account, _state, account_execution_lock
 from .postgres import PostgresPhase1Ledger
-from .state_machine import CarryStateMachine, IntentState
+from .state_machine import (
+    CarryStateMachine,
+    IntentState,
+    InvariantSnapshot,
+    invariant_violations,
+)
 
 RESIDUAL_GUARDS = ("perp_flat", "no_open_orders", "residual_below_minimum_order")
+DELTA_DRIFT_FRACTION = Decimal("0.05")
 
 
-def reconcile_episode_state(connection, *, intent_id, account, limits, closing=False):
+def episode_invariant_snapshot(
+    connection,
+    *,
+    intent_id,
+    snapshot,
+    commands,
+    limits,
+    state,
+    now=None,
+    unhedged_budget_notional_ms=None,
+):
+    """Build the six-invariant view of one episode from durable ledger rows only."""
+    now = now or datetime.now(UTC)
+    with connection.cursor() as cursor:
+        order_ids = {
+            str(row[0])
+            for row in cursor.execute(
+                "SELECT o.id FROM orders o JOIN order_commands c ON c.id=o.command_id "
+                "WHERE c.intent_id=%s",
+                (intent_id,),
+            ).fetchall()
+        }
+        fills = cursor.execute(
+            "SELECT f.order_id,f.venue,f.venue_fill_id,c.leg,c.side,f.quantity,f.price,"
+            "f.fee_amount,f.fee_token,f.filled_at FROM fills f JOIN orders o ON o.id=f.order_id "
+            "JOIN order_commands c ON c.id=o.command_id WHERE c.intent_id=%s "
+            "ORDER BY f.filled_at,f.id",
+            (intent_id,),
+        ).fetchall()
+        approved = cursor.execute(
+            "SELECT approved FROM risk_decisions WHERE intent_id=%s "
+            "ORDER BY decided_at DESC,id DESC LIMIT 1",
+            (intent_id,),
+        ).fetchone()
+    active_by_leg = {"spot": 0, "perp": 0}
+    for command in commands:
+        if command["active"]:
+            active_by_leg[command["leg"]] += 1
+    # Unhedged exposure integrates |owned Spot - short perp| over wall time between
+    # durable fills, then to now. It is a bound on hedge latency cost, not PnL.
+    exposure_ms = Decimal(0)
+    spot = perp = Decimal(0)
+    previous = None
+    for row in fills:
+        order_id, _, _, leg, side, quantity, price, fee_amount, fee_token, filled_at = row
+        if previous is not None:
+            elapsed_ms = Decimal(int((filled_at - previous).total_seconds() * 1000))
+            exposure_ms += abs(spot + perp) * price * max(elapsed_ms, Decimal(0))
+        signed = quantity if side == "buy" else -quantity
+        if leg == "spot":
+            spot += signed
+            if fee_token == "BTC":
+                spot -= fee_amount
+        else:
+            perp += signed
+        previous = filled_at
+    if previous is not None and abs(spot + perp) > 0 and state not in {IntentState.CLOSED}:
+        elapsed_ms = Decimal(int((now - previous).total_seconds() * 1000))
+        exposure_ms += abs(spot + perp) * limits.spot_bid * max(elapsed_ms, Decimal(0))
+    return InvariantSnapshot(
+        state=state,
+        active_commands_by_leg=active_by_leg,
+        spot_notional=snapshot.net_spot_base * limits.spot_bid,
+        perp_notional=snapshot.perp_filled_base * limits.perp_bid,
+        maximum_delta_drift_fraction=DELTA_DRIFT_FRACTION,
+        local_positions={"spot": snapshot.net_spot_base, "perp": snapshot.perp_filled_base},
+        venue_positions={
+            "spot": snapshot.venue_spot_base,
+            "perp": snapshot.venue_perp_base,
+        },
+        rounding_tolerance=Decimal(0),
+        known_order_ids=frozenset(order_ids),
+        fill_order_ids=tuple(str(row[0]) for row in fills),
+        venue_fill_keys=tuple((row[1], row[2]) for row in fills),
+        has_approved_risk_decision=bool(approved and approved[0]),
+        unhedged_notional_milliseconds=exposure_ms,
+        maximum_unhedged_notional_milliseconds=unhedged_budget_notional_ms,
+    )
+
+
+def _enforce_invariants(connection, **kwargs):
+    violations = invariant_violations(episode_invariant_snapshot(connection, **kwargs))
+    if violations:
+        raise ValueError("episode invariant violated: " + "; ".join(violations))
+
+
+def reconcile_episode_state(
+    connection,
+    *,
+    intent_id,
+    account,
+    limits,
+    closing=False,
+    unhedged_budget_notional_ms=None,
+):
+    """Reconcile durable fills with the venue snapshot, then enforce the six invariants.
+
+    Any invariant violation rolls back this tick's transitions and raises, so the
+    caller halts new orders. Budget None means the notional-duration invariant is
+    not measured for this caller; every other invariant is always enforced.
+    """
     with account_execution_lock(connection), connection.transaction():
         connection.execute("SELECT pg_advisory_xact_lock(31092028)")
         _account_fresh(account)
@@ -55,9 +161,22 @@ def reconcile_episode_state(connection, *, intent_id, account, limits, closing=F
                 )
 
         flat = snapshot.net_spot_base == snapshot.perp_filled_base == 0
+
+        def enforce():
+            _enforce_invariants(
+                connection,
+                intent_id=intent_id,
+                snapshot=snapshot,
+                commands=commands,
+                limits=limits,
+                state=machine.state,
+                unhedged_budget_notional_ms=unhedged_budget_notional_ms,
+            )
+
         if machine.state == IntentState.CLOSED:
             if not flat:
                 raise ValueError("closed episode has inventory")
+            enforce()
             return {"state": "CLOSED", "flat": True, "orders_submitted": False}
         if flat:
             for command in commands:
@@ -97,6 +216,7 @@ def reconcile_episode_state(connection, *, intent_id, account, limits, closing=F
         elif machine.state == IntentState.SUBMITTING:
             move(IntentState.PARTIALLY_HEDGED, "confirmed_partial_exposure")
             move(IntentState.HEDGE_REQUIRED, "confirmed_hedge_shortfall")
+        enforce()
         return {
             "state": machine.state.value,
             "flat": flat,

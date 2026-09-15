@@ -25,6 +25,7 @@ def manage_episode_once(
     market_evidence,
     closing=False,
     allow_test_transport=False,
+    unhedged_budget_notional_ms=None,
 ):
     """Recover -> account GET -> fresh quotes -> reconcile -> at most one IOC.
 
@@ -92,6 +93,7 @@ def manage_episode_once(
             intent_id=intent_id,
             account=account,
             limits=limits,
+            unhedged_budget_notional_ms=unhedged_budget_notional_ms,
         )
         if lifecycle["flat"]:
             return {"submitted": False, "status": "CLOSED", "flat": True}
