@@ -13,8 +13,10 @@ episode, a week-run start, or four episodes toward the count below.
 
 Before starting the week run:
 
-1. Define and implement residual ownership/accounting without resetting the
-   baseline or falsely declaring flat; specify when another entry is allowed.
+1. ~~Define and implement residual ownership/accounting~~ Implemented on
+   2026-09-15 (Decision 0007): unsellable closing dust is settled as an audited
+   owned residual and inherited by the next baseline. The stuck episode was
+   settled on the server the same day (`residual-settlement-20260915.json`).
 2. Complete bounded cancellation, partial-fill and restart recovery verification.
 3. Record Telegram delivery results and implement the corresponding pause rule.
 4. Explicitly revise the current one-episode engineering runner for bounded

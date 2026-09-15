@@ -10,7 +10,10 @@ Nautilus의 실제 Binance Demo 주문과 체결을 사용해 다음 순서를 �
 3. REST·스트림 체결을 원장에 대사하고 BTC 수수료를 뺀 수량으로 선물을 헤지한다.
 4. 진입 시 기록한 300초 보유 기한이 지나면 reduce-only 선물 매수로 숏을 종료한다.
 5. 선물 무포지션 확인 후 해당 에피소드가 소유한 현물만 매도한다.
-6. 양쪽이 정확히 0이면 CLOSED, 최소주문 미만 잔고가 남으면 dust와 미완료 상태를 유지한다.
+6. 양쪽이 정확히 0이면 CLOSED. 최소주문 미만 현물 잔량만 남고 선물이 flat이면
+   감사 기록(`episode_residuals`, 비용, incident, 대사, 전이)과 함께 소유 잔량으로 정산해
+   CLOSED로 보낸다. 잔량은 매도하지 않고 다음 에피소드 baseline이 상속한다.
+   `exact_flat=false`로 보고하며 정확한 flat과 구분한다.
 
 경제적 캐리 진입 승인은 아니다. 약 220 USDT 명목의 합성 Demo 트리거이며
 비용·수익률·시장 알파나 실계정 승격 근거로 사용하지 않는다. 정상 캐리 정책의
@@ -85,3 +88,34 @@ rollback한다. 원본 inbox, BLOCKED 3건 및 수정 audit는 보존되어 있�
 않았으며 새 source/image/manifest를 baseline evidence에 기록했다. 이 인수는 통상적인
 동일 이미지 재시작과 다르다. 초기 컨테이너 exit 2, 복구 컨테이너 exit 0이지만 후자는
 잔량 감지 후 정상 중단이라는 뜻이지 flat 또는 완료 승인이 아니다.
+
+
+## 잔량 정산
+
+2026-09-15 19:29 KST에 사용자 승인 후 아래 명령을 실행해 에피소드
+`09a7f1cf-51d1-43ab-b8a6-fa65041ba6ed`를 `ABORTING → CLOSED`로 정산했다
+(종료 코드 0, 주문 0건, Telegram 전달 확인, 증거
+`evidence/phase1/residual-settlement-20260915.json`). 명령은 주문 없이 GET과 원장 기록만 수행한다. 종료 요청·선물 flat·
+미체결 0·체결 전부 반영·매도 불가 잔량 조건 중 하나라도 어긋나면 아무것도 바꾸지 않고
+종료 코드 2를 반환한다. `--notify`는 `[DEMO][PHASE1]` Telegram 알림을 보낸다.
+
+```bash
+cd /home/kai/freqtrade-v3
+set -a; . ./.phase1-database.env; set +a
+IMG=freqtrade-v3-demo-auto:b6d3bbd
+docker run --name phase1-residual-settle-20260915 \
+  --network phase1-demo-evidence --read-only \
+  --tmpfs /tmp:rw,nosuid,nodev,size=128m --user 1002:1002 \
+  -e PHASE1_DATABASE_DSN \
+  -e PHASE1_BUILD_SOURCE_SHA=b6d3bbdad0e47b1a7d64514a472843e3273506fe \
+  -e PHASE1_IMAGE_DIGEST="$(docker image inspect --format '{{.Id}}' "$IMG")" \
+  -v /home/kai/freqtrade-v3/.env:/run/phase1.env:ro \
+  -v /home/kai/freqtrade-v3/evidence/phase1/demo-auto-20260915:/evidence \
+  --entrypoint /app/.venv/bin/python "$IMG" scripts/settle_phase1_residual.py \
+  --credentials-env-file /run/phase1.env \
+  --output /evidence/residual-settlement-20260915.json \
+  --intent-id 09a7f1cf-51d1-43ab-b8a6-fa65041ba6ed --settle-residual --notify
+```
+
+성공 시 출력 JSON의 `settlement.state`가 `CLOSED`, `residual_base`가 `0.00000715`,
+`open_intents`가 `0`이어야 한다. 실행 후 증거 파일을 저장소 `evidence/phase1/`로 복사한다.

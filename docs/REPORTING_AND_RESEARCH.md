@@ -31,6 +31,11 @@ The original milestone used 90 training days. The scheduled full-year monitoring
 - 30 out-of-sample validation days;
 - six walk-forward folds;
 - 0.20% normal and 0.30% stress round-trip costs.
+- Since 2026-09-15, trades are sized at 5% of capital (`capital_fraction_per_trade`),
+  so drawdown is a portfolio measure. Earlier reports assumed 100% of capital per
+  trade and are not comparable on drawdown or expectancy; profit factor is unaffected.
+  Fold-boundary trades now resolve exits on later causal candles instead of closing
+  at the fold's last candle.
 
 This requires the latest 360 days and six hours from the one-year store. A small leading overlap remains so candle boundaries and weekly refreshes do not make the run fail at the minimum-span edge.
 

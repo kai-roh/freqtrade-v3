@@ -1,6 +1,26 @@
 # Server state
 
-## Latest verified Phase 1 state — 2026-09-15
+## Latest verified Phase 1 state — 2026-09-15 19:29 KST
+
+- Source `b6d3bbd` was shipped via `git archive` and built into
+  `freqtrade-v3-demo-auto:b6d3bbd` (image `sha256:afed612e…`) and a test image
+  `freqtrade-v3-tests:b6d3bbd`. The regression suite ran on the host against an
+  isolated schema of `phase1-postgres`: `404 passed, 1 failed`; the failure was the
+  manifest CLI test needing `git` inside the test image, fixed in `42b1a76`.
+- Residual settlement (user-approved, order-free): intent
+  `09a7f1cf-51d1-43ab-b8a6-fa65041ba6ed` `ABORTING → CLOSED`, `episode_residuals`
+  `0.00000715 BTC`, migration 0008 applied, open intents `0`, rejected transitions `0`.
+  Account GET before and after: futures `0`, open BTC orders `0`, Spot
+  `0.00000715 BTC` unchanged. Container `phase1-residual-settle-20260915` exited 0.
+  Evidence: `evidence/phase1/residual-settlement-20260915.json`.
+- SLA evidence (read-only): 259 futures exchange-age samples, median 13 ms,
+  p99 47.68 ms, proposed `maximum_quote_age_ms=96`; hedge-latency samples `1`
+  (insufficient). Policy unchanged. Evidence: `evidence/phase1/sla-evidence-20260915.json`.
+- The non-git working copy at `/home/kai/freqtrade-v3` used by the cron jobs was
+  synced to the same tracked source (`.env`, reports, and data untouched).
+- `phase1-postgres` and `freqtrade_kai` were not modified. No new trading run.
+
+## Phase 1 state before the settlement — 2026-09-15
 
 This section records the last verified state, not a fresh server inspection
 performed during the documentation update.

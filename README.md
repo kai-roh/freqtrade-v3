@@ -66,12 +66,21 @@ episodes or an economically approved carry strategy.
 
 **Continuous automatic trading is stopped.** The final account check showed
 zero futures exposure and zero open BTC orders, with `0.00000715 BTC` Spot dust.
-The intent remains `ABORTING / DUST_REMAINS`; it is not falsely marked flat or
-complete. Phase 1E and the week run remain unfinished. Last code verification:
+The intent was later settled to `CLOSED` with the residual recorded as owned
+inventory (see below); it is not reported as exactly flat. Phase 1E and the week run remain unfinished. Last code verification:
 382 tests passed, including PostgreSQL integration; Ruff passed.
 
-Next: preserve residual ownership across episodes, verify cancellation/partial-fill
-and restart handling, then enable bounded repetition and the observation run.
+Later on 2026-09-15 the code gained an audited residual-settlement path, runtime
+invariant enforcement, a conservative funding projection with a reversal exit,
+config-bound action risk ceilings, a read-only SLA evidence script, and Phase 0
+metric fixes ([Decision 0007](docs/decisions/0007-residual-settlement-and-funding-projection.md)).
+The new image and test image were built on the server and the suite passed
+against the server database. With explicit user approval the stuck episode was
+then settled on the server: `ABORTING → CLOSED` with the `0.00000715 BTC`
+residual recorded as owned inventory, zero orders, zero open intents.
+
+Next: verify cancellation/partial-fill and restart handling, then enable
+bounded repetition and the observation run.
 See [current implementation status](docs/PHASE1_IMPLEMENTATION_STATUS.md),
 [actual execution record](docs/PHASE1_DEMO_AUTO_RUNBOOK.md), and
 [week-run gates](docs/PHASE1_WEEK_RUN.md).

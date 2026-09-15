@@ -126,7 +126,8 @@ runtime의 주문 금지 검사를 완화하지 않았다. 실제 활성화 전 
 
 설치된 Nautilus 1.231.0의 `BinanceQuoteData.parse_to_quote_tick`은 원문 `T`가 없으면
 `ts_event=ts_init`로 대체한다. Spot `bookTicker`의 이 값을 0ms 지연 표본으로 쓰면 안 된다.
-`quote_timing.py`는 원문 시각에서만 나이를 계산하고 부재는 None, 미래 시각은 오류로 남긴다.
+현물 호가는 `demo_node.py`가 `venue_ns=None`으로 두고 `stream_quote_row`가 NULL로 저장한다
+(과거의 `quote_timing.py` 보조 모듈은 호출자가 없어 2026-09-15에 제거했다).
 raw stream hook에는 아직 연결하지 않았다. 따라서 이 함수 추가만으로 호가 SLA를 측정했다고
 보고하거나 현재 정책의 `maximum_quote_age_ms=null`을 바꾸지 않는다.
 

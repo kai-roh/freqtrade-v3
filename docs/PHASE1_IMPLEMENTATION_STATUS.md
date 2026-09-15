@@ -17,21 +17,54 @@
 | 1E 관측 | 실제 스트림·REST·오류 및 복구 증거 확보 | 반복 에피소드, 재시작·장애 주입, SLA 집계, 1주 관측 |
 | Phase 2 | 이번 작업에서 착수·승격하지 않음 | Phase 1 종료 게이트 검토 후 결정 |
 
-**마지막 확인 상태:** 자동 실행기 중단, 선물 `0 BTC`, 미체결 주문 `0`, 활성 명령 `0`,
-현물 잔량 `0.00000715 BTC`, intent `ABORTING`, 중단 사유 `DUST_REMAINS`.
+**마지막 확인 상태 (2026-09-15 19:29 KST):** 자동 실행기 중단, 선물 `0 BTC`, 미체결 주문 `0`,
+활성 명령 `0`, 현물 잔량 `0.00000715 BTC`(정산된 소유 잔량), intent `CLOSED`
+(`residual_settled`). 아래 과거 기록의 `ABORTING / DUST_REMAINS`는 정산 전 상태다.
 미해결 recovery `0`, 적용된 fill inbox `4`다. 잔량은 미설명 대사 오류가 아니라
 수수료·최소 주문 단위로 설명되는 소유 자산이며, 그렇다고 정확한 flat은 아니다.
 
+### 2026-09-15 개선 작업 — 코드 반영 완료, 서버 정산은 대기
+
+[Decision 0007](decisions/0007-residual-settlement-and-funding-projection.md)에 따라
+아래를 구현하고 로컬 PostgreSQL 포함 `405 passed`, Ruff 통과를 확인했다. 서버에서는
+같은 소스(`b6d3bbd`)로 실행 이미지와 테스트 이미지를 빌드하고, 서버 PostgreSQL의
+격리 스키마에서 `404 passed, 1 failed`를 확인했다. 실패 1건은 테스트 이미지에 `git`이
+없어 manifest CLI 테스트가 실행되지 못한 환경 문제이며 이후 이미지에 git을 추가했다.
+
+- 잔량 정산: migration 0008 `episode_residuals`, `settle_episode_residual`,
+  `scripts/settle_phase1_residual.py`. 종료 요청·선물 flat·미체결 0·체결 전부 반영·
+  매도 불가 잔량일 때만 감사 기록과 함께 CLOSED로 보낸다. 매도·기준 잔고 초기화는 없다.
+  다음 에피소드 baseline은 잔량을 상속 인벤토리로 기록한다.
+- 런타임 불변식: `reconcile_episode_state`가 6개 불변식을 매 tick 검사하고 위반 시
+  해당 tick 전이를 rollback한 뒤 예외로 신규 주문을 막는다.
+- 스캐너: 현재 펀딩률과 후행 21회 평균 중 작은 값으로 보유기간을 투영한다. 이력이 짧으면
+  관측 전용. 펀딩 반전 종료 규칙 `funding_reversal_exit`를 추가했다.
+- `action_risk`: 상한을 `configs/phase1-engineering.json` 해시에 결합했다.
+- Phase 1E SLA 증거: `scripts/summarize_phase1_sla.py`. 서버 원장 기준 선물 exchange-age
+  259표본, 중위 13 ms, p99 47.68 ms, 제안 `maximum_quote_age_ms=96`. 헤지 지연 표본은
+  1건으로 부족. 정책 파일은 바꾸지 않았다. 증거: `evidence/phase1/sla-evidence-20260915.json`.
+- Phase 0: fold 경계 청산 연장, 거래당 자본 비율 5% 기준 드로다운, 죽은 embargo 검사 교체,
+  선택 기록의 실제 비용 저장. `quote_timing.py`는 호출자가 없어 제거했다.
+
+**서버 잔량 정산 완료 (2026-09-15 19:29 KST, 사용자 승인 후 실행).** 이미지
+`freqtrade-v3-demo-auto:b6d3bbd`로 `settle_phase1_residual.py`를 실행했다. 주문 0건.
+intent `09a7f1cf…`는 `ABORTING → CLOSED`(trigger `residual_settled`, guard 4개 참),
+`episode_residuals` 1행 `0.00000715 BTC`(현물 bid 기준 약 0.55 USDT), 비용 항목
+`residual_inventory`, incident `resolved`, 대사 `RESIDUAL_SETTLED`, 거부된 전이 0,
+migration 0008 적용, 미종결 intent 0. 계정 GET은 정산 전후 모두 선물 0·미체결 0·
+현물 `0.00000715 BTC`로 변화가 없다(잔량은 계정에 남아 다음 baseline이 상속한다).
+Telegram 전달 확인. 증거: `evidence/phase1/residual-settlement-20260915.json`.
+이는 정확한 flat이 아니라 정산된 잔량이 있는 CLOSED이다.
+
 ### 다음 작업 순서
 
-1. 잔량 처리 정책·원장·진입 가드를 함께 설계한다. 기존 BTC와 전략 소유분을
-   구분하고, 기준 잔고 초기화나 허위 CLOSED 없이 다음 에피소드 허용 조건을 정한다.
-2. IOC 미체결/부분체결, 취소 응답 유실, 재접속·재시작을 실제 Demo에서 검증한다.
+1. IOC 미체결/부분체결, 취소 응답 유실, 재접속·재시작을 실제 Demo에서 검증한다.
    확인되지 않은 명령 재전송 금지와 close-only 인수 이력을 유지한다.
 3. Telegram 전달 결과를 실행 증거에 기록하고, 단일 에피소드 제한과 종료 조건을
    검토한 뒤 반복 실행기로 확장한다. 현재 파일은 전송 시도만으로 전달을 증명하지 않는다.
 4. [1주 관측 계획](PHASE1_WEEK_RUN.md)의 기준으로 반복·재시작·장애·비용·SLA를
    집계한다. 주문 4건을 에피소드 4회 또는 Phase 1E 완료로 세지 않는다.
+   제안된 quote-age SLA 96 ms는 검토된 정책 커밋으로만 채택한다.
 
 ### 검증 및 버전
 
@@ -280,7 +313,8 @@ Oracle의 보호된 `.env`에 병합했고 양쪽 파일 권한은 `0600`이다.
   BLOCKED/incident로 남기고 신규 예약을 차단한다. 재시작 후 저장된 receipt를 재처리한다.
 - `record_order`: 첫 upsert도 command 잠금으로 직렬화하고 command/client ID 및 수량을 검증한다.
 - `quote_timing.py`: 현물 호가의 합성 `ts_event=ts_init`을 0ms 측정으로 오인하지 않도록
-  원문 시각 기반 계산을 추가했다. 실제 스트림 hook과 장시간 표본 수집은 미완료다.
+  원문 시각 기반 계산을 추가했다. (2026-09-15: 호출자가 없어 제거. 같은 보호는
+  `demo_node.py`가 현물 `venue_ns=None`으로 처리하고 `stream_quote_row`가 NULL로 저장한다.)
 
 검증: **272 tests passed**, 실제 PostgreSQL 통합 포함·skip 없음.
 Ruff lint/format 및 diff 검사 통과. 이번 시험을 실제 Demo 체결 에피소드로 계상하지 않는다.
