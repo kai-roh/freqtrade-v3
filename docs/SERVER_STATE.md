@@ -6,9 +6,14 @@
   `freqtrade-v3-demo-auto:20a581d` (`sha256:8db85012…`), source `20a581d`, config
   `configs/phase1-week-run.json`; run identity in
   `evidence/phase1/demo-week-run-20260915/started-at.txt`; events in `run.json`.
-- No auto-restart. Restart with the same `--started-at` and a new container name
-  (see `docs/PHASE1_WEEK_RUN.md`). Do not run any other program or manual order on
-  the Demo BTCUSDT account while it runs.
+- Deliberate restart 1 at 12:25:56 UTC: now running as
+  `phase1-demo-week-run-20260915-restart1` on image `freqtrade-v3-demo-auto:81999bd`
+  (`sha256:b5f2ebf7…`, source `81999bd`); the first container exited 137 by design.
+- `phase1-telegram-bot` (same image, `--restart unless-stopped`, read-only) serves
+  the Telegram commands; menu registered for bot `kais_freqtrade_bot`.
+- No auto-restart for the runner. Restart with the same `--started-at` and a new
+  container name (see `docs/PHASE1_WEEK_RUN.md`). Do not run any other program or
+  manual order on the Demo BTCUSDT account while it runs.
 
 ## Latest verified Phase 1 state before the week run — 2026-09-15 21:01 KST
 

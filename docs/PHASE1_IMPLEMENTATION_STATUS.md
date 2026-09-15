@@ -77,6 +77,10 @@ Telegram 전달 확인. 증거: `evidence/phase1/residual-settlement-20260915.js
 첫 에피소드 진입·헤지와 알림 전달을 확인했다. 상태와 재시작 절차는
 [PHASE1_WEEK_RUN.md](PHASE1_WEEK_RUN.md)에 있다. 이는 Demo 관측이며 수익성 검증이 아니다.
 
+21:25 KST에 에피소드 사이에서 의도적 재시작 1회를 수행하며 간소화된 알림 포맷의 이미지
+`81999bd`로 교체했고, 읽기 전용 Telegram 명령 봇(`/status` `/profit` `/balance` `/daily`
+`/help`)을 같은 이미지로 배포·메뉴 등록했다.
+
 ### 다음 작업 순서
 
 1. 관측 기간 중 같은 `--started-at`으로 의도적 재시작 2회 이상 추가(Phase 1E 게이트 3회),

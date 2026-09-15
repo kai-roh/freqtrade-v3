@@ -88,6 +88,9 @@ The week observation run started on 2026-09-15 at 21:07 KST on the user's
 instruction (60 bounded synthetic episodes, 2-hour interval, 7-day window). It
 is a Demo infrastructure observation, not a profitability test.
 
+A read-only Telegram command bot (`/status`, `/profit`, `/balance`, `/daily`,
+`/help`) runs beside it, and runner notifications are compact one-liners.
+
 Next: add two more deliberate restarts during the run, then evaluate the
 Phase 1E gates from the ledger.
 See [current implementation status](docs/PHASE1_IMPLEMENTATION_STATUS.md),

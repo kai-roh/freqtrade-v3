@@ -13,7 +13,17 @@ the verification run.
 - Run identity `--started-at 2026-09-15T12:07:24+00:00` is stored in
   `evidence/phase1/demo-week-run-20260915/started-at.txt` on the host and must be
   reused for every deliberate restart.
-- Episode 1 entered and hedged at 12:07:30–37 UTC with all notifications delivered.
+- Episode 1 entered and hedged at 12:07:30–37 UTC with all notifications delivered
+  and closed at 12:12:40 UTC with a settled residual of `0.00000714 BTC`.
+- **Deliberate restart 1 (12:25:56 UTC):** the runner was killed between episodes
+  and restarted with the same `--started-at` on image `freqtrade-v3-demo-auto:81999bd`
+  (`sha256:b5f2ebf7…`, compact notifications). Because the manifest changed, the
+  new container counts its own budget from "episode 1 of 60"; the ledger keeps the
+  earlier episode under the previous manifest. Container
+  `phase1-demo-week-run-20260915-restart1`, evidence `run-restart1.json`.
+- Telegram command bot `phase1-telegram-bot` (read-only: ledger, evidence,
+  account GET) serves /status /profit /balance /daily /help for the configured
+  chat; the commands are registered in the bot menu.
 - Still required during the run: at least two more deliberate restarts (three
   total for the Phase 1E gate), then the final SLA and episode aggregation.
 
@@ -81,6 +91,11 @@ Excluded evidence:
 - Profitability or expected return.
 
 ## Telegram Notifications
+
+Runner notifications are short: `[DEMO][PHASE1][KIND] title` on the first line and
+a one-line summary with the KST time on the second. Full details stay in the
+evidence file. Example: `[DEMO][PHASE1][TRADE] 체결 현물 매수` / `0.00285 BTC @
+76950.16 · 09-15 21:26:01 KST`.
 
 Telegram is operational telemetry only. A notification failure must return a
 failed delivery result and must not retry orders, resubmit commands, unblock a
@@ -169,3 +184,18 @@ docker run -d --name phase1-demo-week-run-$(date +%Y%m%d) \
 The container does not auto-restart. Each deliberate restart uses the same
 `--started-at` and a new container name; the runner resumes any open episode
 first. Three or more such restarts are required for the Phase 1E gate.
+
+
+## Telegram commands
+
+`scripts/run_phase1_telegram_bot.py` answers, for the configured chat only:
+
+- `/status` — run start, episodes closed vs budget, open episode state, last event, ledger integrity.
+- `/profit` — realized USDT cash flow per episode net of USDT fees; settled BTC residual listed separately and unvalued. Demo only, not a profitability claim.
+- `/balance` — Demo Spot USDT/BTC, futures available USDT, perp position, leverage, open orders.
+- `/daily` — today's (KST) episodes, fills, realized PnL, residual, errors, undelivered notifications.
+- `/help` — this list.
+
+The bot opens the ledger with `default_transaction_read_only=on`, mounts the
+evidence directory read-only, and has no order transport. Messages from any other
+chat are ignored without reply.
