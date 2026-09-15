@@ -1,6 +1,22 @@
 # Server state
 
-## Latest verified Phase 1 state — 2026-09-15 19:29 KST
+## Latest verified Phase 1 state — 2026-09-15 21:01 KST
+
+- Image `freqtrade-v3-demo-auto:66bf69d` (`sha256:41fb5c67…`) and test image built
+  from source `66bf69d`; host-side suite against an isolated schema:
+  `415 passed, 1 failed` (manifest CLI test needs a `.git` directory the image
+  does not ship).
+- Two-episode repetition verification with a forced kill and same-identity
+  restart completed on Demo: containers `phase1-demo-verify-repeat-20260915`
+  (exit 137, killed deliberately) and `…-restart1` (exit 0). Eight fills, two
+  automatic residual settlements, stop reason `run_window_exhausted`.
+- Ledger: intents `3`, all `CLOSED`; rejected transitions `0`; unresolved recovery
+  `0`; unapplied inbox `0`; active commands `0`; open incidents `0`; fills `12`
+  all FILLED; settled residuals `0.00000715 + 0.00000715 + 0.00000714 BTC`.
+- Policy on the image carries `maximum_quote_age_ms=96`. The week run has not
+  been started. Evidence: `evidence/phase1/demo-verify-repeat-20260915/`.
+
+## State after the residual settlement — 2026-09-15 19:29 KST
 
 - Source `b6d3bbd` was shipped via `git archive` and built into
   `freqtrade-v3-demo-auto:b6d3bbd` (image `sha256:afed612e…`) and a test image

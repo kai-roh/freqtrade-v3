@@ -119,3 +119,44 @@ docker run --name phase1-residual-settle-20260915 \
 
 성공 시 출력 JSON의 `settlement.state`가 `CLOSED`, `residual_base`가 `0.00000715`,
 `open_intents`가 `0`이어야 한다. 실행 후 증거 파일을 저장소 `evidence/phase1/`로 복사한다.
+
+
+## 반복·재시작 검증 — 2026-09-15 KST
+
+소스 `66bf69d`, 이미지 `freqtrade-v3-demo-auto:66bf69d`(`sha256:41fb5c67…`), 설정
+`configs/phase1-verify-repeat.json`(에피소드 2회, 간격 900초, 총 창 3600초, 보유 300초,
+레그 약 220 USDT). 실제 Demo 주문 8건이 모두 FILLED이며 Mainnet 주문·실자본은 없다.
+
+| 시각(UTC) | 이벤트 | 수량 BTC | 체결가 USDT |
+|---|---|---:|---:|
+| 11:35:13 | 에피소드 1 현물 BUY | 0.00285 | 76939.29 |
+| 11:35:17 | 선물 SELL (헤지) | 0.0028 | 76899.40 |
+| 11:36 | **`docker kill`로 실행기 강제 종료** (exit 137, 보유 중) | | |
+| 11:37:24 | 같은 `--started-at`로 재시작 → `RESUMING` 열린 intent 재개 | | |
+| 11:40:13 | 선물 BUY reduce-only (보유 기한 도달) | 0.0028 | 76907.10 |
+| 11:40:18 | 현물 SELL (소유분만) | 0.00284 | 76914.00 |
+| 11:40:23 | 잔량 `0.00000715` 자동 정산 → CLOSED (`exact_flat=false`) | | |
+| 11:55:23 | 15분 간격 후 에피소드 2 현물 BUY | 0.00286 | 76901.69 |
+| 11:55:28 | 선물 SELL (헤지) | 0.0028 | 76845.90 |
+| 12:00:24 | 선물 BUY reduce-only | 0.0028 | 76908.00 |
+| 12:00:29 | 현물 SELL | 0.00285 | 76926.88 |
+| 12:00:34 | 잔량 `0.00000714` 자동 정산 → CLOSED | | |
+| 12:00:35 | 실행기 정상 종료 `run_window_exhausted` (exit 0) | | |
+
+확인 사항:
+
+- 재시작 복구 1회: 강제 종료 시점의 상태 `HEDGE_REQUIRED`(현물 순보유 0.00284715 대
+  숏 0.0028, 미만 lot 잔여)를 재시작 실행기가 재개해 재헤지 없이 종료를 완료했다.
+- 에피소드 2 baseline은 `spot_base=0.00001430`, `inherited_residual_base=0.00001430`으로
+  앞선 두 에피소드의 정산 잔량을 기존 보유분으로 상속했고 매도하지 않았다.
+- 원장: 거부된 전이 0, 미해결 recovery 0, 미처리 inbox 0, 활성 명령 0, 열린 incident 0,
+  체결 12건(이전 에피소드 4건 포함) 전부 FILLED. 모든 알림은 `telegram_delivered=true`.
+- 종료 사유가 `episode_budget_complete`가 아닌 `run_window_exhausted`인 이유는 검증 run
+  식별자 `--started-at`을 실제 시작보다 35분 앞선 11:00Z로 지정했고 창이 3600초였기
+  때문이다. 두 에피소드는 모두 완료됐고 정지 규칙은 설계대로 동작했다.
+- IOC 미체결·부분체결은 이번 실행에서 발생하지 않았다(모두 즉시 전량 체결). 해당 경로는
+  terminal 주문의 command 비활성화와 6회 IOC 상한으로 코드·테스트에서 다룬다.
+
+증거: `evidence/phase1/demo-verify-repeat-20260915/run.json`(강제 종료 전),
+`run-restart1.json`(재시작 후). 이는 반복 실행기와 재시작 복구의 실환경 검증이며
+1주 관측 시작이나 Phase 1E 완료(에피소드 50회, 재시작 3회)는 아니다.

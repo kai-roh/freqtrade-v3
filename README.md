@@ -79,8 +79,13 @@ against the server database. With explicit user approval the stuck episode was
 then settled on the server: `ABORTING → CLOSED` with the `0.00000715 BTC`
 residual recorded as owned inventory, zero orders, zero open intents.
 
-Next: verify cancellation/partial-fill and restart handling, then enable
-bounded repetition and the observation run.
+The same evening the measured 96 ms quote-age SLA was adopted into policy, the
+runner gained bounded repetition with resume and a Telegram pause rule, and a
+two-episode Demo verification with one forced kill and restart completed
+cleanly (8 fills, automatic residual settlement, zero rejected transitions).
+
+Next: start the week observation run on an explicit operator command, add two
+more deliberate restarts, and evaluate the Phase 1E gates.
 See [current implementation status](docs/PHASE1_IMPLEMENTATION_STATUS.md),
 [actual execution record](docs/PHASE1_DEMO_AUTO_RUNBOOK.md), and
 [week-run gates](docs/PHASE1_WEEK_RUN.md).

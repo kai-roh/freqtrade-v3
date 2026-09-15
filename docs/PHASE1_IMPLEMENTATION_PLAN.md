@@ -399,7 +399,9 @@ transition 기록을 assertion한다.
 - 합성 2-leg 시도 최소 50건
 - quote observation은 1E 동안 10초 표본 또는 위험 결정 시점에만 수집
 - hedge latency: Demo 하한 분포의 median/p99를 기록하되 운영 SLA로 승격하지 않음
-- quote-age SLA: 관측 p99 + 100% margin
+- quote-age SLA: 관측 p99 + 100% margin. 2026-09-15 USD-M exchange-age 259표본
+  p99 47.68 ms → `maximum_quote_age_ms=96` 채택(`evidence/phase1/sla-evidence-20260915.json`).
+  현물 bookTicker는 거래소 시각이 없어 미측정으로 유지한다.
 - venue, adapter, instance, network topology 변경 시 재측정
 
 이 표본은 운영 지연 분포 전용이며 수익률이나 alpha 판정에 쓰지 않는다.

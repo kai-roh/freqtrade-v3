@@ -17,9 +17,10 @@
 | 1E 관측 | 실제 스트림·REST·오류 및 복구 증거 확보 | 반복 에피소드, 재시작·장애 주입, SLA 집계, 1주 관측 |
 | Phase 2 | 이번 작업에서 착수·승격하지 않음 | Phase 1 종료 게이트 검토 후 결정 |
 
-**마지막 확인 상태 (2026-09-15 19:29 KST):** 자동 실행기 중단, 선물 `0 BTC`, 미체결 주문 `0`,
-활성 명령 `0`, 현물 잔량 `0.00000715 BTC`(정산된 소유 잔량), intent `CLOSED`
-(`residual_settled`). 아래 과거 기록의 `ABORTING / DUST_REMAINS`는 정산 전 상태다.
+**마지막 확인 상태 (2026-09-15 21:01 KST):** 검증 실행기 정상 종료, intent 3개 모두
+`CLOSED`, 선물 `0 BTC`, 미체결 주문 `0`, 활성 명령 `0`, 정산된 소유 잔량 누계
+`0.00002144 BTC`(3 에피소드), 체결 12건 FILLED. 아래 과거 기록의 `ABORTING / DUST_REMAINS`는
+정산 전 상태다.
 미해결 recovery `0`, 적용된 fill inbox `4`다. 잔량은 미설명 대사 오류가 아니라
 수수료·최소 주문 단위로 설명되는 소유 자산이며, 그렇다고 정확한 flat은 아니다.
 
@@ -56,9 +57,30 @@ migration 0008 적용, 미종결 intent 0. 계정 GET은 정산 전후 모두 �
 Telegram 전달 확인. 증거: `evidence/phase1/residual-settlement-20260915.json`.
 이는 정확한 flat이 아니라 정산된 잔량이 있는 CLOSED이다.
 
+### 2026-09-15 저녁 — SLA 채택, 반복 실행기, 실환경 재시작 검증
+
+- 정책 `sla.maximum_quote_age_ms=96` 채택(USD-M exchange-age 259표본, p99 47.68 ms,
+  ceil(2×p99) 규칙, 증거 경로·표본 수·측정 시각을 정책 로더가 검증). 현물 bookTicker는
+  거래소 시각이 없어 미측정이며 경제적 진입 경로는 여전히 이를 이유로 거부한다.
+- 실행기가 `run_control` 경계(에피소드 수·간격·총 창·Telegram 연속 실패 3회 정지)로
+  반복한다. 열린 에피소드는 항상 먼저 재개하고, 모든 알림 이벤트에 전달 결과를 기록한다.
+  `--engineering-config`로 설정 파일을 고르며 위험 프로세스는 같은 파일 해시에 결합된다.
+  `configs/phase1-week-run.json`(60회, 2시간 간격, 7일)과 `phase1-verify-repeat.json`(2회)을 추가했다.
+- 서버 검증: 이미지 `66bf69d` 빌드, 서버 DB 격리 스키마 테스트 `415 passed, 1 failed`
+  (실패는 테스트 이미지에 `.git`이 없어 manifest CLI가 `git rev-parse`를 못 하는 환경 문제).
+  실제 Demo에서 2에피소드·강제 종료 1회·재시작 재개·자동 잔량 정산을 확인했다.
+  상세는 [반복·재시작 검증](PHASE1_DEMO_AUTO_RUNBOOK.md#반복재시작-검증--2026-09-15-kst).
+- 로컬 검증: `415 passed`(PostgreSQL 포함), Ruff 통과.
+
+**1주 관측 실행은 시작하지 않았다.** 시작 절차와 조건은
+[PHASE1_WEEK_RUN.md](PHASE1_WEEK_RUN.md#starting-the-week-run)에 있다.
+
 ### 다음 작업 순서
 
-1. IOC 미체결/부분체결, 취소 응답 유실, 재접속·재시작을 실제 Demo에서 검증한다.
+1. 운영자 판단으로 1주 관측 실행 시작(`configs/phase1-week-run.json`). 기간 중 의도적
+   재시작 2회 이상 추가(Phase 1E 게이트 3회), 에피소드 50회 이상 집계.
+2. 관측 종료 후 SLA·헤지 지연 표본 재집계와 Phase 1E 종료 게이트 판정.
+3. (참고) IOC 미체결/부분체결, 취소 응답 유실, 재접속·재시작을 실제 Demo에서 검증한다.
    확인되지 않은 명령 재전송 금지와 close-only 인수 이력을 유지한다.
 3. Telegram 전달 결과를 실행 증거에 기록하고, 단일 에피소드 제한과 종료 조건을
    검토한 뒤 반복 실행기로 확장한다. 현재 파일은 전송 시도만으로 전달을 증명하지 않는다.
