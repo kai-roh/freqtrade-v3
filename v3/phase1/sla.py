@@ -55,6 +55,11 @@ def summarize_phase1_sla(
     )
 
 
+def summarize_latency(values: list[int], name: str) -> LatencySummary:
+    """Public single-series summary with the same 50-sample floor as the SLA evidence."""
+    return _summary(values, name)
+
+
 def _summary(values: list[int], name: str) -> LatencySummary:
     if len(values) < 50:
         raise ValueError(f"{name} requires at least 50 samples")

@@ -89,6 +89,14 @@ def _timeline(data: pd.DataFrame, time_col: str | None) -> pd.Series:
     return times
 
 
+def _assert_row_embargo(times, train_mask, validation_mask, minimum_gap, fold_id: int) -> None:
+    """Check the embargo on the selected rows themselves, independent of boundary math."""
+    last_train = pd.Timestamp(times[train_mask].iloc[-1])
+    first_validation = pd.Timestamp(times[validation_mask].iloc[0])
+    if first_validation - last_train < pd.Timedelta(minimum_gap):
+        raise ValueError(f"fold {fold_id} violates embargo")
+
+
 def make_purged_walk_forward_folds(
     data: pd.DataFrame,
     config: WalkForwardConfig,
@@ -132,8 +140,7 @@ def make_purged_walk_forward_folds(
             raise ValueError(f"fold {fold_id} has insufficient validation rows")
         if set(train_indices).intersection(validation_indices):
             raise ValueError(f"fold {fold_id} train/validation indices overlap")
-        if train_end + embargo > validation_start:
-            raise ValueError(f"fold {fold_id} violates embargo")
+        _assert_row_embargo(times, train_mask, validation_mask, embargo, fold_id)
 
         folds.append(
             Fold(
