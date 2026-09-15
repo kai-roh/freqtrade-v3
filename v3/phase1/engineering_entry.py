@@ -48,6 +48,7 @@ def submit_engineering_entry(
             live_orders=False,
             real_capital=False,
             freshness_basis="local_receive_gap",
+            engineering_config_sha256=risk_service.config_sha256,
             account_reconciled=True,
             receive_gap_ms=list(receive_gap_ms),
             observed_ns=observed_ns,

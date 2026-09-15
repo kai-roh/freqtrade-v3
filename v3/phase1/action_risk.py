@@ -12,12 +12,61 @@ import multiprocessing as mp
 import time
 from dataclasses import dataclass
 from decimal import Decimal
+from pathlib import Path
 
 from .episode_plan import EpisodeActionType, EpisodeLimits, EpisodeSnapshot, plan_episode_action
+
+ENGINEERING_CONFIG_PATH = (
+    Path(__file__).resolve().parents[2] / "configs" / "phase1-engineering.json"
+)
 
 
 def payload_hash(payload: dict) -> str:
     return hashlib.sha256(json.dumps(payload, sort_keys=True, allow_nan=False).encode()).hexdigest()
+
+
+@dataclass(frozen=True)
+class EngineeringBounds:
+    """Hard ceilings read from the committed engineering config, bound by content hash.
+
+    The risk worker loads this file itself and refuses any payload whose declared
+    config hash differs, so the runner cannot drift from the ceilings it claims.
+    """
+
+    config_sha256: str
+    maximum_receive_gap_ms: int
+    maximum_leg_usdt: Decimal
+    maximum_ioc_slippage_bps: Decimal
+    maximum_run_seconds: int
+
+    @property
+    def slippage_fraction(self) -> Decimal:
+        return self.maximum_ioc_slippage_bps / Decimal(10000)
+
+
+def load_engineering_bounds(path: Path = ENGINEERING_CONFIG_PATH) -> EngineeringBounds:
+    raw = Path(path).read_bytes()
+    data = json.loads(raw)
+    if data["environment"] != "demo" or data["real_capital"] is not False:
+        raise ValueError("engineering config must be Demo without real capital")
+    if data["economic_approval"] is not False or data["synthetic_trigger"] is not True:
+        raise ValueError("engineering config must be an explicit non-economic synthetic trigger")
+    if data["freshness_basis"] != "local_receive_gap":
+        raise ValueError("engineering config freshness basis must be local_receive_gap")
+    gap, run_seconds = data["maximum_receive_gap_ms"], data["maximum_run_seconds"]
+    if type(gap) is not int or not 0 < gap <= 2000:
+        raise ValueError("maximum_receive_gap_ms must be an integer in (0, 2000]")
+    if type(run_seconds) is not int or not 30 <= run_seconds <= 900:
+        raise ValueError("maximum_run_seconds must be an integer in [30, 900]")
+    leg = Decimal(data["maximum_leg_usdt"])
+    slippage = Decimal(data["maximum_ioc_slippage_bps"])
+    if not leg.is_finite() or not 0 < leg <= 300:
+        raise ValueError("maximum_leg_usdt must be in (0, 300]")
+    if not slippage.is_finite() or not 0 < slippage <= 10:
+        raise ValueError("maximum_ioc_slippage_bps must be in (0, 10]")
+    if Decimal(data["target_leg_usdt"]) > leg:
+        raise ValueError("target leg exceeds the configured leg ceiling")
+    return EngineeringBounds(hashlib.sha256(raw).hexdigest(), gap, leg, slippage, run_seconds)
 
 
 @dataclass(frozen=True)
@@ -27,9 +76,12 @@ class ActionApproval:
     request_hash: str
 
 
-def evaluate_action(payload: dict) -> ActionApproval:
+def evaluate_action(payload: dict, bounds: EngineeringBounds | None = None) -> ActionApproval:
     digest = payload_hash(payload)
     try:
+        bounds = bounds or load_engineering_bounds()
+        if payload["engineering_config_sha256"] != bounds.config_sha256:
+            raise ValueError("engineering config hash does not match the risk worker's file")
         if payload["environment"] != "demo" or payload["real_capital"] is not False:
             raise ValueError("Demo only")
         if payload["live_orders"] is not False:
@@ -38,16 +90,17 @@ def evaluate_action(payload: dict) -> ActionApproval:
             raise ValueError("explicit receive-gap basis required")
         if payload["account_reconciled"] is not True:
             raise ValueError("account reconciliation required")
+        limit_ms = bounds.maximum_receive_gap_ms
         elapsed = (time.time_ns() - payload["observed_ns"]) / 1_000_000
-        if not 0 <= elapsed <= 2000:
+        if not 0 <= elapsed <= limit_ms:
             raise ValueError("action observation expired")
         gaps = payload["receive_gap_ms"]
         if len(gaps) != 2 or any(
-            type(gap) is not int or gap < 0 or gap + elapsed > 2000 for gap in gaps
+            type(gap) is not int or gap < 0 or gap + elapsed > limit_ms for gap in gaps
         ):
             raise ValueError("quote transport stale")
         if payload.get("purpose") == "demo_engineering_entry":
-            return _evaluate_engineering_entry(payload, digest)
+            return _evaluate_engineering_entry(payload, digest, bounds)
         snapshot = EpisodeSnapshot(**payload["snapshot"])
         limits = EpisodeLimits(**payload["limits"])
         action = plan_episode_action(snapshot, limits)
@@ -67,7 +120,10 @@ def evaluate_action(payload: dict) -> ActionApproval:
         quantity, price = Decimal(payload["quantity"]), Decimal(payload["price"])
         if not price.is_finite() or price <= 0:
             raise ValueError("invalid action price")
-        if action.action == EpisodeActionType.HEDGE_PERP_SELL and quantity * price > Decimal("300"):
+        if (
+            action.action == EpisodeActionType.HEDGE_PERP_SELL
+            and quantity * price > bounds.maximum_leg_usdt
+        ):
             raise ValueError("action exceeds bounded Demo notional")
         reference = (
             limits.perp_ask
@@ -76,8 +132,8 @@ def evaluate_action(payload: dict) -> ActionApproval:
             if action.action == EpisodeActionType.CLOSE_SPOT_SELL
             else limits.perp_bid
         )
-        # IOC execution must remain within 10 bps of the observed opposite quote.
-        if abs(price / reference - 1) > Decimal("0.001"):
+        # IOC execution must remain within the configured bps of the opposite quote.
+        if abs(price / reference - 1) > bounds.slippage_fraction:
             raise ValueError("IOC price exceeds slippage cap")
         leverage = Decimal(payload["perp_leverage"])
         if not leverage.is_finite() or not 1 <= leverage <= 2:
@@ -89,7 +145,7 @@ def evaluate_action(payload: dict) -> ActionApproval:
     return ActionApproval(True, "confirmed-inventory Demo action only", digest)
 
 
-def _evaluate_engineering_entry(payload, digest):
+def _evaluate_engineering_entry(payload, digest, bounds):
     """Explicit synthetic-trigger lane; never claims economic entry approval."""
     from decimal import ROUND_FLOOR
 
@@ -110,12 +166,12 @@ def _evaluate_engineering_entry(payload, digest):
         raise ValueError("engineering entry requires flat futures and no open orders")
     if account["margin_type"] != "ISOLATED" or not 1 <= leverage <= 2:
         raise ValueError("engineering entry requires isolated leverage <=2")
-    if not 30 <= payload["hold_seconds"] <= 900:
-        raise ValueError("engineering holding bound is 30..900 seconds")
-    if qty % limits.spot_lot_size or qty * price > 300:
-        raise ValueError("engineering entry size exceeds lot or 300 USDT cap")
-    if abs(price / limits.spot_ask - 1) > Decimal("0.001"):
-        raise ValueError("engineering entry exceeds 10 bps price cap")
+    if not 30 <= payload["hold_seconds"] <= bounds.maximum_run_seconds:
+        raise ValueError("engineering holding bound exceeds the configured run window")
+    if qty % limits.spot_lot_size or qty * price > bounds.maximum_leg_usdt:
+        raise ValueError("engineering entry size exceeds lot or configured leg cap")
+    if abs(price / limits.spot_ask - 1) > bounds.slippage_fraction:
+        raise ValueError("engineering entry exceeds configured price cap")
     hedge = (qty * Decimal("0.999") / limits.perp_lot_size).to_integral_value(
         rounding=ROUND_FLOOR
     ) * limits.perp_lot_size
@@ -136,14 +192,15 @@ def _evaluate_engineering_entry(payload, digest):
     )
 
 
-def _worker(channel):
+def _worker(channel, config_path):
     try:
-        channel.send("ready")
+        bounds = load_engineering_bounds(config_path)
+        channel.send(("ready", bounds.config_sha256))
         while True:
             message = channel.recv()
             if message is None:
                 return
-            channel.send(evaluate_action(message))
+            channel.send(evaluate_action(message, bounds))
     except (EOFError, OSError):
         return
     finally:
@@ -153,16 +210,18 @@ def _worker(channel):
 class ActionRiskService:
     """A separate process with no credentials, database, or order transport."""
 
-    def __init__(self):
+    def __init__(self, config_path: Path = ENGINEERING_CONFIG_PATH):
+        self.config_sha256 = load_engineering_bounds(config_path).config_sha256
         context = mp.get_context("spawn")
         self.channel, child = context.Pipe()
-        self.process = context.Process(target=_worker, args=(child,), daemon=True)
+        self.process = context.Process(target=_worker, args=(child, str(config_path)), daemon=True)
         self.process.start()
         child.close()
         self.closed = False
-        if not self.channel.poll(5) or self.channel.recv() != "ready":
+        ready = self.channel.recv() if self.channel.poll(5) else None
+        if ready != ("ready", self.config_sha256):
             self.close()
-            raise ValueError("action risk service failed to start")
+            raise ValueError("action risk service failed to start on the same config")
 
     def evaluate(self, payload: dict) -> ActionApproval:
         digest = payload_hash(payload)

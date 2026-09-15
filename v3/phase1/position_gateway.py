@@ -221,6 +221,7 @@ def _submit_position_action(
         "live_orders": False,
         "real_capital": False,
         "freshness_basis": "local_receive_gap",
+        "engineering_config_sha256": risk_service.config_sha256,
         "account_reconciled": snapshot.net_spot_base == snapshot.venue_spot_base
         and snapshot.perp_filled_base == snapshot.venue_perp_base
         and not account["open_orders"],
