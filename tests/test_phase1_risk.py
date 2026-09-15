@@ -15,6 +15,10 @@ def _measured_policy():
     raw = json.loads((ROOT / "configs" / "phase1-policy.json").read_text())
     measured = copy.deepcopy(raw)
     measured["sla"]["maximum_quote_age_ms"] = 1000
+    measured["sla"]["quote_age_p99_ms"] = "500"
+    measured["sla"]["quote_age_sample_count"] = 50
+    measured["sla"]["quote_age_evidence"] = "evidence/phase1/fixture.json"
+    measured["sla"]["quote_age_measured_at"] = "2026-09-15T00:00:00+00:00"
     measured["reconciliation"]["maximum_unexplained_residual_usdt"] = "0.05"
     measured["reconciliation"]["maximum_unclassified_hours"] = "2"
     measured["cost_model"].update(
@@ -76,13 +80,38 @@ def test_measured_safe_context_is_approved():
     assert not decision.reasons
 
 
-def test_unmeasured_quote_sla_fails_closed_after_fee_measurement():
-    policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
+def _unmeasured_policy():
+    import json
 
-    decision = evaluate_carry_risk(_context(), policy)
+    raw = json.loads((ROOT / "configs" / "phase1-policy.json").read_text())
+    unmeasured = copy.deepcopy(raw)
+    for key in (
+        "maximum_quote_age_ms",
+        "quote_age_evidence",
+        "quote_age_measured_at",
+        "quote_age_p99_ms",
+        "quote_age_sample_count",
+    ):
+        unmeasured["sla"][key] = None
+    return policy_from_mapping(unmeasured)
+
+
+def test_unmeasured_quote_sla_fails_closed_after_fee_measurement():
+    decision = evaluate_carry_risk(_context(), _unmeasured_policy())
 
     assert not decision.approved
     assert "quote-age SLA is unmeasured" in decision.reasons
+
+
+def test_committed_policy_enforces_the_measured_96ms_quote_sla():
+    policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
+    assert policy.maximum_quote_age_ms == 96
+
+    stale = evaluate_carry_risk(_context(quote_age_ms=97), policy)
+    assert "quote is stale" in stale.reasons
+    fresh = evaluate_carry_risk(_context(quote_age_ms=96), policy)
+    assert "quote is stale" not in fresh.reasons
+    assert "quote-age SLA is unmeasured" not in fresh.reasons
 
 
 def test_stale_fee_snapshot_fails_closed():

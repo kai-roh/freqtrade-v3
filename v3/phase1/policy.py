@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -345,6 +346,24 @@ def policy_from_mapping(data: Mapping[str, Any]) -> Phase1Policy:
     quote_age = sla.get("maximum_quote_age_ms")
     if quote_age is not None and (isinstance(quote_age, bool) or not isinstance(quote_age, int)):
         raise ValueError("maximum_quote_age_ms must be an integer or null")
+    if quote_age is not None:
+        # A measured SLA must cite its evidence and equal the pre-registered rule:
+        # observed p99 plus a 100% margin, rounded up to whole milliseconds.
+        evidence = sla.get("quote_age_evidence")
+        if (
+            not isinstance(evidence, str)
+            or not evidence.startswith("evidence/phase1/")
+            or not evidence.endswith(".json")
+        ):
+            raise ValueError("measured quote-age SLA requires a Phase 1 evidence JSON path")
+        p99 = _decimal(sla, "quote_age_p99_ms")
+        samples = sla.get("quote_age_sample_count")
+        if isinstance(samples, bool) or not isinstance(samples, int) or samples < 50:
+            raise ValueError("measured quote-age SLA requires at least 50 samples")
+        if quote_age != math.ceil(p99 * 2):
+            raise ValueError("maximum_quote_age_ms must equal ceil(2 x observed p99)")
+        if not isinstance(sla.get("quote_age_measured_at"), str):
+            raise ValueError("measured quote-age SLA requires quote_age_measured_at")
 
     required_fields = intent.get("required_fields")
     if not isinstance(required_fields, list) or not all(

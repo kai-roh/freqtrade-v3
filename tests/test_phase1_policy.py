@@ -176,3 +176,24 @@ def test_policy_requires_conservative_funding_projection_and_reversal_exit():
     short["scanner"]["funding_projection"]["trailing_intervals"] = 2
     with pytest.raises(ValueError, match="three trailing"):
         policy_from_mapping(short)
+
+
+def test_measured_quote_age_sla_cites_evidence_and_follows_the_p99_rule():
+    policy = _policy()
+    assert policy["sla"]["maximum_quote_age_ms"] == 96
+    assert policy["sla"]["quote_age_evidence"] == "evidence/phase1/sla-evidence-20260915.json"
+    assert (ROOT / policy["sla"]["quote_age_evidence"]).is_file()
+    assert policy_from_mapping(policy).maximum_quote_age_ms == 96
+
+    loose = copy.deepcopy(policy)
+    loose["sla"]["maximum_quote_age_ms"] = 200
+    with pytest.raises(ValueError, match="ceil"):
+        policy_from_mapping(loose)
+    uncited = copy.deepcopy(policy)
+    uncited["sla"]["quote_age_evidence"] = None
+    with pytest.raises(ValueError, match="evidence"):
+        policy_from_mapping(uncited)
+    thin = copy.deepcopy(policy)
+    thin["sla"]["quote_age_sample_count"] = 49
+    with pytest.raises(ValueError, match="50 samples"):
+        policy_from_mapping(thin)

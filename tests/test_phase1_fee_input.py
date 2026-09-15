@@ -26,7 +26,7 @@ def test_shared_fee_input_preserves_policy_and_freshness(tmp_path):
     assert updated.fee_schedule.maker_round_trip_bps == 24
     assert not updated.fee_schedule.is_fresh(now + timedelta(hours=25))
     assert updated.raw == original.raw
-    assert updated.maximum_quote_age_ms is None
+    assert updated.maximum_quote_age_ms == original.maximum_quote_age_ms == 96
 
 
 @pytest.mark.parametrize(

@@ -120,8 +120,13 @@
   "sla": {
     "hedge_latency_demo_median_ms": null,
     "hedge_latency_demo_p99_ms": null,
-    "maximum_quote_age_ms": null,
+    "maximum_quote_age_ms": 96,
+    "quote_age_evidence": "evidence/phase1/sla-evidence-20260915.json",
+    "quote_age_measured_at": "2026-09-15T10:24:45+00:00",
     "quote_age_measured_in_phase": "1E",
+    "quote_age_p99_ms": "47.68",
+    "quote_age_sample_count": 259,
+    "quote_age_scope": "USD-M exchange event age only; Spot bookTicker has no exchange timestamp and stays unmeasured",
     "unmeasured_behavior": "deny"
   },
   "source": {

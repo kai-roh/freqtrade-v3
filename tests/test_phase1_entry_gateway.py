@@ -77,6 +77,10 @@ def _policy_path(tmp_path: Path) -> Path:
     raw = json.loads((ROOT / "configs/phase1-policy.json").read_text())
     measured = copy.deepcopy(raw)
     measured["sla"]["maximum_quote_age_ms"] = 1000
+    measured["sla"]["quote_age_p99_ms"] = "500"
+    measured["sla"]["quote_age_sample_count"] = 50
+    measured["sla"]["quote_age_evidence"] = "evidence/phase1/fixture.json"
+    measured["sla"]["quote_age_measured_at"] = "2026-09-15T00:00:00+00:00"
     measured["reconciliation"]["maximum_unexplained_residual_usdt"] = "0.05"
     measured["reconciliation"]["maximum_unclassified_hours"] = "2"
     measured["cost_model"]["snapshot_captured_at"] = datetime.now(UTC).isoformat()
@@ -151,13 +155,29 @@ def test_dirty_manifest_blocks_before_any_gateway_io():
         )
 
 
-def test_unmeasured_policy_denies_without_sending_orders():
+def _unmeasured_policy_path(tmp_path: Path) -> Path:
+    raw = json.loads((ROOT / "configs/phase1-policy.json").read_text())
+    unmeasured = copy.deepcopy(raw)
+    for key in (
+        "maximum_quote_age_ms",
+        "quote_age_evidence",
+        "quote_age_measured_at",
+        "quote_age_p99_ms",
+        "quote_age_sample_count",
+    ):
+        unmeasured["sla"][key] = None
+    path = tmp_path / "phase1-policy-unmeasured.json"
+    path.write_text(json.dumps(unmeasured, sort_keys=True))
+    return path
+
+
+def test_unmeasured_policy_denies_without_sending_orders(tmp_path):
     dsn = os.environ.get("PHASE1_TEST_DATABASE_DSN")
     if not dsn:
         pytest.skip("PHASE1_TEST_DATABASE_DSN not set")
     with _isolated_database(dsn) as connection:
         apply_migrations(connection)
-        policy_path = ROOT / "configs/phase1-policy.json"
+        policy_path = _unmeasured_policy_path(tmp_path)
         strategy = FakeStrategy()
         with Phase1RiskService(policy_path=policy_path, timeout_seconds=3) as service:
             result = submit_phase1_entry(
