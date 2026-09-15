@@ -18,6 +18,7 @@ COPY v3 ./v3
 COPY scripts/check_phase1_imports.py ./scripts/check_phase1_imports.py
 COPY scripts/run_phase1_matching_probe.py ./scripts/run_phase1_matching_probe.py
 COPY scripts/run_phase1_demo_auto.py ./scripts/run_phase1_demo_auto.py
+COPY scripts/settle_phase1_residual.py ./scripts/settle_phase1_residual.py
 COPY configs/phase1-policy.json ./configs/phase1-policy.json
 COPY configs/phase1-engineering.json ./configs/phase1-engineering.json
 

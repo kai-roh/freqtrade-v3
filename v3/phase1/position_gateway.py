@@ -52,9 +52,17 @@ def record_episode_baseline(connection, intent_id, account):
             "SELECT 1 FROM order_commands WHERE intent_id=%s", (intent_id,)
         ).fetchone():
             raise ValueError("baseline cannot be registered after commands")
+        # Settled residuals of earlier episodes remain account inventory. They are
+        # inherited as pre-existing BTC here, never re-owned or sold by this episode.
+        inherited = connection.execute(
+            "SELECT COALESCE(sum(residual_base),0) FROM episode_residuals"
+        ).fetchone()[0]
+        if inherited > spot:
+            raise ValueError("account holds less BTC than the settled residual record")
         connection.execute(
-            "INSERT INTO episode_baselines(intent_id,spot_base,observed_at,evidence) VALUES (%s,%s,%s,%s::jsonb)",
-            (intent_id, spot, datetime.now(UTC), json.dumps(_safe_account(account))),
+            "INSERT INTO episode_baselines(intent_id,spot_base,observed_at,evidence,inherited_residual_base) "
+            "VALUES (%s,%s,%s,%s::jsonb,%s)",
+            (intent_id, spot, datetime.now(UTC), json.dumps(_safe_account(account)), inherited),
         )
 
 
@@ -91,6 +99,10 @@ def _state(connection, intent_id, account, closing):
         ).fetchone()
         if not baseline:
             raise ValueError("persisted pre-entry baseline required")
+        residual = cursor.execute(
+            "SELECT residual_base FROM episode_residuals WHERE intent_id=%s", (intent_id,)
+        ).fetchone()
+        settled = residual["residual_base"] if residual else Decimal(0)
         # An unsubmitted opposite-leg reservation can be retired only after approval.
         commands = cursor.execute(
             "SELECT c.id,c.leg,c.active,d.status AS dispatch_status,o.status AS order_status,"
@@ -137,12 +149,18 @@ def _state(connection, intent_id, account, closing):
         spot_filled_base=spot,
         perp_filled_base=perp,
         spot_base_fee=fees,
-        venue_spot_base=Decimal(account["spot_total_btc"]) - baseline["spot_base"],
+        settled_residual_base=settled,
+        venue_spot_base=Decimal(account["spot_total_btc"]) - baseline["spot_base"] - settled,
         venue_perp_base=Decimal(account["perp_qty"]),
         open_order_count=len(account["open_orders"]),
     )
     fingerprint = payload_hash(
-        {"commands": str(commands), "fills": str(rows), "baseline": str(baseline)}
+        {
+            "commands": str(commands),
+            "fills": str(rows),
+            "baseline": str(baseline),
+            "settled_residual": str(settled),
+        }
     )
     return snapshot, commands, fingerprint
 

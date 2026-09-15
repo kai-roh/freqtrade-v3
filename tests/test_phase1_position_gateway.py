@@ -14,9 +14,10 @@ from test_phase1_entry_gateway import (
 
 from v3.phase1.action_risk import ActionRiskService
 from v3.phase1.dispatch import DispatchJournal
+from v3.phase1.engineering_entry import submit_engineering_entry
 from v3.phase1.entry_gateway import submit_phase1_entry
 from v3.phase1.episode_coordinator import manage_episode_once
-from v3.phase1.episode_lifecycle import reconcile_episode_state
+from v3.phase1.episode_lifecycle import reconcile_episode_state, settle_episode_residual
 from v3.phase1.episode_plan import EpisodeLimits
 from v3.phase1.policy import load_phase1_policy
 from v3.phase1.position_gateway import submit_position_action
@@ -322,3 +323,108 @@ def test_partial_entry_residual_cannot_be_closed_by_lifecycle(episode):
         db, intent_id=entry.intent_id, account=_account(), limits=limits, closing=True
     )
     assert result["state"] == "ABORTING" and not result["flat"]
+    # Sellable inventory is never written off as a residual.
+    with pytest.raises(ValueError, match="active command|still sellable|unsellable"):
+        settle_episode_residual(db, intent_id=entry.intent_id, account=_account(), limits=limits)
+    assert db.execute("SELECT count(*) FROM episode_residuals").fetchone()[0] == 0
+
+
+def test_closing_dust_is_settled_as_owned_residual_and_next_episode_inherits_it(episode):
+    class Inspector:
+        perp = "0"
+        owned = "0.004995"
+
+        def account(self):
+            return _account(perp=self.perp, owned=self.owned)
+
+    inspector = Inspector()
+    db, _, strategy, risk, entry, limits = episode
+    # Settlement is refused before any close request exists.
+    with pytest.raises(ValueError, match="closing episode|close request"):
+        settle_episode_residual(db, intent_id=entry.intent_id, account=_account(), limits=limits)
+    hedge = _tick(episode, inspector)
+    assert hedge["action"] == "hedge_perp_sell"
+    _fill(db, hedge["command_id"], "0.004")
+    inspector.perp = "-0.004"
+    close = _tick(episode, inspector, closing=True)
+    assert close["action"] == "close_perp_buy"
+    # Futures still short: the Spot remainder must not be settled.
+    with pytest.raises(ValueError):
+        settle_episode_residual(
+            db, intent_id=entry.intent_id, account=inspector.account(), limits=limits
+        )
+    _fill(db, close["command_id"], "0.004")
+    inspector.perp = "0"
+    sell = _tick(episode, inspector)
+    assert sell["action"] == "close_spot_sell"
+    assert strategy.submitted[-1]["quantity"] == Decimal("0.00499")
+    _fill(db, sell["command_id"], "0.00499")
+    inspector.owned = "0.000005"
+    stuck = _tick(episode, inspector)
+    assert stuck["status"] == "DUST_REMAINS" and stuck["state"] == "ABORTING"
+    submitted = len(strategy.submitted)
+
+    settled = settle_episode_residual(
+        db, intent_id=entry.intent_id, account=inspector.account(), limits=limits
+    )
+    assert settled["state"] == "CLOSED" and settled["residual_settled"]
+    assert settled["residual_base"] == "0.000005" and not settled["flat"]
+    assert len(strategy.submitted) == submitted
+    assert (
+        db.execute("SELECT state FROM intents WHERE id=%s", (entry.intent_id,)).fetchone()[0]
+        == "CLOSED"
+    )
+    assert db.execute(
+        "SELECT residual_base FROM episode_residuals WHERE intent_id=%s", (entry.intent_id,)
+    ).fetchone()[0] == Decimal("0.000005")
+    assert (
+        db.execute(
+            "SELECT count(*) FROM cost_ledger_entries WHERE intent_id=%s AND category='residual_inventory'",
+            (entry.intent_id,),
+        ).fetchone()[0]
+        == 1
+    )
+    assert db.execute(
+        "SELECT status,resolved_at IS NOT NULL FROM incidents WHERE intent_id=%s "
+        "AND category='residual_settlement'",
+        (entry.intent_id,),
+    ).fetchone() == ("resolved", True)
+    assert (
+        db.execute(
+            "SELECT count(*) FROM state_transitions WHERE intent_id=%s AND trigger='residual_settled' "
+            "AND accepted AND to_state='CLOSED'",
+            (entry.intent_id,),
+        ).fetchone()[0]
+        == 1
+    )
+    assert (
+        db.execute("SELECT count(*) FROM state_transitions WHERE NOT accepted").fetchone()[0] == 0
+    )
+    # The settled episode reconciles as CLOSED without hiding account inventory.
+    after = _tick(episode, inspector)
+    assert after["status"] == "CLOSED"
+    with pytest.raises(ValueError, match="closing episode"):
+        settle_episode_residual(
+            db, intent_id=entry.intent_id, account=inspector.account(), limits=limits
+        )
+
+    # A next episode may start; the residual is pre-existing, inherited inventory.
+    successor = submit_engineering_entry(
+        connection=db,
+        runtime=strategy,
+        risk_service=risk,
+        manifest=_manifest(),
+        account=inspector.account(),
+        limits=EpisodeLimits("0.00001", "0.001", "5", "50", "60000", "60000", "60000", "60001"),
+        quantity=Decimal("0.0036"),
+        price=Decimal("60000"),
+        receive_gap_ms=(0, 0),
+        observed_ns=time.time_ns(),
+        allow_test_transport=True,
+    )
+    assert successor["submitted"]
+    baseline = db.execute(
+        "SELECT spot_base,inherited_residual_base FROM episode_baselines WHERE intent_id=%s",
+        (successor["intent_id"],),
+    ).fetchone()
+    assert baseline == (Decimal("0.250005"), Decimal("0.000005"))

@@ -169,3 +169,31 @@ def test_inconsistent_or_foreign_snapshots_fail_closed(overrides, reason):
 
     assert action.action == EpisodeActionType.BLOCKED
     assert reason in action.reason
+
+
+def test_settled_residual_is_subtracted_from_owned_spot_and_bounded_by_inventory():
+    closing = snapshot(
+        phase=EpisodePhase.CLOSING,
+        spot_filled_base="0.005",
+        spot_base_fee="0.000005",
+        settled_residual_base="0.000005",
+        venue_spot_base="0.00499",
+    )
+    assert closing.net_spot_base == Decimal("0.00499")
+    assert plan_episode_action(closing, limits()).action == EpisodeActionType.CLOSE_SPOT_SELL
+    flat = snapshot(
+        phase=EpisodePhase.CLOSING,
+        spot_filled_base="0.000005",
+        settled_residual_base="0.000005",
+        venue_spot_base="0",
+    )
+    assert plan_episode_action(flat, limits()).action == EpisodeActionType.WAIT
+    excessive = snapshot(
+        phase=EpisodePhase.CLOSING,
+        spot_filled_base="0.000005",
+        settled_residual_base="0.000006",
+        venue_spot_base="-0.000001",
+    )
+    assert plan_episode_action(excessive, limits()).action == EpisodeActionType.BLOCKED
+    with pytest.raises(ValueError):
+        snapshot(settled_residual_base="-0.000001")

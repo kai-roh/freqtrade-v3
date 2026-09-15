@@ -71,6 +71,7 @@ class EpisodeSnapshot:
     spot_filled_base: DecimalInput
     perp_filled_base: DecimalInput
     spot_base_fee: DecimalInput = "0"
+    settled_residual_base: DecimalInput = "0"
     venue_spot_base: DecimalInput | None = None
     venue_perp_base: DecimalInput | None = None
     pending_command_count: int = 0
@@ -86,6 +87,11 @@ class EpisodeSnapshot:
             self, "perp_filled_base", _decimal("perp_filled_base", self.perp_filled_base)
         )
         object.__setattr__(self, "spot_base_fee", _decimal("spot_base_fee", self.spot_base_fee))
+        object.__setattr__(
+            self,
+            "settled_residual_base",
+            _decimal("settled_residual_base", self.settled_residual_base),
+        )
         if self.venue_spot_base is not None:
             object.__setattr__(
                 self, "venue_spot_base", _decimal("venue_spot_base", self.venue_spot_base)
@@ -105,10 +111,13 @@ class EpisodeSnapshot:
             raise ValueError("episode counts must be non-negative")
         if self.spot_base_fee < 0:
             raise ValueError("spot_base_fee cannot be negative")
+        if self.settled_residual_base < 0:
+            raise ValueError("settled_residual_base cannot be negative")
 
     @property
     def net_spot_base(self) -> Decimal:
-        return self.spot_filled_base - self.spot_base_fee
+        """Episode-owned Spot: fills minus BTC fees minus audited settled residual."""
+        return self.spot_filled_base - self.spot_base_fee - self.settled_residual_base
 
 
 @dataclass(frozen=True)
@@ -224,6 +233,8 @@ def _snapshot_violations(snapshot: EpisodeSnapshot, limits: EpisodeLimits) -> li
         violations.append("Spot filled quantity cannot be negative")
     if snapshot.spot_base_fee > snapshot.spot_filled_base:
         violations.append("Spot base fee exceeds filled inventory")
+    if snapshot.settled_residual_base > snapshot.spot_filled_base - snapshot.spot_base_fee:
+        violations.append("settled residual exceeds fee-adjusted Spot inventory")
     return violations
 
 

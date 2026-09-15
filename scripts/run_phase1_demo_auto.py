@@ -2,7 +2,8 @@
 """Run one durable Demo carry engineering episode, including timed automatic exit.
 
 This is a synthetic engineering trigger, NOT approval of a profitable strategy.
-No mainnet credentials, transfers, unbounded replacement, or dust write-off.
+No mainnet credentials, transfers, or unbounded replacement. Closing dust below
+the Spot minimum order is settled as an audited owned residual, never sold or hidden.
 """
 
 import argparse
@@ -28,6 +29,7 @@ from v3.phase1.demo_inspector import DemoInspector  # noqa: E402
 from v3.phase1.demo_node import DemoNode  # noqa: E402
 from v3.phase1.engineering_entry import submit_engineering_entry  # noqa: E402
 from v3.phase1.episode_coordinator import manage_episode_once  # noqa: E402
+from v3.phase1.episode_lifecycle import settle_episode_residual  # noqa: E402
 from v3.phase1.episode_plan import EpisodeLimits  # noqa: E402
 from v3.phase1.fill_inbox import DurableFillInbox  # noqa: E402
 from v3.phase1.node_smoke import _private_native_logs  # noqa: E402
@@ -294,16 +296,23 @@ async def execute(args, runtimes):
                     await report("stop", result | {"completed_episode": True})
                     return
                 elif result.get("status") == "DUST_REMAINS":
-                    # Matched-with-dust may hold until the deadline, but closing
-                    # dust remains an owned residual and prohibits a fresh entry.
+                    # Matched-with-dust may hold until the deadline. Closing dust is
+                    # settled as an audited owned residual only when futures are flat
+                    # and no bounded order could still sell it; it is never sold
+                    # below lot size and never hidden as flat.
                     closing = control.execute(
                         "SELECT close_requested_at IS NOT NULL FROM episode_baselines WHERE intent_id=%s",
                         (intent_id,),
                     ).fetchone()[0]
                     if closing:
+                        limits, _, _ = market()
+                        account = await asyncio.to_thread(inspector.account)
+                        settled = settle_episode_residual(
+                            control, intent_id=intent_id, account=account, limits=limits
+                        )
                         await report(
                             "stop",
-                            result | {"completed_episode": False, "new_entries_halted": True},
+                            result | settled | {"completed_episode": True, "exact_flat": False},
                         )
                         return
                 elif result.get("status") not in {"WAIT"}:
