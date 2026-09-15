@@ -11,6 +11,15 @@ from .ledger import FillRow
 from .postgres import PostgresPhase1Ledger
 
 
+def binance_event_time(nanoseconds):
+    # Pinned millis_to_nanos uses float conversion: epoch milliseconds can
+    # acquire <=256 ns of rounding error. Preserve finer times otherwise.
+    milliseconds = (nanoseconds + 500_000) // 1_000_000
+    if abs(nanoseconds - milliseconds * 1_000_000) <= 256:
+        return datetime(1970, 1, 1, tzinfo=UTC) + timedelta(milliseconds=milliseconds)
+    return datetime(1970, 1, 1, tzinfo=UTC) + timedelta(microseconds=nanoseconds // 1000)
+
+
 def record_nautilus_fill(ledger: PostgresPhase1Ledger, event) -> str:
     """Record venue evidence even while new orders are halted.
 
@@ -26,7 +35,7 @@ def record_nautilus_fill(ledger: PostgresPhase1Ledger, event) -> str:
     venue = runtime_id.rsplit(".", 1)[1]
     if str(event.account_id).split("-", 1)[0] != venue:
         raise ValueError("fill account issuer does not match instrument venue")
-    at = datetime(1970, 1, 1, tzinfo=UTC) + timedelta(microseconds=event.ts_event // 1000)
+    at = binance_event_time(event.ts_event)
     quantity, price = event.last_qty.as_decimal(), event.last_px.as_decimal()
     # Binance trade IDs are symbol scoped, not globally unique for a product.
     venue_fill_id = f"{canonical}:{event.trade_id}"

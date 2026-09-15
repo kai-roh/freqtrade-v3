@@ -5,7 +5,16 @@ from decimal import Decimal
 import pytest
 from test_phase1_dispatch_safety import ready  # noqa: F401
 
-from v3.phase1.fill_ingestion import record_nautilus_fill
+from v3.phase1.fill_ingestion import binance_event_time, record_nautilus_fill
+
+
+@pytest.mark.parametrize("offset", [-256, -64, 0, 64, 256])
+def test_pinned_binance_epoch_millis_float_jitter_is_canonical(offset):
+    from datetime import UTC, datetime
+
+    assert binance_event_time(1789463468937000000 + offset) == datetime(
+        2026, 9, 15, 9, 11, 8, 937000, tzinfo=UTC
+    )
 
 
 def fill(trade="1", quantity="0.001", timestamp=1000000000, fee="0.01", **overrides):

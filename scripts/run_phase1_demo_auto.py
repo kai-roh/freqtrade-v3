@@ -33,6 +33,7 @@ from v3.phase1.fill_inbox import DurableFillInbox  # noqa: E402
 from v3.phase1.node_smoke import _private_native_logs  # noqa: E402
 from v3.phase1.notifications import Phase1Notification, send_phase1_telegram  # noqa: E402
 from v3.phase1.observations import capture_binance_carry_market_observation  # noqa: E402
+from v3.phase1.position_gateway import account_execution_lock  # noqa: E402
 from v3.phase1.postgres import PostgresPhase1Ledger, apply_migrations  # noqa: E402
 from v3.phase1.rest_recovery import recover_tracked_order  # noqa: E402
 from v3.reproducibility import (  # noqa: E402
@@ -115,6 +116,41 @@ async def execute(args, runtimes):
         # Dedicated process-lifetime ownership, separate from per-order/account locks.
         if not control.execute("SELECT pg_try_advisory_lock(31092029)").fetchone()[0]:
             raise ValueError("Demo auto runner already active")
+        if args.resume_intent:
+            if not args.previous_manifest:
+                raise ValueError("explicit previous manifest required for close-only takeover")
+            with account_execution_lock(control), control.transaction():
+                row = control.execute(
+                    "SELECT i.run_manifest_id,i.state,b.close_requested_at FROM intents i "
+                    "JOIN episode_baselines b ON b.intent_id=i.id WHERE i.id=%s FOR UPDATE",
+                    (args.resume_intent,),
+                ).fetchone()
+                if (
+                    not row
+                    or row[0] != args.previous_manifest
+                    or row[2] is None
+                    or row[1] not in {"ABORTING", "RECONCILING", "RECONCILIATION_BLOCKED"}
+                ):
+                    raise ValueError("only an explicitly identified closing episode can transfer")
+                control.execute(
+                    "UPDATE episode_baselines SET evidence=evidence || %s::jsonb WHERE intent_id=%s",
+                    (
+                        json.dumps(
+                            {
+                                "close_only_takeover": {
+                                    "from_manifest": row[0],
+                                    "to_manifest": manifest.to_dict(),
+                                    "at": datetime.now(UTC).isoformat(),
+                                }
+                            }
+                        ),
+                        args.resume_intent,
+                    ),
+                )
+                control.execute(
+                    "UPDATE intents SET run_manifest_id=%s WHERE id=%s",
+                    (manifest.manifest_id, args.resume_intent),
+                )
         ledger = PostgresPhase1Ledger(stream)
         for instrument in (spot, perp):
             ledger.add_instrument_snapshot(instrument.to_postgres_row())
@@ -185,6 +221,8 @@ async def execute(args, runtimes):
             if existing:
                 intent_id = str(existing[0][0])
             else:
+                if args.resume_intent:
+                    raise ValueError("close-only takeover must never create an entry")
                 account = await asyncio.to_thread(inspector.account)
                 limits, gaps, ns = market()
                 # Exact Spot lot. Independent risk rechecks fee-adjusted hedge headroom.
@@ -294,6 +332,10 @@ def main():
     parser.add_argument("--credentials-env-file", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--started-at", required=True, help="Stable run identity; reuse on restart")
+    parser.add_argument(
+        "--resume-intent", help="Explicit close-only version takeover; no new entry"
+    )
+    parser.add_argument("--previous-manifest")
     parser.add_argument("--execute-demo-auto", action="store_true", required=True)
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)

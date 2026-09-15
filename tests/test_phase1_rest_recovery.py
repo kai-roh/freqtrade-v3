@@ -1,3 +1,4 @@
+import json
 import os
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
@@ -122,6 +123,43 @@ class _PerpInspector:
                 "time": 1_700_000_000_000,
             }
         ]
+
+
+@pytest.mark.parametrize("damage", [None, "no_inbox_proof", "fee_conflict"])
+def test_legacy_microsecond_repair_requires_raw_proof_and_identical_trade(damage):
+    dsn = os.environ.get("PHASE1_TEST_DATABASE_DSN")
+    if not dsn:
+        pytest.skip("PHASE1_TEST_DATABASE_DSN not set")
+    with _isolated_database(dsn) as db:
+        apply_migrations(db)
+        _, command, _ = _ready_command(db, leg="perp")
+        assert recover_tracked_order(db, _PerpInspector(), command)["status"] == "APPLIED"
+        db.execute("UPDATE fills SET filled_at=filled_at-interval '1 microsecond'")
+        if damage == "fee_conflict":
+            db.execute("UPDATE fills SET fee_amount=1")
+        if damage != "no_inbox_proof":
+            db.execute(
+                "INSERT INTO fill_event_inbox(id,payload,status) VALUES (%s,%s::jsonb,'APPLIED')",
+                (
+                    str(uuid4()),
+                    json.dumps(
+                        dict(
+                            client_order_id="client-perp-r1",
+                            trade_id="123",
+                            ts_event=1700000000000000000 - 64,
+                        )
+                    ),
+                ),
+            )
+        result = recover_tracked_order(db, _PerpInspector(), command)
+        assert result["status"] == ("APPLIED" if damage is None else "BLOCKED")
+        timestamp = db.execute("SELECT filled_at FROM fills").fetchone()[0]
+        assert timestamp.microsecond == (0 if damage is None else 999999)
+        repaired = db.execute(
+            "SELECT snapshot ? 'timestamp_normalization' FROM order_recovery_checks WHERE id=%s",
+            (result["check_id"],),
+        ).fetchone()[0]
+        assert repaired is (damage is None)
 
 
 @pytest.mark.parametrize(

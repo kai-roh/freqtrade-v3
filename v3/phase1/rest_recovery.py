@@ -194,6 +194,9 @@ def _apply_snapshot(
             )
             for fill in snapshot.fills:
                 venue_fill_id = _canonical_rest_fill_id(command, fill.venue_fill_id)
+                _normalize_legacy_stream_time(
+                    connection, command, snapshot, fill, venue_fill_id, check_id
+                )
                 ledger.add_fill(
                     FillRow(
                         str(uuid5(NAMESPACE_URL, f"v3-fill:{snapshot.venue}:{venue_fill_id}")),
@@ -225,6 +228,51 @@ def _apply_snapshot(
     except Exception as exc:
         return _block_recovery(connection, check_id, type(exc).__name__)
     return {"check_id": check_id, "status": "APPLIED"}
+
+
+def _normalize_legacy_stream_time(connection, command, snapshot, fill, venue_fill_id, check_id):
+    """Repair only a proven 1us truncation, retaining raw inbox and audit receipt.
+
+    All other duplicate fields are still checked by add_fill in this same atomic
+    transaction; any mismatch rolls back the correction too.
+    """
+    from .fill_ingestion import binance_event_time
+
+    existing = connection.execute(
+        "SELECT id,filled_at FROM fills WHERE venue=%s AND venue_fill_id=%s FOR UPDATE",
+        (snapshot.venue, venue_fill_id),
+    ).fetchone()
+    if not existing or fill.filled_at - existing[1] != timedelta(microseconds=1):
+        return
+    raw = connection.execute(
+        "SELECT payload FROM fill_event_inbox WHERE status='APPLIED' "
+        "AND payload->>'client_order_id'=%s AND payload->>'trade_id'=%s",
+        (command["idempotency_key"], venue_fill_id.rsplit(":", 1)[-1]),
+    ).fetchall()
+    epoch = datetime(1970, 1, 1, tzinfo=UTC)
+    if not any(
+        binance_event_time(row[0]["ts_event"]) == fill.filled_at
+        and epoch + timedelta(microseconds=row[0]["ts_event"] // 1000) == existing[1]
+        for row in raw
+    ):
+        return
+    connection.execute("UPDATE fills SET filled_at=%s WHERE id=%s", (fill.filled_at, existing[0]))
+    connection.execute(
+        "UPDATE order_recovery_checks SET snapshot=snapshot || %s::jsonb WHERE id=%s",
+        (
+            json.dumps(
+                {
+                    "timestamp_normalization": {
+                        "fill_id": str(existing[0]),
+                        "previous": existing[1].isoformat(),
+                        "canonical": fill.filled_at.isoformat(),
+                        "basis": "raw inbox nanos and identical REST trade; pinned float conversion",
+                    }
+                }
+            ),
+            check_id,
+        ),
+    )
 
 
 def _lock_command(connection, command_id: str) -> dict[str, Any]:
