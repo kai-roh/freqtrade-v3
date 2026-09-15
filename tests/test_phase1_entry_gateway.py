@@ -1,6 +1,7 @@
 import copy
 import json
 import os
+import time
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
@@ -120,6 +121,17 @@ def _request(**overrides) -> EntryGatewayRequest:
             transfer_authorized=False,
         ),
         "evaluated_at": datetime.now(UTC),
+        "account_snapshot": {
+            "observed_ns": time.time_ns(),
+            "spot_total_btc": "0",
+            "spot_btc": "0",
+            "spot_usdt": "1000",
+            "perp_usdt": "1000",
+            "perp_qty": "0",
+            "open_orders": [],
+            "leverage": 2,
+            "margin_type": "ISOLATED",
+        },
     }
     values.update(overrides)
     return EntryGatewayRequest(**values)

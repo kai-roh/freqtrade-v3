@@ -1,0 +1,14 @@
+{
+  "environment": "demo",
+  "real_capital": false,
+  "economic_approval": false,
+  "synthetic_trigger": true,
+  "target_leg_usdt": "220",
+  "maximum_leg_usdt": "300",
+  "hold_seconds": 300,
+  "maximum_run_seconds": 900,
+  "maximum_episodes": 1,
+  "freshness_basis": "local_receive_gap",
+  "maximum_receive_gap_ms": 2000,
+  "maximum_ioc_slippage_bps": "10"
+}

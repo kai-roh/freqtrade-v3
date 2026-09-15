@@ -22,6 +22,7 @@ from .dispatch import DispatchJournal, DispatchOrder
 from .fee_input import policy_with_fee_snapshot
 from .ledger import IntentRow, OrderCommandRow, RiskDecisionRow, command_idempotency_key
 from .policy import Phase1Policy, load_phase1_policy
+from .position_gateway import account_execution_lock, record_episode_baseline
 from .postgres import PostgresPhase1Ledger
 from .risk import CarryRiskContext
 from .risk_service import Phase1RiskService
@@ -72,6 +73,7 @@ class EntryGatewayRequest:
     perp: EntryLeg
     wallet_preflight: WalletPreflight
     evaluated_at: datetime
+    account_snapshot: dict | None = None
 
     def __post_init__(self) -> None:
         if self.spot.leg != "spot" or self.perp.leg != "perp":
@@ -115,7 +117,16 @@ class _StrategyTransport(Protocol):
     def submit_prepared(self, order) -> None: ...
 
 
-def submit_phase1_entry(
+def submit_phase1_entry(**kwargs):
+    kwargs["manifest"].assert_deployable()
+    ledger = kwargs["ledger"]
+    if ledger is None:
+        return _submit_phase1_entry(**kwargs)
+    with account_execution_lock(ledger.connection):
+        return _submit_phase1_entry(**kwargs)
+
+
+def _submit_phase1_entry(
     *,
     request: EntryGatewayRequest,
     manifest: RunManifest,
@@ -262,6 +273,32 @@ def submit_phase1_entry(
         IntentState.RISK_APPROVED, trigger="risk_approved", guards={"approved": True}
     )
     with ledger.connection.transaction():
+        ledger.connection.execute("SELECT pg_advisory_xact_lock(31092028)")
+        if request.account_snapshot is None:
+            raise ValueError("pre-entry account snapshot required")
+        account = request.account_snapshot
+        leverage = Decimal(str(account["leverage"]))
+        if account["margin_type"] != "ISOLATED" or leverage != Decimal(
+            request.leverage_by_instrument["BTCUSDT-PERP.BINANCE"]
+        ):
+            raise ValueError("account leverage/margin evidence does not match approval")
+        spot_need = request.spot.notional * (
+            1 + policy.fee_schedule.spot_taker_bps / Decimal(10000)
+        )
+        perp_need = request.perp.notional * (
+            1 / leverage + policy.fee_schedule.perp_taker_bps / Decimal(10000)
+        )
+        if Decimal(account["spot_usdt"]) < spot_need or Decimal(account["perp_usdt"]) < perp_need:
+            raise ValueError("observed wallets cannot fund approved entry")
+        if ledger.connection.execute(
+            "SELECT 1 FROM order_commands WHERE active LIMIT 1"
+        ).fetchone():
+            raise ValueError("another command is active")
+        if ledger.connection.execute(
+            "SELECT 1 FROM intents WHERE state <> 'CLOSED' AND id<>%s LIMIT 1", (intent_id,)
+        ).fetchone():
+            raise ValueError("another episode has not closed")
+        record_episode_baseline(ledger.connection, intent_id, request.account_snapshot)
         commands = _record_entry_commands(ledger, intent_id, request)
     machine.transition(
         IntentState.SUBMITTING,

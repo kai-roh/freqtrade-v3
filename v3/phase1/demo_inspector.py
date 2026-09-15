@@ -1,5 +1,6 @@
 """Read-only Demo account and tracked-order reconciliation."""
 
+import time
 from decimal import Decimal
 
 from .binance_probe import SPOT_DEMO, USDM_DEMO, BinanceReadOnlyClient
@@ -24,6 +25,7 @@ class DemoInspector:
         return result.data
 
     def account(self):
+        observed_ns = time.time_ns()
         spot = self.get("spot", "/api/v3/account")
         perp = self.get("perp", "/fapi/v3/account")
         config = self.get("perp", "/fapi/v1/symbolConfig", {"symbol": "BTCUSDT"})
@@ -42,6 +44,15 @@ class DemoInspector:
         result = dict(
             spot_usdt=balances.get("USDT", Decimal(0)),
             spot_btc=balances.get("BTC", Decimal(0)),
+            spot_total_btc=sum(
+                (
+                    Decimal(r["free"]) + Decimal(r["locked"])
+                    for r in spot["balances"]
+                    if r["asset"] == "BTC"
+                ),
+                Decimal(0),
+            ),
+            observed_ns=observed_ns,
             perp_usdt=Decimal(perp["availableBalance"]),
             perp_qty=sum((Decimal(r["positionAmt"]) for r in positions), Decimal(0)),
             leverage=int(configs[0]["leverage"]),
