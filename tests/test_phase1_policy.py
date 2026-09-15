@@ -152,3 +152,27 @@ def test_policy_parser_rejects_unsafe_types_order_contract_or_missing_exit_cost(
     inconsistent_cost["cost_model"]["normal_round_trip_cost_bps"] = "12"
     with pytest.raises(ValueError, match="declared normal costs"):
         policy_from_mapping(inconsistent_cost)
+
+
+def test_policy_requires_conservative_funding_projection_and_reversal_exit():
+    policy = _policy()
+    assert policy["scanner"]["funding_projection"]["method"] == "min_of_current_and_trailing_mean"
+    assert policy["scanner"]["funding_projection"]["trailing_intervals"] >= 3
+    assert policy["scanner"]["funding_projection"]["require_trailing_history"] is True
+    assert policy["scanner"]["funding_reversal_exit"]["consecutive_nonpositive_intervals"] >= 1
+    loaded = policy_from_mapping(policy)
+    assert loaded.funding_projection_intervals == 21
+    assert loaded.funding_reversal_consecutive_intervals == 2
+
+    optimistic = copy.deepcopy(policy)
+    optimistic["scanner"]["funding_projection"]["method"] = "current_rate"
+    with pytest.raises(ValueError, match="min_of_current_and_trailing_mean"):
+        policy_from_mapping(optimistic)
+    no_history = copy.deepcopy(policy)
+    no_history["scanner"]["funding_projection"]["require_trailing_history"] = False
+    with pytest.raises(ValueError, match="require trailing history"):
+        policy_from_mapping(no_history)
+    short = copy.deepcopy(policy)
+    short["scanner"]["funding_projection"]["trailing_intervals"] = 2
+    with pytest.raises(ValueError, match="three trailing"):
+        policy_from_mapping(short)

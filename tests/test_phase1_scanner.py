@@ -5,13 +5,18 @@ from pathlib import Path
 import pytest
 
 from v3.phase1.policy import FeeSchedule, load_phase1_policy
-from v3.phase1.scanner import CarryObservation, scan_carry
+from v3.phase1.scanner import (
+    CarryObservation,
+    funding_reversal_exit,
+    project_funding_rate,
+    scan_carry,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 CAPTURED_AT = datetime(2026, 9, 3, 2, 27, 4, 465026, tzinfo=UTC)
 
 
-def _observation(rate="0.0001", hours=720, notional="300", venue="binance"):
+def _observation(rate="0.0001", hours=720, notional="300", venue="binance", history=None):
     return CarryObservation(
         venue=venue,
         spot_instrument_id="BTCUSDT.BINANCE",
@@ -22,6 +27,7 @@ def _observation(rate="0.0001", hours=720, notional="300", venue="binance"):
         holding_period_hours=hours,
         instrument_snapshot_id="snapshot-1",
         observed_at=CAPTURED_AT,
+        trailing_funding_rates=(rate,) * 21 if history is None else history,
     )
 
 
@@ -143,3 +149,63 @@ def test_scanner_rejects_unapproved_instrument_or_holding_period():
 
     with pytest.raises(ValueError, match="venue"):
         scan_carry(_observation(venue="not-binance"), policy, fee_schedule=_fees())
+
+
+def test_single_funding_spike_is_not_extrapolated_over_the_holding_period():
+    policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
+    calm_history = ("0.00002",) * 21
+    spike = scan_carry(
+        _observation(rate="0.001", history=calm_history), policy, fee_schedule=_fees()
+    )
+
+    assert project_funding_rate(
+        _observation(rate="0.001", history=calm_history), policy
+    ) == Decimal("0.00002")
+    assert spike.projected_funding_rate == Decimal("0.00002")
+    assert spike.funding_rate == Decimal("0.001")
+    assert spike.expected_gross_bps == Decimal("18.0000")
+    assert not spike.actionable
+    # A decaying regime uses the lower current rate, never the higher trailing mean.
+    decaying = scan_carry(
+        _observation(rate="0.00003", history=("0.0002",) * 21), policy, fee_schedule=_fees()
+    )
+    assert decaying.projected_funding_rate == Decimal("0.00003")
+    assert not decaying.actionable
+
+
+def test_short_funding_history_keeps_scanner_observation_only():
+    policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
+    target = scan_carry(_observation(history=("0.0001",) * 20), policy, fee_schedule=_fees())
+
+    assert not target.actionable
+    assert target.projected_funding_rate is None
+    assert target.net_expected_bps is None
+    assert "projection window" in target.decision_reason
+    assert target.to_dict()["projected_funding_rate"] is None
+
+
+def test_negative_trailing_mean_blocks_even_with_positive_current_funding():
+    policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
+    history = ("-0.0002",) * 20 + ("0.0005",)
+    target = scan_carry(_observation(rate="0.0005", history=history), policy, fee_schedule=_fees())
+
+    assert not target.actionable
+    assert "not positive" in target.decision_reason
+
+
+@pytest.mark.parametrize(
+    "rates,expected",
+    [
+        (("0.0001", "0.0001", "0.0001"), False),
+        (("0.0001", "0", "-0.00001"), True),
+        (("0.0003", "-0.0001", "-0.0003"), True),
+        (("0.0001", "0.0001"), True),
+        (("0.0005", "-0.0001", "0.0001"), False),
+        (("-0.0005", "0.0001", "0.0001"), True),
+    ],
+)
+def test_funding_reversal_exit_rule_is_deterministic(rates, expected):
+    policy = load_phase1_policy(ROOT / "configs" / "phase1-policy.json")
+    exit_now, reason = funding_reversal_exit(rates, policy)
+    assert exit_now is expected
+    assert reason.startswith("exit" if expected else "hold")

@@ -107,6 +107,7 @@ class FundingObservationRecord:
     settlement_at: datetime
     source_environment: str
     source: str
+    trailing_rates: tuple[Decimal, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -138,6 +139,7 @@ class Phase1CarryMarketObservation:
             instrument_snapshot_id=self.perp_instrument.id,
             observed_at=self.captured_at,
             other_success_cost_bps=other_success_cost_bps,
+            trailing_funding_rates=self.funding.trailing_rates,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -155,6 +157,7 @@ class Phase1CarryMarketObservation:
                 "settlement_at": self.funding.settlement_at.isoformat(),
                 "source_environment": self.funding.source_environment,
                 "source": self.funding.source,
+                "trailing_rates": [str(rate) for rate in self.funding.trailing_rates],
             },
         }
 
@@ -165,6 +168,7 @@ def capture_binance_carry_market_observation(
     symbol: str = "BTCUSDT",
     clock: Clock | None = None,
     monotonic: Callable[[], float] | None = None,
+    funding_history_limit: int = 24,
 ) -> Phase1CarryMarketObservation:
     """Fetch order-free public facts needed to bridge the scanner and risk layer."""
 
@@ -215,7 +219,9 @@ def capture_binance_carry_market_observation(
         clock=now,
         monotonic=mono,
     )
-    funding = capture_mainnet_public_funding(client, symbol=symbol, clock=now)
+    funding = capture_mainnet_public_funding(
+        client, symbol=symbol, clock=now, history_limit=funding_history_limit
+    )
     return Phase1CarryMarketObservation(
         spot_instrument=spot_instrument,
         perp_instrument=perp_instrument,
@@ -231,12 +237,15 @@ def capture_mainnet_public_funding(
     *,
     symbol: str,
     clock: Clock | None = None,
+    history_limit: int = 3,
 ) -> FundingObservationRecord:
+    if history_limit < 3:
+        raise ValueError("funding history needs at least three settlements")
     captured_at = _utc((clock or (lambda: datetime.now(UTC)))(), "captured_at")
     history_data = client.get(
         USDM_LIVE,
         "/fapi/v1/fundingRate",
-        params={"symbol": symbol, "limit": 3},
+        params={"symbol": symbol, "limit": history_limit},
     ).data
     history = _require_sequence(history_data, "fundingRate")
     rows = [_require_mapping(row, "fundingRate row") for row in history]
@@ -247,6 +256,9 @@ def capture_mainnet_public_funding(
     latest = symbol_rows[-1]
     funding_rate = _positive_or_signed_decimal(latest.get("fundingRate"), "fundingRate")
     settlement_at = _millis_to_utc(latest.get("fundingTime"), "fundingTime")
+    trailing_rates = tuple(
+        _positive_or_signed_decimal(row.get("fundingRate"), "fundingRate") for row in symbol_rows
+    )
 
     info = client.get(USDM_LIVE, "/fapi/v1/fundingInfo").data
     interval = _interval_from_funding_info(info, symbol)
@@ -267,6 +279,7 @@ def capture_mainnet_public_funding(
         settlement_at=settlement_at,
         source_environment="mainnet_public_usdm",
         source=source,
+        trailing_rates=trailing_rates,
     )
 
 

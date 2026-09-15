@@ -136,6 +136,10 @@ class Phase1Policy:
     minimum_expected_net_bps: Decimal
     minimum_holding_hours: int
     maximum_holding_hours: int
+    funding_projection_intervals: int
+    funding_projection_requires_history: bool
+    funding_reversal_consecutive_intervals: int
+    funding_reversal_trailing_intervals: int
     required_intent_fields: tuple[str, ...]
     fee_schedule: FeeSchedule
     raw: Mapping[str, Any]
@@ -176,6 +180,14 @@ class Phase1Policy:
             raise ValueError("minimum expected net bps must be positive")
         if self.minimum_holding_hours >= self.maximum_holding_hours:
             raise ValueError("minimum holding hours must be below maximum holding hours")
+        if self.funding_projection_intervals < 3:
+            raise ValueError("funding projection needs at least three trailing settlements")
+        if not self.funding_projection_requires_history:
+            raise ValueError("funding projection must require trailing history")
+        if self.funding_reversal_consecutive_intervals < 1:
+            raise ValueError("funding reversal exit needs at least one settlement")
+        if self.funding_reversal_trailing_intervals < self.funding_reversal_consecutive_intervals:
+            raise ValueError("funding reversal trailing window must cover the consecutive rule")
         if self.required_intent_fields != EXPECTED_INTENT_FIELDS:
             raise ValueError("intent required fields differ from the six-field contract")
 
@@ -323,6 +335,12 @@ def policy_from_mapping(data: Mapping[str, Any]) -> Phase1Policy:
         raise ValueError("unmeasured fee schedule metadata must remain null")
     if scanner.get("replace_prior_after_phase") != "3":
         raise ValueError("Demo abort measurements cannot replace the prior before Phase 3")
+    projection = _mapping(scanner, "funding_projection")
+    if projection.get("method") != "min_of_current_and_trailing_mean":
+        raise ValueError("funding projection must use min_of_current_and_trailing_mean")
+    if projection.get("unmeasured_behavior") != "observe_only":
+        raise ValueError("funding projection without history must stay observation-only")
+    reversal = _mapping(scanner, "funding_reversal_exit")
 
     quote_age = sla.get("maximum_quote_age_ms")
     if quote_age is not None and (isinstance(quote_age, bool) or not isinstance(quote_age, int)):
@@ -360,6 +378,12 @@ def policy_from_mapping(data: Mapping[str, Any]) -> Phase1Policy:
         minimum_expected_net_bps=_decimal(scanner, "minimum_expected_net_bps"),
         minimum_holding_hours=_positive_int(scanner, "minimum_holding_hours"),
         maximum_holding_hours=_positive_int(scanner, "maximum_holding_hours"),
+        funding_projection_intervals=_positive_int(projection, "trailing_intervals"),
+        funding_projection_requires_history=projection.get("require_trailing_history") is True,
+        funding_reversal_consecutive_intervals=_positive_int(
+            reversal, "consecutive_nonpositive_intervals"
+        ),
+        funding_reversal_trailing_intervals=_positive_int(reversal, "trailing_intervals"),
         required_intent_fields=tuple(required_fields),
         fee_schedule=FeeSchedule(
             spot_maker_bps=_optional_decimal(costs, "spot_maker_bps"),

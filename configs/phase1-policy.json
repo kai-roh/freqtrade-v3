@@ -51,8 +51,8 @@
     ]
   },
   "hard_rule_governance": {
-    "evidence_required": true,
     "estimated_block_fraction_required": true,
+    "evidence_required": true,
     "policy_rules_review_after_phase": "1E"
   },
   "instruments": {
@@ -80,8 +80,8 @@
     "sampling_interval_seconds": 10
   },
   "reconciliation": {
-    "maximum_unexplained_residual_usdt": null,
     "maximum_unclassified_hours": null,
+    "maximum_unexplained_residual_usdt": null,
     "unmeasured_behavior": "deny"
   },
   "risk": {
@@ -98,6 +98,18 @@
   "scanner": {
     "abort_probability_source": "policy_prior",
     "assumed_abort_probability": "0.20",
+    "funding_projection": {
+      "method": "min_of_current_and_trailing_mean",
+      "rationale": "a single settlement rate is not extrapolated over the holding period; a funding spike cannot pass the gate on its own",
+      "require_trailing_history": true,
+      "trailing_intervals": 21,
+      "unmeasured_behavior": "observe_only"
+    },
+    "funding_reversal_exit": {
+      "consecutive_nonpositive_intervals": 2,
+      "rationale": "exit the carry when funding stops paying the short leg instead of holding to the maximum period",
+      "trailing_intervals": 3
+    },
     "maximum_holding_hours": 720,
     "minimum_expected_net_bps": "20",
     "minimum_holding_hours": 48,

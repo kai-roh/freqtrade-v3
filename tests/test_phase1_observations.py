@@ -1,4 +1,5 @@
 from datetime import UTC, datetime, timedelta
+from decimal import Decimal
 from types import SimpleNamespace
 
 import pytest
@@ -68,4 +69,34 @@ def test_future_or_stale_funding_is_rejected(offset):
             ),
             symbol="BTCUSDT",
             clock=lambda: NOW,
+        )
+
+
+def test_funding_capture_keeps_chronological_trailing_rates_for_projection():
+    class Fixture(FundingFixture):
+        def get(self, base, path, **kwargs):
+            if path.endswith("fundingRate"):
+                assert kwargs["params"]["limit"] == 5
+                return SimpleNamespace(
+                    data=[
+                        {
+                            "symbol": "BTCUSDT",
+                            "fundingRate": rate,
+                            "fundingTime": int(
+                                (NOW - timedelta(hours=8 * back)).timestamp() * 1000
+                            ),
+                        }
+                        for back, rate in ((1, "0.0004"), (5, "0.0001"), (3, "0.0002"))
+                    ]
+                )
+            return super().get(base, path, **kwargs)
+
+    result = capture_mainnet_public_funding(
+        Fixture([]), symbol="BTCUSDT", clock=lambda: NOW, history_limit=5
+    )
+    assert result.trailing_rates == (Decimal("0.0001"), Decimal("0.0002"), Decimal("0.0004"))
+    assert result.funding_rate == Decimal("0.0004")
+    with pytest.raises(ValueError, match="three"):
+        capture_mainnet_public_funding(
+            Fixture([]), symbol="BTCUSDT", clock=lambda: NOW, history_limit=2
         )
