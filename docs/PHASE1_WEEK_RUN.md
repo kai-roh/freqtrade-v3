@@ -199,3 +199,19 @@ first. Three or more such restarts are required for the Phase 1E gate.
 The bot opens the ledger with `default_transaction_read_only=on`, mounts the
 evidence directory read-only, and has no order transport. Messages from any other
 chat are ignored without reply.
+
+
+## Deliberate restarts
+
+`scripts/phase1_deliberate_restart.sh <base-name> <label> <evidence-dir>` waits
+until the running week runner has an open episode with a filled perp leg, kills
+that container, and starts `<base-name>-<label>` with the same image, source
+hash, run identity, and config. The new container must resume the open episode
+(`RESUMING`) and close it without re-hedging. Each run appends to
+`<evidence-dir>/deliberate-restarts.log` and writes `run-<label>.json`.
+
+Scheduled on 2026-09-15 (KST evening): `restart2` and `restart3` were queued on
+the host with a 4-hour wait budget each, so both fire during the next two
+episodes' holding windows. Together with the version restart at 21:25 KST this
+gives the three forced-termination recoveries the Phase 1E gate requires, all
+recorded in the ledger and evidence files.
