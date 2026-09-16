@@ -4,16 +4,19 @@ import pandas as pd
 import pytest
 
 import v3.research as research
-from v3.baselines import no_trade
+from v3.baselines import no_trade, volatility_breakout
 from v3.research import (
     Candidate,
     ResearchConfig,
     _combine_portfolio_fold,
     _evaluate_portfolio,
+    _exit_extended_index,
     _metric_frame,
+    _run_slice,
     load_market_data,
     run_milestone_one,
 )
+from v3.risk import RiskConfig
 
 
 def _candles(index: pd.DatetimeIndex) -> pd.DataFrame:
@@ -78,6 +81,7 @@ def test_research_config_defaults_match_milestone_gate():
     assert config.fold_count == 6
     assert config.train_days == 90
     assert config.validation_days == 30
+    assert config.capital_fraction_per_trade == 0.05
     assert config.embargo_hours == 6
     assert config.normal_cost_bps == 20.0
     assert config.stress_cost_bps == 30.0
@@ -243,3 +247,78 @@ def test_documented_docker_runner_forwards_reproducible_timestamp():
     assert '--user "1000:$HOST_GID"' in runner
     assert "chmod 2770" in runner
     assert "chmod 0777" not in runner
+
+
+def test_metric_frame_scales_pnl_and_notional_to_the_capital_fraction():
+    events = pd.DataFrame(
+        {
+            "gross_return": [0.10, -0.20],
+            "pair": ["BTC/USDT:USDT", "ETH/USDT:USDT"],
+            "side": ["long", "long"],
+            "entry_time": pd.to_datetime(["2026-01-01", "2026-01-02"], utc=True),
+            "exit_time": pd.to_datetime(["2026-01-01 01:00", "2026-01-02 01:00"], utc=True),
+        }
+    )
+    trades = _metric_frame(events, 0.05)
+    assert trades["pnl"].tolist() == pytest.approx([0.005, -0.01])
+    assert trades["notional"].tolist() == [0.05, 0.05]
+    with pytest.raises(ValueError):
+        _metric_frame(events, 0)
+
+
+def test_fold_boundary_trades_resolve_exits_on_later_rows_without_new_entries():
+    index = pd.date_range("2026-01-01", periods=40, freq="15min", tz="UTC")
+    values = pd.Series(range(len(index)), index=index, dtype=float)
+    market = pd.DataFrame(
+        {
+            "open": 100.0 + values,
+            "high": 100.5 + values,
+            "low": 99.5 + values,
+            "close": 100.2 + values,
+            "volume": 10.0,
+        },
+        index=index,
+    )
+    features = pd.DataFrame({"atr": 1.0}, index=index)
+    validation = list(index[:20])
+
+    extended = _exit_extended_index(market.index, validation, 8)
+    assert len(extended) == 28 and list(extended[:20]) == validation
+    assert _exit_extended_index(market.index, list(index[-3:]), 8).tolist() == list(index[-3:])
+
+    def signal(_features, **_options):
+        frame = pd.DataFrame({"long": False, "short": False}, index=_features.index)
+        frame.loc[_features.index[18], "long"] = True  # opens at row 19, near the boundary
+        if len(_features.index) > 25:
+            frame.loc[_features.index[25], "long"] = True  # outside the fold: must be ignored
+        return frame
+
+    candidate = Candidate("boundary", signal, ({},))
+    risk = RiskConfig(stop_atr=100, target_atr=100, max_holding_candles=8, round_trip_cost_bps=0)
+    truncated = _run_slice(
+        market.loc[validation],
+        features.loc[validation],
+        candidate,
+        pair="BTC/USDT:USDT",
+        side="long",
+        options={},
+        risk=risk,
+    )
+    resolved = _run_slice(
+        market.loc[extended],
+        features.loc[extended],
+        candidate,
+        pair="BTC/USDT:USDT",
+        side="long",
+        options={},
+        risk=risk,
+        entry_index=pd.Index(validation),
+    )
+    assert len(truncated) == 1 and len(resolved) == 1
+    assert truncated["exit_time"].iloc[0] == index[19]
+    assert resolved["exit_time"].iloc[0] == index[26]
+    assert resolved["pnl"].iloc[0] > truncated["pnl"].iloc[0]
+
+
+def test_volatility_breakout_signal_is_importable_for_catalog_parity():
+    assert callable(volatility_breakout)

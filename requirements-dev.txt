@@ -1,6 +1,8 @@
-numpy
-pandas
-pyarrow
-pytest
-PyYAML
-ruff
+nautilus-trader==1.231.0
+numpy==2.5.2
+pandas==3.0.5
+psycopg[binary]==3.3.5
+pyarrow==25.0.1
+pytest==9.1.1
+PyYAML==6.0.3
+ruff==0.16.5

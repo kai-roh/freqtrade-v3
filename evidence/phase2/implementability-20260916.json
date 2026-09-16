@@ -1,0 +1,284 @@
+{
+  "by_legs_per_side": {
+    "2": {
+      "admissible_count": 7,
+      "admissible_symbols": [
+        "ETHUSDT",
+        "SOLUSDT",
+        "BNBUSDT",
+        "XRPUSDT",
+        "DOGEUSDT",
+        "ADAUSDT",
+        "LINKUSDT"
+      ],
+      "basket_feasible": true,
+      "symbols": [
+        {
+          "admissible": false,
+          "floored_leg_notional_usdt": "0.00000",
+          "legs_per_side": 2,
+          "liquidation_distance": "0.49",
+          "reasons": [
+            "leg notional below 3x minimum notional"
+          ],
+          "required_minimum_usdt": "150",
+          "symbol": "BTCUSDT",
+          "target_leg_notional_usdt": "75"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "73.96972",
+          "legs_per_side": 2,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "60",
+          "symbol": "ETHUSDT",
+          "target_leg_notional_usdt": "75"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "74.505200",
+          "legs_per_side": 2,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "15",
+          "symbol": "SOLUSDT",
+          "target_leg_notional_usdt": "75"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "70.97800",
+          "legs_per_side": 2,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "15",
+          "symbol": "BNBUSDT",
+          "target_leg_notional_usdt": "75"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "74.967920",
+          "legs_per_side": 2,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "15",
+          "symbol": "XRPUSDT",
+          "target_leg_notional_usdt": "75"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "74.956765",
+          "legs_per_side": 2,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "15",
+          "symbol": "DOGEUSDT",
+          "target_leg_notional_usdt": "75"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "74.97000",
+          "legs_per_side": 2,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "15",
+          "symbol": "ADAUSDT",
+          "target_leg_notional_usdt": "75"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "74.97675",
+          "legs_per_side": 2,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "60",
+          "symbol": "LINKUSDT",
+          "target_leg_notional_usdt": "75"
+        }
+      ]
+    },
+    "3": {
+      "admissible_count": 5,
+      "admissible_symbols": [
+        "SOLUSDT",
+        "BNBUSDT",
+        "XRPUSDT",
+        "DOGEUSDT",
+        "ADAUSDT"
+      ],
+      "basket_feasible": false,
+      "symbols": [
+        {
+          "admissible": false,
+          "floored_leg_notional_usdt": "0.00000",
+          "legs_per_side": 3,
+          "liquidation_distance": "0.49",
+          "reasons": [
+            "leg notional below 3x minimum notional"
+          ],
+          "required_minimum_usdt": "150",
+          "symbol": "BTCUSDT",
+          "target_leg_notional_usdt": "50"
+        },
+        {
+          "admissible": false,
+          "floored_leg_notional_usdt": "47.72240",
+          "legs_per_side": 3,
+          "liquidation_distance": "0.49",
+          "reasons": [
+            "leg notional below 3x minimum notional"
+          ],
+          "required_minimum_usdt": "60",
+          "symbol": "ETHUSDT",
+          "target_leg_notional_usdt": "50"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "49.347600",
+          "legs_per_side": 3,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "15",
+          "symbol": "SOLUSDT",
+          "target_leg_notional_usdt": "50"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "49.68460",
+          "legs_per_side": 3,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "15",
+          "symbol": "BNBUSDT",
+          "target_leg_notional_usdt": "50"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "49.894190",
+          "legs_per_side": 3,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "15",
+          "symbol": "XRPUSDT",
+          "target_leg_notional_usdt": "50"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "49.997505",
+          "legs_per_side": 3,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "15",
+          "symbol": "DOGEUSDT",
+          "target_leg_notional_usdt": "50"
+        },
+        {
+          "admissible": true,
+          "floored_leg_notional_usdt": "49.91625",
+          "legs_per_side": 3,
+          "liquidation_distance": "0.49",
+          "reasons": [],
+          "required_minimum_usdt": "15",
+          "symbol": "ADAUSDT",
+          "target_leg_notional_usdt": "50"
+        },
+        {
+          "admissible": false,
+          "floored_leg_notional_usdt": "49.98450",
+          "legs_per_side": 3,
+          "liquidation_distance": "0.49",
+          "reasons": [
+            "leg notional below 3x minimum notional"
+          ],
+          "required_minimum_usdt": "60",
+          "symbol": "LINKUSDT",
+          "target_leg_notional_usdt": "50"
+        }
+      ]
+    }
+  },
+  "captured_at": "2026-09-16T14:52:03.261940+00:00",
+  "contract": {
+    "buffer_usdt": "50",
+    "gross_notional_cap_usdt": "400",
+    "gross_notional_target_usdt": "300",
+    "headroom": "3",
+    "isolated_leverage": "2",
+    "margin_per_side_usdt": "150",
+    "minimum_liquidation_distance": "0.20",
+    "sleeve_usdt": "200"
+  },
+  "interpretation": "Research proceeds regardless; an infeasible k is reported as 'not implementable at this capital size' and never changes the registered hypotheses",
+  "raw_filters": {
+    "ADAUSDT": {
+      "LOT_SIZE.stepSize": "1",
+      "MIN_NOTIONAL": "5",
+      "PRICE_FILTER.tickSize": "0.00010",
+      "onboardDate": 1580457600000,
+      "reference_price_demo_mid": "0.19125",
+      "status": "TRADING"
+    },
+    "BNBUSDT": {
+      "LOT_SIZE.stepSize": "0.01",
+      "MIN_NOTIONAL": "5",
+      "PRICE_FILTER.tickSize": "0.010",
+      "onboardDate": 1581321600000,
+      "reference_price_demo_mid": "709.780",
+      "status": "TRADING"
+    },
+    "BTCUSDT": {
+      "LOT_SIZE.stepSize": "0.001",
+      "MIN_NOTIONAL": "50",
+      "PRICE_FILTER.tickSize": "0.10",
+      "onboardDate": 1567965300000,
+      "reference_price_demo_mid": "75604.20",
+      "status": "TRADING"
+    },
+    "DOGEUSDT": {
+      "LOT_SIZE.stepSize": "1",
+      "MIN_NOTIONAL": "5",
+      "PRICE_FILTER.tickSize": "0.000010",
+      "onboardDate": 1594371600000,
+      "reference_price_demo_mid": "0.078985",
+      "status": "TRADING"
+    },
+    "ETHUSDT": {
+      "LOT_SIZE.stepSize": "0.001",
+      "MIN_NOTIONAL": "20",
+      "PRICE_FILTER.tickSize": "0.01",
+      "onboardDate": 1574840700000,
+      "reference_price_demo_mid": "2386.12",
+      "status": "TRADING"
+    },
+    "LINKUSDT": {
+      "LOT_SIZE.stepSize": "0.01",
+      "MIN_NOTIONAL": "20",
+      "PRICE_FILTER.tickSize": "0.001",
+      "onboardDate": 1579248000000,
+      "reference_price_demo_mid": "10.635",
+      "status": "TRADING"
+    },
+    "SOLUSDT": {
+      "LOT_SIZE.stepSize": "0.01",
+      "MIN_NOTIONAL": "5",
+      "PRICE_FILTER.tickSize": "0.0100",
+      "onboardDate": 1600066800000,
+      "reference_price_demo_mid": "96.7600",
+      "status": "TRADING"
+    },
+    "XRPUSDT": {
+      "LOT_SIZE.stepSize": "0.1",
+      "MIN_NOTIONAL": "5",
+      "PRICE_FILTER.tickSize": "0.0001",
+      "onboardDate": 1578298800000,
+      "reference_price_demo_mid": "1.26635",
+      "status": "TRADING"
+    }
+  },
+  "schema_version": 1,
+  "sources": {
+    "filters": "https://fapi.binance.com/fapi/v1/exchangeInfo",
+    "maintenance_margin_rate": "assumed 1% (leverageBracket needs credentials); 2x isolated distance ~49% exceeds the 20% floor by a wide margin",
+    "reference_price": "https://demo-fapi.binance.com/fapi/v1/ticker/bookTicker (mid)"
+  }
+}

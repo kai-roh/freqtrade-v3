@@ -1,0 +1,41 @@
+{
+  "strategy_id": "carry-phase1-example",
+  "currency": "USDT",
+  "reference_notional": "200",
+  "observed_gross_edge": "0.0010",
+  "buffer_multiplier": "1.5",
+  "executions": [
+    {
+      "event_id": "example-1",
+      "leg_id": "long-leg",
+      "venue": "hyperliquid",
+      "instrument_id": "BTC",
+      "execution_type": "maker_limit",
+      "notional": "100",
+      "turnover": "1",
+      "fee_rate": "0.00015",
+      "fee_source": "official-tier-0-snapshot",
+      "basis": "estimated"
+    },
+    {
+      "event_id": "example-1",
+      "leg_id": "short-leg",
+      "venue": "hyperliquid",
+      "instrument_id": "BTC-PERP",
+      "execution_type": "maker_limit",
+      "notional": "100",
+      "turnover": "1",
+      "fee_rate": "0.00015",
+      "fee_source": "official-tier-0-snapshot",
+      "basis": "estimated"
+    }
+  ],
+  "other_costs": [
+    {
+      "category": "market_impact",
+      "amount": "0.02",
+      "source": "conservative-placeholder",
+      "basis": "stress"
+    }
+  ]
+}

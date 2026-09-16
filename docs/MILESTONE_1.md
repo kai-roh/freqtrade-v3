@@ -51,6 +51,6 @@ At the normal 0.20% round-trip cost assumption:
 | Volatility breakout | Long | 447 | 0.576 | -0.1916% | 93.03% | 0/6 |
 | Volatility breakout | Short | 424 | 0.666 | -0.1563% | 69.99% | 0/6 |
 
-All portfolios also failed the 0.30% stress-cost gate. The decision is `STOP_BEFORE_CLASSIFIER`: do not build FreqAI/classifier logic, do not start the V3 shadow service, and do not authorize live trading from this milestone.
+All portfolios also failed the 0.30% stress-cost gate. The decision is `STOP_BEFORE_CLASSIFIER`: do not build FreqAI/classifier logic, do not paper-trade the rejected policy, and do not authorize live trading from this milestone. A later operator decision permits only a zero-entry infrastructure test; it does not promote any signal family.
 
 The full machine-readable evidence is in [`research_results/milestone-1/results.json`](../research_results/milestone-1/results.json). A future research milestone may test a genuinely different, lower-turnover hypothesis, but it must retain the no-trade control, causal features, purged folds, conservative costs, 1x risk, and the same fail-closed promotion gates.

@@ -1,0 +1,149 @@
+{
+  "authorization": {
+    "live_orders": false,
+    "real_capital": false
+  },
+  "bootstrap_scope": {
+    "gates_phase1_simulation": false,
+    "gates_v2_conclusion_wording": true,
+    "gates_v2_directional_revival": true
+  },
+  "capital": {
+    "basket_sleeve_fraction": "0.20",
+    "carry_sleeve_fraction": "0.45",
+    "legging_hedge_fraction": "0.10",
+    "margin_buffer_fraction": "0.15",
+    "operating_fraction": "0.05",
+    "reserve_fraction": "0.05",
+    "total": "1000"
+  },
+  "cost_model": {
+    "bnb_discount_applied": false,
+    "demo_fee_treatment": "ignore",
+    "fee_source": "credentialed_mainnet_account_query",
+    "include_exit_cost": true,
+    "normal_entry_cost_bps": "12",
+    "normal_round_trip_cost_bps": "24",
+    "perp_maker_bps": "2",
+    "perp_taker_bps": "5",
+    "snapshot_captured_at": "2026-09-03T02:27:04.465026+00:00",
+    "snapshot_evidence": "evidence/phase1/binance-mainnet-fees-2026-09-03.json",
+    "snapshot_maximum_age_hours": 24,
+    "spot_maker_bps": "10",
+    "spot_taker_bps": "10",
+    "unmeasured_behavior": "observe_only"
+  },
+  "deferred_rules": {
+    "single_venue_capital_cap": {
+      "enforced_from_phase": "3",
+      "reason": "single-venue by design, real_capital false",
+      "suspended_in_phase1": true,
+      "value": "0.70"
+    }
+  },
+  "execution": {
+    "engine": "nautilus_trader",
+    "environment": "demo",
+    "primary_venue": "binance",
+    "product_types": [
+      "spot",
+      "usd_m"
+    ]
+  },
+  "hard_rule_governance": {
+    "estimated_block_fraction_required": true,
+    "evidence_required": true,
+    "policy_rules_review_after_phase": "1E"
+  },
+  "instruments": {
+    "perp": "BTCUSDT-PERP.BINANCE",
+    "spot": "BTCUSDT.BINANCE"
+  },
+  "intent": {
+    "required_fields": [
+      "entry_reason",
+      "target_position",
+      "normal_exit",
+      "risk_exit",
+      "max_holding_or_review_at",
+      "cost_and_risk_budget"
+    ]
+  },
+  "order_types": {
+    "emergency_hedge": "IOC_LIMIT",
+    "perp_post_only": "GTX",
+    "spot_post_only": "LIMIT_MAKER"
+  },
+  "quote_observations": {
+    "enabled_by_default": false,
+    "measurement_phase": "1E",
+    "sampling_interval_seconds": 10
+  },
+  "reconciliation": {
+    "maximum_unclassified_hours": null,
+    "maximum_unexplained_residual_usdt": null,
+    "unmeasured_behavior": "deny"
+  },
+  "risk": {
+    "abort_budget_scope": "per_month",
+    "consecutive_abort_halt_threshold": 2,
+    "daily_loss_fraction_of_total_capital": "0.02",
+    "maximum_abort_attempts_per_month": 3,
+    "maximum_abort_cost_bps": "30",
+    "maximum_delta_drift_fraction": "0.05",
+    "maximum_leverage": "2",
+    "minimum_notional_headroom": "3",
+    "monthly_abort_budget_fraction_of_carry_sleeve": "0.005"
+  },
+  "scanner": {
+    "abort_probability_source": "policy_prior",
+    "assumed_abort_probability": "0.20",
+    "funding_projection": {
+      "method": "min_of_current_and_trailing_mean",
+      "rationale": "a single settlement rate is not extrapolated over the holding period; a funding spike cannot pass the gate on its own",
+      "require_trailing_history": true,
+      "trailing_intervals": 21,
+      "unmeasured_behavior": "observe_only"
+    },
+    "funding_reversal_exit": {
+      "consecutive_nonpositive_intervals": 2,
+      "rationale": "exit the carry when funding stops paying the short leg instead of holding to the maximum period",
+      "trailing_intervals": 3
+    },
+    "maximum_holding_hours": 720,
+    "minimum_expected_net_bps": "20",
+    "minimum_holding_hours": 48,
+    "phase1e_measurement_use": "demo_lower_bound_only",
+    "replace_prior_after_phase": "3"
+  },
+  "schema_version": 2,
+  "sla": {
+    "hedge_latency_demo_median_ms": null,
+    "hedge_latency_demo_p99_ms": null,
+    "maximum_quote_age_ms": 96,
+    "quote_age_evidence": "evidence/phase1/sla-evidence-20260915.json",
+    "quote_age_measured_at": "2026-09-15T10:24:45+00:00",
+    "quote_age_measured_in_phase": "1E",
+    "quote_age_p99_ms": "47.68",
+    "quote_age_sample_count": 259,
+    "quote_age_scope": "USD-M exchange event age only; Spot bookTicker has no exchange timestamp and stays unmeasured",
+    "unmeasured_behavior": "deny"
+  },
+  "source": {
+    "require_clean_worktree": true,
+    "require_dependency_lock_hash": true,
+    "require_image_digest": true
+  },
+  "synthetic_target": {
+    "allowed_environments": [
+      "demo",
+      "testnet"
+    ],
+    "forbidden_when_live_authorized": true
+  },
+  "validation": {
+    "pbo_threshold": "0.2",
+    "phase2_method": "purged_walk_forward",
+    "upgrade_to_cpcv_after": "basket_implementability_confirmed"
+  }
+}

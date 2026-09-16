@@ -1,0 +1,9 @@
+{
+  "sample_unit": "daily_portfolio_pnl",
+  "block_definition": "moving_contiguous_periods",
+  "block_length": 3,
+  "iterations": 10000,
+  "seed": 20260819,
+  "alpha": 0.05,
+  "direction": "two-sided"
+}

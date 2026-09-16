@@ -1,0 +1,56 @@
+{
+  "captured_at": "2026-09-07T23:58:49.165165+00:00",
+  "environment": "demo",
+  "execution_authorized": false,
+  "products": {
+    "spot": {
+      "authentication": {
+        "http_status": 200,
+        "ok": true
+      },
+      "open_order_count": 0,
+      "test_order": {
+        "http_status": 200,
+        "ok": true,
+        "reason": "validated_response",
+        "response_empty": true,
+        "validation_order_response": false
+      },
+      "usdt_available_at_least_300": true,
+      "usdt_available_positive": true
+    },
+    "usdm": {
+      "authentication": {
+        "http_status": 200,
+        "ok": true
+      },
+      "nonzero_position_count": 0,
+      "open_order_count": 0,
+      "symbol_config": {
+        "auto_add_margin": false,
+        "http_status": 200,
+        "leverage": 20,
+        "margin_type": "CROSSED",
+        "max_notional_value": "20000000",
+        "ok": true,
+        "symbol": "BTCUSDT"
+      },
+      "test_order": {
+        "http_status": 200,
+        "ok": false,
+        "reason": "unverified_response_shape",
+        "response_empty": false,
+        "validation_order_response": false
+      },
+      "usdt_available_at_least_300": false,
+      "usdt_available_positive": false
+    }
+  },
+  "safety": {
+    "balances_recorded": false,
+    "configuration_changed": false,
+    "matching_engine_orders_submitted": false,
+    "transfers_submitted": false
+  },
+  "validation_api_passed": false
+}

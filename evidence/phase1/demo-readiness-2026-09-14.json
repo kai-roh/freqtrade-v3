@@ -1,0 +1,15 @@
+{
+  "captured_at": "2026-09-14T07:52:21.221622+00:00",
+  "checks": {
+    "isolated_margin": true,
+    "leverage_at_most_two": true,
+    "no_btc_open_orders": true,
+    "perp_flat": true,
+    "perp_funded_for_180_notional": true,
+    "spot_funded_for_180_notional": true
+  },
+  "orders_submitted": false,
+  "passed": true,
+  "telegram_delivered": true,
+  "telegram_error_type": null
+}

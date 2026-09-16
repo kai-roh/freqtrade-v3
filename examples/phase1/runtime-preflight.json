@@ -1,0 +1,20 @@
+{
+  "dependency_lock_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "environment": "demo",
+  "git_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "image_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "instruments": [
+    "BTCUSDT.BINANCE",
+    "BTCUSDT-PERP.BINANCE"
+  ],
+  "leverage_by_instrument": {
+    "BTCUSDT-PERP.BINANCE": "2",
+    "BTCUSDT.BINANCE": "1"
+  },
+  "live_orders": false,
+  "order_submission_enabled": false,
+  "perp_client_id": "BINANCE_USDM_DEMO",
+  "real_capital": false,
+  "source_dirty": false,
+  "spot_client_id": "BINANCE_SPOT_DEMO"
+}
