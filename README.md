@@ -91,8 +91,13 @@ is a Demo infrastructure observation, not a profitability test.
 A read-only Telegram command bot (`/status`, `/profit`, `/balance`, `/daily`,
 `/help`) runs beside it, and runner notifications are compact one-liners.
 
-Next: add two more deliberate restarts during the run, then evaluate the
-Phase 1E gates from the ledger.
+Three forced-restart recoveries completed on the first evening; the remaining
+Phase 1E items are the episode count and the end-of-run aggregation.
+
+Phase 2 research (perp-only market-neutral basket) was pre-registered on
+2026-09-16 in [Phase 2 pre-registration](docs/PHASE2_PREREGISTRATION.md) and
+[Decision 0008](docs/decisions/0008-phase2-basket-preregistration.md). It runs
+in parallel with the week observation and has no code yet.
 See [current implementation status](docs/PHASE1_IMPLEMENTATION_STATUS.md),
 [actual execution record](docs/PHASE1_DEMO_AUTO_RUNBOOK.md), and
 [week-run gates](docs/PHASE1_WEEK_RUN.md).
