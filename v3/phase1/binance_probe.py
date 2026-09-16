@@ -48,6 +48,7 @@ ALLOWED_REQUESTS = frozenset(
         (SPOT_LIVE, "/api/v3/account", True),
         (SPOT_LIVE, "/api/v3/account/commission", True),
         (USDM_LIVE, "/fapi/v1/time", False),
+        (USDM_LIVE, "/fapi/v1/exchangeInfo", False),
         (USDM_LIVE, "/fapi/v1/fundingInfo", False),
         (USDM_LIVE, "/fapi/v1/fundingRate", False),
         (USDM_LIVE, "/fapi/v3/account", True),
