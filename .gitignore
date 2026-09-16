@@ -15,3 +15,4 @@ reports/
 
 # Private frozen source evidence; only derived hashes/aggregates may be committed.
 data/v2_frozen/*.sqlite*
+user_data/data-phase2/
