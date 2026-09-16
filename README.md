@@ -94,10 +94,15 @@ A read-only Telegram command bot (`/status`, `/profit`, `/balance`, `/daily`,
 Three forced-restart recoveries completed on the first evening; the remaining
 Phase 1E items are the episode count and the end-of-run aggregation.
 
-Phase 2 research (perp-only market-neutral basket) was pre-registered and
-revised after review on 2026-09-16 in [Phase 2 pre-registration](docs/PHASE2_PREREGISTRATION.md) and
-[Decision 0008](docs/decisions/0008-phase2-basket-preregistration.md). It runs
-in parallel with the week observation and has no code yet.
+Phase 2 research (perp-only market-neutral basket) was pre-registered on
+2026-09-16 ([Phase 2 pre-registration](docs/PHASE2_PREREGISTRATION.md),
+[Decision 0008](docs/decisions/0008-phase2-basket-preregistration.md)) and run
+unchanged on 2026-09-17 with the result `STOP_NO_EDGE`
+([Decision 0009](docs/decisions/0009-phase2-basket-result-stop-no-edge.md),
+[report](research_results/phase2/REPORT.md)). Funding carry collected +3.4 USDT
+of funding over the validation folds but paid 13.8 USDT in costs; simple
+reversal lost on price. Neither hypothesis passed any gate set. No strategy is
+promoted; the next step is a new registration, not tuning.
 See [current implementation status](docs/PHASE1_IMPLEMENTATION_STATUS.md),
 [actual execution record](docs/PHASE1_DEMO_AUTO_RUNBOOK.md), and
 [week-run gates](docs/PHASE1_WEEK_RUN.md).
