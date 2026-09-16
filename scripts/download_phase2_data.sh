@@ -12,8 +12,13 @@ PAIRS=(BTC/USDT:USDT ETH/USDT:USDT SOL/USDT:USDT BNB/USDT:USDT XRP/USDT:USDT DOG
 
 # Separate datadir: the weekly cron dataset under user_data/data stays untouched.
 DATADIR="${V3_PHASE2_DATADIR:-user_data/data-phase2}"
+HOST_GID="$(id -g)"
 mkdir -p "$DATADIR"
-docker run --rm --user "$(id -u):$(id -g)" \
+# Keep the image's uid 1000 so its freqtrade install stays executable, and share
+# the host group so the written files remain manageable from the host.
+chgrp "$HOST_GID" "$DATADIR"
+chmod 2770 "$DATADIR"
+docker run --rm --user "1000:$HOST_GID" \
   -v "$PROJECT_ROOT/user_data:/freqtrade/user_data" \
   -v "$PROJECT_ROOT/configs:/freqtrade/configs:ro" \
   "$IMAGE" download-data \
