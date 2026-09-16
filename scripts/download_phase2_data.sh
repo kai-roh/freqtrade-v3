@@ -21,7 +21,7 @@ fi
 # The image runs as uid/gid 1000; make the datadir writable for that group.
 mkdir -p "$DATADIR"
 chgrp 1000 "$DATADIR" 2>/dev/null || true
-chmod 2770 "$DATADIR"
+chmod 2770 "$DATADIR" 2>/dev/null || true
 
 docker compose run --rm --no-deps freqtrade_v3_shadow download-data \
   --config /freqtrade/configs/research.json \
