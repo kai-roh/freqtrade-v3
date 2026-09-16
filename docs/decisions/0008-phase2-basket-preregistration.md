@@ -15,12 +15,15 @@ feature construction.
 ## Decision
 
 Register `docs/PHASE2_PREREGISTRATION.md` as the frozen Phase 2 contract: a
-no-trade control plus two deterministic market-neutral perp-only basket
-families (funding cross-section carry at 8-hour decisions, residual reversal at
-daily decisions), a fixed eight-asset universe, explicit taker-plus-slippage
-costs with real funding cash flows, purged walk-forward with PBO ≤ 0.2, the
-Milestone 1 promotion gates, and an implementability gate that already shows a
-1,000 USDT account cannot run a four-leg basket on Binance USD-M.
+no-trade control, a primary funding cross-section carry hypothesis with a
+pre-registered minimum funding-spread entry filter at 8-hour decisions, and a
+simple cross-sectional reversal baseline at daily decisions; a fixed eight-asset
+universe over 450 days; taker-plus-slippage costs charged on actual quantity
+changes with real funding cash flows; purged walk-forward on daily portfolio net
+returns with per-hypothesis CSCV PBO ≤ 0.2; the Milestone 1 gates plus a
+mandatory P&L decomposition; a per-symbol implementability gate; and a venue
+separation rule under which Binance results never transfer to Hyperliquid
+without Hyperliquid data.
 
 Research runs in parallel with the Phase 1 week observation and does not depend
 on it. Passing Phase 2 authorizes only a separate shadow observation, never real
