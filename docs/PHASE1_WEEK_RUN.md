@@ -16,14 +16,22 @@ instruction after Telegram notifications were confirmed on every event.
   `1fe50ea6-3e97-4fd8-b1dc-32f06384ef6b` is `ABORTING` with `0.00286713 BTC`
   Spot long unhedged on the Demo account (futures flat). Telegram error events
   were delivered at the time.
-- Resume: restart with the same `--started-at 2026-09-15T12:07:24+00:00` and image
-  `freqtrade-v3-demo-auto:81999bd`; the runner resumes the open episode, sells the
-  owned Spot, settles the residual, then stops with `run_window_exhausted`.
-  This submits Demo orders and needs explicit user approval.
-- Fix before any further run: treat transient freshness denials as retry-next-tick
-  with a consecutive-denial cap instead of a fatal error (see PROGRESS.md).
-- Container `phase1-demo-week-run-20260915-restart3` (exited 2), config
-  `configs/phase1-week-run.json`, run identity in
+- Resume attempt 2026-09-25 08:08 UTC (`…-resume4`, image `81999bd`, user-approved):
+  `RESUMING` was reached, then the unhedged notional-duration invariant fired
+  before any order because it integrates exposure over the eight stopped days
+  (budget 300 USDT × 900 s). Exit 2, zero orders, evidence `run-resume4.json`.
+- Fixes in `1a124d1`: transient freshness denials retry next tick with a cap of
+  five consecutive denials; in the closing phase a budget exceedance is recorded
+  as `episode_baselines.evidence->'unhedged_budget_exceeded'` and closing
+  continues. Image `freqtrade-v3-demo-auto:1a124d1` (`sha256:5d2dd045…`) is built.
+- Resume (pending approval): the new image has a new manifest, so use the
+  close-only takeover: same `--started-at 2026-09-15T12:07:24+00:00`, plus
+  `--resume-intent 1fe50ea6-3e97-4fd8-b1dc-32f06384ef6b --previous-manifest
+  8f3072d648507e159b30cae19469ba40c2e63f859b90c054c3af610755986ba3`. The runner
+  transfers the intent, sells the owned Spot, settles the residual, and exits
+  without a new entry. This submits Demo orders and needs explicit user approval.
+- Containers `phase1-demo-week-run-20260915-restart3` and `…-resume4` (both
+  exited 2), config `configs/phase1-week-run.json`, run identity in
   `evidence/phase1/demo-week-run-20260915/started-at.txt`.
 
 ## Readiness — 2026-09-15

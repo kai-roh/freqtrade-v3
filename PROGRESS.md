@@ -1,6 +1,6 @@
 # PROGRESS
 
-기준일: 2026-09-25 KST. 새 세션은 이 파일부터 읽는다. 상세 근거는 각 링크 문서에 있고,
+기준일: 2026-09-25 17:30 KST. 새 세션은 이 파일부터 읽는다. 상세 근거는 각 링크 문서에 있고,
 이 파일은 **현재 상태·열린 문제·다음 할 일**만 최신으로 유지한다. 과거 이력은 여기 쓰지 않는다.
 
 ## 한 줄 요약
@@ -23,29 +23,42 @@ Phase 1(Binance Demo 2-leg 캐리 집행 인프라)은 재시작 복구 3회·�
 | Phase 3 | 착수 불가(후보 없음) | Decision 0006 §Constraints |
 
 서버(`ft-tokyo`, `/home/kai/freqtrade-v3`) 컨테이너: `phase1-postgres` 실행, `phase1-telegram-bot` 실행,
-`phase1-demo-week-run-20260915-restart3` exit 2(정지), `freqtrade_kai`(zero-entry shadow) 실행.
-저장소 브랜치 `codex/v2-to-v3-infrastructure`는 origin과 동기화, 테스트 435개 통과(PostgreSQL 포함).
+`phase1-demo-week-run-20260915-restart3`·`…-resume4` exit 2(정지), `freqtrade_kai`(zero-entry shadow) 실행.
+서버 작업 복사본은 `1a124d1` + `05faa73` 동기화, 이미지 `freqtrade-v3-demo-auto:1a124d1` 빌드됨.
+저장소 브랜치 `codex/v2-to-v3-infrastructure`, 테스트 438개 통과(PostgreSQL 포함).
 
 ## 열린 문제
 
 1. **Demo 비헤지 노출.** intent `1fe50ea6-3e97-4fd8-b1dc-32f06384ef6b`가 `ABORTING`: 선물은 종료됐고
-   현물 `0.00286713 BTC`(약 220 USDT)가 남아 있다. 원인은 현물 매도 IOC가 위험 프로세스에서
+   현물 `0.00286713 BTC`(약 220 USDT)가 남아 있다. 최초 원인은 현물 매도 IOC가 위험 프로세스에서
    `quote transport stale`(수신 지연 2초 초과)로 거부되자 실행기가 이를 치명 오류로 취급해 종료한 것.
-   손실 위험은 없으나(Demo) 관측 목적상 정리해야 한다. 해결: 같은 `--started-at`으로 재시작하면
-   `RESUMING` → 현물 매도 → 잔량 정산. **Demo 주문이 나가므로 사용자 승인 후 실행.**
-2. **실행기 설계 결함.** 일시적 신선도 거부는 다음 tick 재시도여야 하는데 즉시 정지한다.
-   연속 거부 상한(예: 5회) 후에만 정지하도록 `scripts/run_phase1_demo_auto.py`의 `run_episode`
-   (`management action blocked` 분기)를 수정하고 테스트를 추가해야 한다. IOC 6회 상한은 그대로 둔다.
+   09-25 08:08 UTC에 기존 이미지 `81999bd`로 재개(`resume4`)했으나 **두 번째 원인**으로 다시 정지:
+   "비헤지 notional×시간 예산"(300 USDT × 900 s) 불변식이 정지돼 있던 8일을 그대로 적분해 위반으로
+   판정, 매도 전에 `ValueError`로 종료했다(주문 0건). 두 원인 모두 `1a124d1`에서 수정했고 서버에
+   이미지 `freqtrade-v3-demo-auto:1a124d1`(`sha256:5d2dd045…`)이 빌드돼 있다. 손실 위험은 없으나(Demo)
+   관측 목적상 정리해야 한다. 해결: 아래 "다음 할 일 1"의 close-only 인수 명령. **Demo 주문이 나가므로
+   사용자 승인 후 실행.**
+2. ~~**실행기 설계 결함.**~~ `1a124d1`에서 수정. (a) 신선도 거부(`quote transport stale`,
+   `action observation expired`)는 다음 tick 재시도, 연속 5회에서 정지(`run_control.retry_transient_denial`).
+   (b) 청산 단계(`close_requested_at` 기록 후)에서는 노출 예산 초과를 `episode_baselines.evidence`
+   `unhedged_budget_exceeded`로 기록만 하고 청산을 계속한다. 다른 불변식은 모든 단계에서 치명 유지,
+   IOC 6회 상한 유지. 로컬 PostgreSQL 16.14 포함 438개 테스트 통과. 서버 격리 스키마 테스트는
+   미실행(권한 분류기 차단).
 3. **Phase 1E 게이트 미달.** 에피소드 29 < 50. 재시작 3회는 충족. 새 run(새 `--started-at`, 새 manifest)으로
    연장할지, 현 상태에서 게이트를 판정하고 종료할지 결정이 필요하다.
 4. 테스트 이미지에서 manifest CLI 테스트 1건이 `.git` 부재로 실패한다(환경 문제, 코드 결함 아님).
 
 ## 다음 할 일 (순서대로)
 
-1. 열린 문제 1 해결: 실행기 재시작(승인 필요). 명령은 [PHASE1_WEEK_RUN](docs/PHASE1_WEEK_RUN.md#starting-the-week-run)의
-   패턴에서 `--started-at 2026-09-15T12:07:24+00:00`, 이미지 `freqtrade-v3-demo-auto:81999bd` 사용.
-   창이 만료됐으므로 재개 후 열린 에피소드만 닫고 `run_window_exhausted`로 정지한다.
-2. 열린 문제 2 수정 → 로컬 테스트 → 서버 이미지 빌드·격리 스키마 테스트 → 재배포.
+1. 열린 문제 1 해결: 새 이미지 `1a124d1`은 매니페스트가 달라 열린 에피소드를 자동으로 잡지 않으므로
+   close-only 인수로 재개한다(승인 필요). [PHASE1_WEEK_RUN](docs/PHASE1_WEEK_RUN.md#starting-the-week-run)의
+   패턴에 `--started-at 2026-09-15T12:07:24+00:00 --resume-intent 1fe50ea6-3e97-4fd8-b1dc-32f06384ef6b
+   --previous-manifest 8f3072d648507e159b30cae19469ba40c2e63f859b90c054c3af610755986ba3`을 더하고
+   `PHASE1_BUILD_SOURCE_SHA=1a124d1cd006a135a0ddf70036f05be67c001a16`, 출력 `run-resume5.json`,
+   컨테이너 `phase1-demo-week-run-20260915-resume5`. 현물 매도 → 잔량 정산 → 종료(신규 진입 없음).
+   완료 후 `evidence->'unhedged_budget_exceeded'`와 잔량 정산 기록을 확인한다.
+2. (선택) 서버에서 `freqtrade-v3-tests` 이미지를 빌드해 격리 스키마 테스트 재확인
+   (`Dockerfile.tests.dockerignore`는 `05faa73`에서 `user_data/*` 제외).
 3. Phase 1E 결정: 연장 run 시작 여부. 연장하면 `configs/phase1-week-run.json`으로 새 run.
 4. 관측 종료 후 `scripts/summarize_phase1_sla.py`로 SLA·헤지 지연 재집계, Phase 1E 종료 ADR 작성.
 5. Phase 2 후속은 **새 사전등록**으로만: 유력 후보는 H1을 maker/post-only 집행·일 단위 결정·낮은 회전율로

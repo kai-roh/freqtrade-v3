@@ -1,5 +1,19 @@
 # Server state
 
+## Latest verified state — 2026-09-25 17:30 KST
+
+- Resume attempt `phase1-demo-week-run-20260915-resume4` (image `81999bd`,
+  08:08 UTC) exited 2 before any order: the unhedged notional-duration invariant
+  fired on the eight stopped days. Ledger unchanged: 29 `CLOSED` + 1 `ABORTING`,
+  `0.00286713 BTC` Spot long, futures flat.
+- Source `1a124d1` (+ `05faa73` dockerignore) synced via `git archive | tar -xm`;
+  image `freqtrade-v3-demo-auto:1a124d1` = `sha256:5d2dd045…`, source SHA baked in.
+  Test image not built/run on the host this time (permission classifier denied
+  the isolated-schema run); the suite passed locally against PostgreSQL 16.14
+  (438 passed).
+- Next state change (needs approval): close-only takeover with image `1a124d1`,
+  see `PROGRESS.md` 다음 할 일 1.
+
 ## Latest verified state — 2026-09-25 16:57 KST
 
 - `phase1-demo-week-run-20260915-restart3` exited 2 on 2026-09-17 16:41 UTC
