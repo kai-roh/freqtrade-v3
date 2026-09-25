@@ -57,55 +57,15 @@ Passing research gates does not authorize live trading.
 
 ## Status
 
-### Latest verified progress — 2026-09-15
+### Current state
 
-Phase 1 has executed four actual Binance Demo fills: Spot entry, futures hedge,
-futures close, and Spot close after a timestamp-precision fix and close-only
-deployment takeover. This was one engineering-triggered episode, not four
-episodes or an economically approved carry strategy.
-
-**Continuous automatic trading is stopped.** The final account check showed
-zero futures exposure and zero open BTC orders, with `0.00000715 BTC` Spot dust.
-The intent was later settled to `CLOSED` with the residual recorded as owned
-inventory (see below); it is not reported as exactly flat. Phase 1E and the week run remain unfinished. Last code verification:
-382 tests passed, including PostgreSQL integration; Ruff passed.
-
-Later on 2026-09-15 the code gained an audited residual-settlement path, runtime
-invariant enforcement, a conservative funding projection with a reversal exit,
-config-bound action risk ceilings, a read-only SLA evidence script, and Phase 0
-metric fixes ([Decision 0007](docs/decisions/0007-residual-settlement-and-funding-projection.md)).
-The new image and test image were built on the server and the suite passed
-against the server database. With explicit user approval the stuck episode was
-then settled on the server: `ABORTING → CLOSED` with the `0.00000715 BTC`
-residual recorded as owned inventory, zero orders, zero open intents.
-
-The same evening the measured 96 ms quote-age SLA was adopted into policy, the
-runner gained bounded repetition with resume and a Telegram pause rule, and a
-two-episode Demo verification with one forced kill and restart completed
-cleanly (8 fills, automatic residual settlement, zero rejected transitions).
-
-The week observation run started on 2026-09-15 at 21:07 KST on the user's
-instruction (60 bounded synthetic episodes, 2-hour interval, 7-day window). It
-is a Demo infrastructure observation, not a profitability test.
-
-A read-only Telegram command bot (`/status`, `/profit`, `/balance`, `/daily`,
-`/help`) runs beside it, and runner notifications are compact one-liners.
-
-Three forced-restart recoveries completed on the first evening; the remaining
-Phase 1E items are the episode count and the end-of-run aggregation.
-
-Phase 2 research (perp-only market-neutral basket) was pre-registered on
-2026-09-16 ([Phase 2 pre-registration](docs/PHASE2_PREREGISTRATION.md),
-[Decision 0008](docs/decisions/0008-phase2-basket-preregistration.md)) and run
-unchanged on 2026-09-17 with the result `STOP_NO_EDGE`
-([Decision 0009](docs/decisions/0009-phase2-basket-result-stop-no-edge.md),
-[report](research_results/phase2/REPORT.md)). Funding carry collected +3.4 USDT
-of funding over the validation folds but paid 13.8 USDT in costs; simple
-reversal lost on price. Neither hypothesis passed any gate set. No strategy is
-promoted; the next step is a new registration, not tuning.
-See [current implementation status](docs/PHASE1_IMPLEMENTATION_STATUS.md),
-[actual execution record](docs/PHASE1_DEMO_AUTO_RUNBOOK.md), and
-[week-run gates](docs/PHASE1_WEEK_RUN.md).
+The living status, open issues, and next steps are kept in [PROGRESS.md](PROGRESS.md).
+As of 2026-09-25: Phase 1 execution infrastructure is proven on Binance Demo
+(127 fills, three forced-restart recoveries, audited residual settlement), the
+week observation runner is **halted** since 2026-09-17 with one open Demo
+episode awaiting an approved resume, Phase 2 basket research ended
+`STOP_NO_EDGE` (Decision 0009), and no strategy is a Phase 3 candidate.
+Real-money trading remains unauthorized everywhere.
 
 ### Earlier research and integration milestones
 

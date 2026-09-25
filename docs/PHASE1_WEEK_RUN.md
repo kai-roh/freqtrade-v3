@@ -2,30 +2,29 @@
 
 기준일: 2026-09-15 KST
 
-Status: **running** since 2026-09-15 12:07:24 UTC (21:07 KST) on explicit user
-instruction after Telegram order notifications were confirmed on every event of
-the verification run.
+Status: **halted since 2026-09-17 16:41 UTC**; the 7-day window expired on
+2026-09-22 12:07 UTC. The run started 2026-09-15 12:07:24 UTC on explicit user
+instruction after Telegram notifications were confirmed on every event.
 
-- Container `phase1-demo-week-run-20260915`, source `20a581d`, image
-  `freqtrade-v3-demo-auto:20a581d` (`sha256:8db85012…`), config
-  `configs/phase1-week-run.json` (60 episodes, 2 h interval, 7-day window, hold 300 s,
-  leg about 220 USDT, Telegram pause after 3 consecutive failures).
-- Run identity `--started-at 2026-09-15T12:07:24+00:00` is stored in
-  `evidence/phase1/demo-week-run-20260915/started-at.txt` on the host and must be
-  reused for every deliberate restart.
-- Episode 1 entered and hedged at 12:07:30–37 UTC with all notifications delivered
-  and closed at 12:12:40 UTC with a settled residual of `0.00000714 BTC`.
-- **Deliberate restart 1 (12:25:56 UTC):** the runner was killed between episodes
-  and restarted with the same `--started-at` on image `freqtrade-v3-demo-auto:81999bd`
-  (`sha256:b5f2ebf7…`, compact notifications). Because the manifest changed, the
-  new container counts its own budget from "episode 1 of 60"; the ledger keeps the
-  earlier episode under the previous manifest. Container
-  `phase1-demo-week-run-20260915-restart1`, evidence `run-restart1.json`.
-- Telegram command bot `phase1-telegram-bot` (read-only: ledger, evidence,
-  account GET) serves /status /profit /balance /daily /help for the configured
-  chat; the commands are registered in the bot menu.
-- Still required during the run: at least two more deliberate restarts (three
-  total for the Phase 1E gate), then the final SLA and episode aggregation.
+- Outcome so far: 29 episodes closed (1 under manifest `20a581d`, 28 under
+  `81999bd`), 127 fills, zero rejected transitions, zero unresolved recovery,
+  three forced-restart recoveries (see "Deliberate restarts"). Gate item "50
+  episodes" is **not met**.
+- Halt cause: in episode 26 the Spot close IOC was denied by the action risk
+  worker with `quote transport stale` (receive gap over 2 s) and the runner
+  treated the denial as fatal (exit 2). Intent
+  `1fe50ea6-3e97-4fd8-b1dc-32f06384ef6b` is `ABORTING` with `0.00286713 BTC`
+  Spot long unhedged on the Demo account (futures flat). Telegram error events
+  were delivered at the time.
+- Resume: restart with the same `--started-at 2026-09-15T12:07:24+00:00` and image
+  `freqtrade-v3-demo-auto:81999bd`; the runner resumes the open episode, sells the
+  owned Spot, settles the residual, then stops with `run_window_exhausted`.
+  This submits Demo orders and needs explicit user approval.
+- Fix before any further run: treat transient freshness denials as retry-next-tick
+  with a consecutive-denial cap instead of a fatal error (see PROGRESS.md).
+- Container `phase1-demo-week-run-20260915-restart3` (exited 2), config
+  `configs/phase1-week-run.json`, run identity in
+  `evidence/phase1/demo-week-run-20260915/started-at.txt`.
 
 ## Readiness — 2026-09-15
 

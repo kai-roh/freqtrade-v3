@@ -1,5 +1,22 @@
 # Server state
 
+## Latest verified state — 2026-09-25 16:57 KST
+
+- `phase1-demo-week-run-20260915-restart3` exited 2 on 2026-09-17 16:41 UTC
+  (Spot close denied for stale quote transport; fail-closed). One intent
+  `ABORTING` with `0.00286713 BTC` Spot long unhedged; futures flat. Resume
+  requires user approval (see `docs/PHASE1_WEEK_RUN.md`).
+- Ledger: intents 29 `CLOSED` + 1 `ABORTING`, fills 127, rejected transitions 0,
+  unresolved recovery 0, active commands 0, settled residuals 29 totalling
+  `0.00020649 BTC`. USD-M quote-age samples 120,702.
+- `phase1-telegram-bot` up 9 days; `phase1-postgres` up 11 days; `freqtrade_kai`
+  (zero-entry shadow) healthy. Weekly cron research ran 2026-09-20
+  (`STOP_BEFORE_CLASSIFIER`, best PF 0.639).
+- Phase 2 data lives in `user_data/data-phase2/` (not in Git); cron dataset untouched.
+- The non-git working copy is synced to `c778875`; later commits are docs/research
+  only except `v3/phase2/` and `scripts/run_phase2_research.py`, which the server
+  does not need to run.
+
 ## Week observation run — started 2026-09-15 21:07 KST
 
 - Container `phase1-demo-week-run-20260915` running image
