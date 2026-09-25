@@ -7,3 +7,5 @@ __pycache__
 .ruff_cache
 reports
 research_results/scheduled
+user_data/*
+!user_data/strategies
