@@ -1,6 +1,17 @@
 # Server state
 
-## Latest verified state — 2026-09-25 17:30 KST
+## Latest verified state — 2026-09-25 20:10 KST
+
+- Close-only takeover `phase1-demo-week-run-20260915-resume5` (image `1a124d1`,
+  user-approved) exited 0 at 11:01:35 UTC: Spot `0.00286 BTC` sold at 84734,
+  residual `0.00000713 BTC` settled, intent `1fe50ea6…` `ABORTING → CLOSED`.
+- Ledger: intents 30 `CLOSED`, 0 open; fills 128; settled residuals 30 totalling
+  `0.00021362 BTC`; rejected transitions 0; unresolved recovery 0; active
+  commands 0; fill inbox fully applied. No week runner is running.
+- `phase1-telegram-bot` up (image `81999bd`, read-only); `phase1-postgres` up;
+  `freqtrade_kai` shadow running.
+
+## Before the takeover — 2026-09-25 17:30 KST
 
 - Resume attempt `phase1-demo-week-run-20260915-resume4` (image `81999bd`,
   08:08 UTC) exited 2 before any order: the unhedged notional-duration invariant

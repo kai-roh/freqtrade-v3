@@ -2,14 +2,15 @@
 
 기준일: 2026-09-15 KST
 
-Status: **halted since 2026-09-17 16:41 UTC**; the 7-day window expired on
-2026-09-22 12:07 UTC. The run started 2026-09-15 12:07:24 UTC on explicit user
+Status: **finished; window expired.** The runner halted 2026-09-17 16:41 UTC, the
+7-day window expired 2026-09-22 12:07 UTC, and the open episode was closed by a
+close-only takeover on 2026-09-25 11:01 UTC (no open intents). The run started 2026-09-15 12:07:24 UTC on explicit user
 instruction after Telegram notifications were confirmed on every event.
 
-- Outcome so far: 29 episodes closed (1 under manifest `20a581d`, 28 under
-  `81999bd`), 127 fills, zero rejected transitions, zero unresolved recovery,
-  three forced-restart recoveries (see "Deliberate restarts"). Gate item "50
-  episodes" is **not met**.
+- Outcome: 30 episodes closed (1 under manifest `20a581d`, 28 under `81999bd`,
+  1 transferred to `1a124d1` for its close), 128 fills, zero rejected
+  transitions, zero unresolved recovery, three forced-restart recoveries (see
+  "Deliberate restarts"). Gate item "50 episodes" is **not met**.
 - Halt cause: in episode 26 the Spot close IOC was denied by the action risk
   worker with `quote transport stale` (receive gap over 2 s) and the runner
   treated the denial as fatal (exit 2). Intent
@@ -24,14 +25,18 @@ instruction after Telegram notifications were confirmed on every event.
   five consecutive denials; in the closing phase a budget exceedance is recorded
   as `episode_baselines.evidence->'unhedged_budget_exceeded'` and closing
   continues. Image `freqtrade-v3-demo-auto:1a124d1` (`sha256:5d2dd045…`) is built.
-- Resume (pending approval): the new image has a new manifest, so use the
-  close-only takeover: same `--started-at 2026-09-15T12:07:24+00:00`, plus
-  `--resume-intent 1fe50ea6-3e97-4fd8-b1dc-32f06384ef6b --previous-manifest
-  8f3072d648507e159b30cae19469ba40c2e63f859b90c054c3af610755986ba3`. The runner
-  transfers the intent, sells the owned Spot, settles the residual, and exits
-  without a new entry. This submits Demo orders and needs explicit user approval.
-- Containers `phase1-demo-week-run-20260915-restart3` and `…-resume4` (both
-  exited 2), config `configs/phase1-week-run.json`, run identity in
+- Close-only takeover 2026-09-25 11:01 UTC (`…-resume5`, image `1a124d1`,
+  user-approved): same `--started-at`, `--resume-intent 1fe50ea6…`,
+  `--previous-manifest 8f3072d6…`. `RESUMING` 11:01:26, Spot sell IOC enqueued
+  11:01:29, filled `0.00286 BTC @ 84734.00` 11:01:32, residual `0.00000713 BTC`
+  (0.60 USDT) settled 11:01:35, intent `CLOSED`, exit 0, no new entry. The
+  budget exceedance was recorded once in the baseline evidence
+  (`unhedged_notional_milliseconds` 1.63e11 vs budget 2.7e8). Ledger after:
+  30 `CLOSED`, 128 fills, 30 settled residuals totalling `0.00021362 BTC`,
+  rejected transitions 0, unresolved recovery 0, active commands 0.
+  Evidence `run-resume5.json`.
+- Containers `phase1-demo-week-run-20260915-restart3`, `…-resume4` (exited 2) and
+  `…-resume5` (exited 0), config `configs/phase1-week-run.json`, run identity in
   `evidence/phase1/demo-week-run-20260915/started-at.txt`.
 
 ## Readiness — 2026-09-15

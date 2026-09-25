@@ -1,13 +1,13 @@
 # PROGRESS
 
-기준일: 2026-09-25 17:30 KST. 새 세션은 이 파일부터 읽는다. 상세 근거는 각 링크 문서에 있고,
+기준일: 2026-09-25 20:10 KST. 새 세션은 이 파일부터 읽는다. 상세 근거는 각 링크 문서에 있고,
 이 파일은 **현재 상태·열린 문제·다음 할 일**만 최신으로 유지한다. 과거 이력은 여기 쓰지 않는다.
 
 ## 한 줄 요약
 
-Phase 1(Binance Demo 2-leg 캐리 집행 인프라)은 재시작 복구 3회·잔량 정산·29 에피소드까지
-실증됐지만 주간 관측 실행기는 **2026-09-17 16:41 UTC에 정지**해 있고 Demo 계정에 비헤지 현물
-롱 1건이 남아 있다. Phase 2(perp-only 시장중립 바스켓)는 사전등록대로 실행해 **STOP_NO_EDGE**로
+Phase 1(Binance Demo 2-leg 캐리 집행 인프라)은 재시작 복구 3회·잔량 정산·30 에피소드까지
+실증됐다. 주간 관측 실행기는 2026-09-17 정지 후 실행 창(09-22)이 만료됐고, 남아 있던 비헤지 현물은
+**2026-09-25 11:01 UTC에 close-only 재개로 매도·정산해 열린 intent 0건**이다. Phase 2(perp-only 시장중립 바스켓)는 사전등록대로 실행해 **STOP_NO_EDGE**로
 기각됐다. Phase 3(소액 실자본) 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 현재 상태
@@ -15,55 +15,42 @@ Phase 1(Binance Demo 2-leg 캐리 집행 인프라)은 재시작 복구 3회·�
 | 영역 | 상태 | 근거 |
 |---|---|---|
 | Phase 0 연구·비용·재현성 | 완료. Milestone 1 `STOP_BEFORE_CLASSIFIER`, 자본기준 지표로 재검증해도 동일 | [MILESTONE_1](docs/MILESTONE_1.md), `research_results/validation-b6d3bbd/` |
-| Phase 1A~1D 집행 인프라 | 완료. 실체결 127건, 거부 전이 0, 미해결 복구 0, 강제 재시작 복구 3회 | [PHASE1_IMPLEMENTATION_STATUS](docs/PHASE1_IMPLEMENTATION_STATUS.md), [DEMO_AUTO_RUNBOOK](docs/PHASE1_DEMO_AUTO_RUNBOOK.md) |
-| Phase 1E 주간 관측 | **정지 중.** 에피소드 29/50, 실행 창 09-22 12:07 UTC 만료, 열린 intent 1개 `ABORTING` | [PHASE1_WEEK_RUN](docs/PHASE1_WEEK_RUN.md), `evidence/phase1/demo-week-run-20260915/` |
+| Phase 1A~1D 집행 인프라 | 완료. 실체결 128건, 거부 전이 0, 미해결 복구 0, 강제 재시작 복구 3회 | [PHASE1_IMPLEMENTATION_STATUS](docs/PHASE1_IMPLEMENTATION_STATUS.md), [DEMO_AUTO_RUNBOOK](docs/PHASE1_DEMO_AUTO_RUNBOOK.md) |
+| Phase 1E 주간 관측 | **종료(창 만료).** 에피소드 30 CLOSED / 게이트 50, 열린 intent 0, 마지막 에피소드는 09-25 close-only 재개로 종료 | [PHASE1_WEEK_RUN](docs/PHASE1_WEEK_RUN.md), `evidence/phase1/demo-week-run-20260915/` |
 | quote-age SLA | 채택 96 ms(USD-M p99 47.68 ms × 2). 현물 bookTicker는 미측정 유지. 표본 120,702개 누적 | `configs/phase1-policy.json`, `evidence/phase1/sla-evidence-20260915.json` |
 | Telegram | 알림 2줄 포맷, 명령 봇 `/status /profit /balance /daily /help` 실행 중 | [PHASE1_WEEK_RUN](docs/PHASE1_WEEK_RUN.md#telegram-commands) |
 | Phase 2 바스켓 연구 | 완료·기각 `STOP_NO_EDGE`. 펀딩 +3.4 USDT vs 비용 13.8 USDT, PBO 0.77 | [Decision 0009](docs/decisions/0009-phase2-basket-result-stop-no-edge.md), `research_results/phase2/REPORT.md` |
 | Phase 3 | 착수 불가(후보 없음) | Decision 0006 §Constraints |
 
 서버(`ft-tokyo`, `/home/kai/freqtrade-v3`) 컨테이너: `phase1-postgres` 실행, `phase1-telegram-bot` 실행,
-`phase1-demo-week-run-20260915-restart3`·`…-resume4` exit 2(정지), `freqtrade_kai`(zero-entry shadow) 실행.
-서버 작업 복사본은 `1a124d1` + `05faa73` 동기화, 이미지 `freqtrade-v3-demo-auto:1a124d1` 빌드됨.
+주간 실행 컨테이너는 모두 종료(`…-resume5` exit 0이 마지막), `freqtrade_kai`(zero-entry shadow) 실행.
+서버 작업 복사본은 `1a124d1` + `05faa73` 동기화, 현행 이미지 `freqtrade-v3-demo-auto:1a124d1`(`sha256:5d2dd045…`).
 저장소 브랜치 `codex/v2-to-v3-infrastructure`, 테스트 438개 통과(PostgreSQL 포함).
 
 ## 열린 문제
 
-1. **Demo 비헤지 노출.** intent `1fe50ea6-3e97-4fd8-b1dc-32f06384ef6b`가 `ABORTING`: 선물은 종료됐고
-   현물 `0.00286713 BTC`(약 220 USDT)가 남아 있다. 최초 원인은 현물 매도 IOC가 위험 프로세스에서
-   `quote transport stale`(수신 지연 2초 초과)로 거부되자 실행기가 이를 치명 오류로 취급해 종료한 것.
-   09-25 08:08 UTC에 기존 이미지 `81999bd`로 재개(`resume4`)했으나 **두 번째 원인**으로 다시 정지:
-   "비헤지 notional×시간 예산"(300 USDT × 900 s) 불변식이 정지돼 있던 8일을 그대로 적분해 위반으로
-   판정, 매도 전에 `ValueError`로 종료했다(주문 0건). 두 원인 모두 `1a124d1`에서 수정했고 서버에
-   이미지 `freqtrade-v3-demo-auto:1a124d1`(`sha256:5d2dd045…`)이 빌드돼 있다. 손실 위험은 없으나(Demo)
-   관측 목적상 정리해야 한다. 해결: 아래 "다음 할 일 1"의 close-only 인수 명령. **Demo 주문이 나가므로
-   사용자 승인 후 실행.**
-2. ~~**실행기 설계 결함.**~~ `1a124d1`에서 수정. (a) 신선도 거부(`quote transport stale`,
-   `action observation expired`)는 다음 tick 재시도, 연속 5회에서 정지(`run_control.retry_transient_denial`).
-   (b) 청산 단계(`close_requested_at` 기록 후)에서는 노출 예산 초과를 `episode_baselines.evidence`
-   `unhedged_budget_exceeded`로 기록만 하고 청산을 계속한다. 다른 불변식은 모든 단계에서 치명 유지,
-   IOC 6회 상한 유지. 로컬 PostgreSQL 16.14 포함 438개 테스트 통과. 서버 격리 스키마 테스트는
-   미실행(권한 분류기 차단).
-3. **Phase 1E 게이트 미달.** 에피소드 29 < 50. 재시작 3회는 충족. 새 run(새 `--started-at`, 새 manifest)으로
-   연장할지, 현 상태에서 게이트를 판정하고 종료할지 결정이 필요하다.
-4. 테스트 이미지에서 manifest CLI 테스트 1건이 `.git` 부재로 실패한다(환경 문제, 코드 결함 아님).
+1. **Phase 1E 게이트 미달.** 에피소드 30 < 50. 재시작 3회는 충족. 새 run(새 `--started-at`, 새 manifest)으로
+   연장할지, 현 상태에서 게이트를 판정하고 종료할지 결정이 필요하다. 연장 시 이미지는 `1a124d1` 이상.
+2. 서버 격리 스키마 테스트(`freqtrade-v3-tests`)를 `1a124d1` 이후 실행하지 않았다(권한 분류기 차단).
+   로컬 PostgreSQL 16.14에서 438개 통과로 대체. 테스트 이미지 컨텍스트는 `05faa73`에서 `user_data/*` 제외.
+3. 테스트 이미지에서 manifest CLI 테스트 1건이 `.git` 부재로 실패한다(환경 문제, 코드 결함 아님).
+
+해결됨(09-25): Demo 비헤지 현물 `0.00286713 BTC`는 `1a124d1` 이미지의 close-only 재개
+(`--resume-intent`/`--previous-manifest`)로 `0.00286 BTC @ 84,734` 매도, 잔량 `0.00000713 BTC` 정산,
+intent `1fe50ea6…` CLOSED. 원인 두 가지(신선도 거부 즉시 정지, 청산 단계 노출 예산 불변식)는 `1a124d1`에서
+수정. 상세는 [PHASE1_WEEK_RUN](docs/PHASE1_WEEK_RUN.md).
 
 ## 다음 할 일 (순서대로)
 
-1. 열린 문제 1 해결: 새 이미지 `1a124d1`은 매니페스트가 달라 열린 에피소드를 자동으로 잡지 않으므로
-   close-only 인수로 재개한다(승인 필요). [PHASE1_WEEK_RUN](docs/PHASE1_WEEK_RUN.md#starting-the-week-run)의
-   패턴에 `--started-at 2026-09-15T12:07:24+00:00 --resume-intent 1fe50ea6-3e97-4fd8-b1dc-32f06384ef6b
-   --previous-manifest 8f3072d648507e159b30cae19469ba40c2e63f859b90c054c3af610755986ba3`을 더하고
-   `PHASE1_BUILD_SOURCE_SHA=1a124d1cd006a135a0ddf70036f05be67c001a16`, 출력 `run-resume5.json`,
-   컨테이너 `phase1-demo-week-run-20260915-resume5`. 현물 매도 → 잔량 정산 → 종료(신규 진입 없음).
-   완료 후 `evidence->'unhedged_budget_exceeded'`와 잔량 정산 기록을 확인한다.
-2. (선택) 서버에서 `freqtrade-v3-tests` 이미지를 빌드해 격리 스키마 테스트 재확인
-   (`Dockerfile.tests.dockerignore`는 `05faa73`에서 `user_data/*` 제외).
-3. Phase 1E 결정: 연장 run 시작 여부. 연장하면 `configs/phase1-week-run.json`으로 새 run.
-4. 관측 종료 후 `scripts/summarize_phase1_sla.py`로 SLA·헤지 지연 재집계, Phase 1E 종료 ADR 작성.
-5. Phase 2 후속은 **새 사전등록**으로만: 유력 후보는 H1을 maker/post-only 집행·일 단위 결정·낮은 회전율로
+1. Phase 1E 결정: 연장 run 시작 여부. 연장하면 `configs/phase1-week-run.json`, 이미지 `1a124d1`, 새 `--started-at`으로
+   새 run(Demo 주문, 승인 필요). 종료하면 게이트 미달(30/50)을 그대로 기록한다.
+2. 관측 종료 후 `scripts/summarize_phase1_sla.py`로 SLA·헤지 지연 재집계, Phase 1E 종료 ADR 작성
+   (09-25 재개의 `unhedged_budget_exceeded` 증거와 두 수정 사항 포함).
+3. (선택) 서버에서 `freqtrade-v3-tests:1a124d1` 빌드·격리 스키마 테스트 재확인.
+4. Phase 2 후속은 **새 사전등록**으로만: 유력 후보는 H1을 maker/post-only 집행·일 단위 결정·낮은 회전율로
    재정의. 결과를 본 뒤 격자·비용·게이트를 바꾸는 것은 금지(Decision 0008).
-6. 저장소: `codex/v2-to-v3-infrastructure` → `main` PR·머지. 서버 작업 복사본 재동기화(`git archive HEAD | ssh ... tar -x`).
+5. 저장소: 로컬 커밋(`1a124d1`~) push, `codex/v2-to-v3-infrastructure` → `main` PR·머지.
+   서버 작업 복사본 재동기화(`git archive HEAD | ssh ... tar -xm`).
 
 ## 운영 규칙 (요약)
 
