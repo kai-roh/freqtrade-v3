@@ -1,0 +1,9 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+TZ=Asia/Seoul
+
+# V3 operations report: every day at 23:00 KST.
+0 23 * * * cd /home/kai/freqtrade-v3 && ./scripts/run_operations_report.sh daily >> /home/kai/freqtrade-v3/reports/logs/daily-cron.log 2>&1
+
+# V3 data refresh, walk-forward research, archived result, and weekly report.
+10 23 * * 0 cd /home/kai/freqtrade-v3 && ./scripts/run_scheduled_research.sh >> /home/kai/freqtrade-v3/reports/logs/weekly-research-cron.log 2>&1

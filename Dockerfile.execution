@@ -1,0 +1,36 @@
+FROM python:3.12.12-slim-bookworm@sha256:228390eced221ad2986a3dd77e10b1accca6ba8ceb36f1572de1b346a337cc1a
+
+ARG UV_VERSION=0.9.24
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir "uv==${UV_VERSION}"
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
+
+COPY v3 ./v3
+COPY scripts/check_phase1_imports.py ./scripts/check_phase1_imports.py
+COPY scripts/run_phase1_matching_probe.py ./scripts/run_phase1_matching_probe.py
+COPY scripts/run_phase1_demo_auto.py ./scripts/run_phase1_demo_auto.py
+COPY scripts/settle_phase1_residual.py ./scripts/settle_phase1_residual.py
+COPY scripts/summarize_phase1_sla.py ./scripts/summarize_phase1_sla.py
+COPY scripts/check_phase1_demo_readiness.py ./scripts/check_phase1_demo_readiness.py
+COPY scripts/run_phase1_telegram_bot.py ./scripts/run_phase1_telegram_bot.py
+COPY configs/phase1-policy.json ./configs/phase1-policy.json
+COPY configs/phase1-engineering.json ./configs/phase1-engineering.json
+COPY configs/phase1-week-run.json ./configs/phase1-week-run.json
+COPY configs/phase1-verify-repeat.json ./configs/phase1-verify-repeat.json
+
+ARG SOURCE_SHA
+ENV PHASE1_BUILD_SOURCE_SHA=${SOURCE_SHA}
+LABEL org.opencontainers.image.revision=${SOURCE_SHA}
+
+USER 65532:65532
+
+ENTRYPOINT ["/app/.venv/bin/python", "scripts/check_phase1_imports.py"]

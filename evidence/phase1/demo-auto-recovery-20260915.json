@@ -1,0 +1,58 @@
+{
+  "environment": "demo",
+  "economic_approval": false,
+  "manifest": {
+    "schema_version": 1,
+    "manifest_id": "1376587d9a7f94a720b5b45aab0be3b473bb9401a065c03b80ae4b5361bca8c6",
+    "generated_at": "2026-09-15T09:06:00Z",
+    "source_dirty": false,
+    "dependencies_exact": true,
+    "git_commit_sha": "96dde03b97367335f09f31da1120c08dfba1eaa1",
+    "container_image_digest": "sha256:8653914615dbdf7ca91051821752bccf09198b2dcc436af322f449a1dff08431",
+    "dependency_lock_sha256": "f83f893eb97e449a6dfd1f141093b9e54bd21588d8190cf03664ac6268256218",
+    "config_sha256": "5236a0de99c40b19b955f9f1bbe8b73fa4e572e444764fc367769a9ae5990927",
+    "model_artifact_sha256": "084b2710058127323cfb3c67206b8f89241a1c366d3cfaf92ffad1b51bc632ec",
+    "data_snapshot_id": "demo-engineering:2026-09-15T09:06:00+00:00",
+    "timerange": {
+      "start": "2026-09-15T09:06:00Z",
+      "end": "2026-09-15T09:06:01Z"
+    }
+  },
+  "events": [
+    {
+      "at": "2026-09-15T09:16:07.776358+00:00",
+      "kind": "start",
+      "status": "RUNNING",
+      "strategy_started": true,
+      "hold_seconds": 300
+    },
+    {
+      "at": "2026-09-15T09:16:11.703217+00:00",
+      "kind": "trade",
+      "submitted": true,
+      "status": "ENQUEUED",
+      "command_id": "a393473d-f97c-4d39-9052-502b8eee80b7",
+      "client_order_id": "v3a25409827032046649ae103048f049",
+      "action": "close_spot_sell"
+    },
+    {
+      "at": "2026-09-15T09:16:14.682533+00:00",
+      "kind": "trade",
+      "fill_confirmed": true,
+      "instrument": "BTCUSDT.BINANCE_SPOT_DEMO",
+      "quantity": "0.00284000",
+      "price": "76969.68000000",
+      "side": "SELL"
+    },
+    {
+      "at": "2026-09-15T09:16:16.539782+00:00",
+      "kind": "stop",
+      "submitted": false,
+      "status": "DUST_REMAINS",
+      "state": "ABORTING",
+      "reason": "Spot dust remains below sell lot or notional minimum",
+      "completed_episode": false,
+      "new_entries_halted": true
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+name: freqtrade-v3-phase1
+
+services:
+  phase1_postgres:
+    image: postgres:16.14-bookworm@sha256:e84240fdc0f11ac4cff65865db840555aa09c02ae532eb4c95822881164da0e4
+    environment:
+      POSTGRES_DB: phase1
+      POSTGRES_USER: phase1
+      POSTGRES_PASSWORD: ${PHASE1_POSTGRES_PASSWORD:?PHASE1_POSTGRES_PASSWORD is required}
+    networks:
+      - phase1_internal
+    volumes:
+      - phase1_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U phase1 -d phase1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  phase1_execution_smoke:
+    image: ${PHASE1_EXECUTION_IMAGE:?PHASE1_EXECUTION_IMAGE must be an immutable digest}
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - phase1_internal
+    depends_on:
+      phase1_postgres:
+        condition: service_healthy
+    environment:
+      PHASE1_POLICY_PATH: /app/configs/phase1-policy.json
+    restart: "no"
+
+networks:
+  phase1_internal:
+    internal: true
+
+volumes:
+  phase1_postgres_data:
+    name: freqtrade_v3_phase1_postgres_data

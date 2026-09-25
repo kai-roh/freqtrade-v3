@@ -1,0 +1,16 @@
+# Test-runner image layered on the pinned execution image. It adds the locked
+# dev dependencies and the full source tree so the regression suite, including
+# PostgreSQL integration tests, can run on the deployment host against an
+# isolated schema. It is never used to trade and has no credentials.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+USER root
+# git is required by the run-manifest CLI tests; it is not part of the runtime image.
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+RUN uv sync --frozen
+COPY . /app
+RUN chown -R 65532:65532 /app
+USER 65532:65532
+
+ENTRYPOINT ["/app/.venv/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "--color=no"]

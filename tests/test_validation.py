@@ -158,3 +158,19 @@ def test_promotion_propagates_initial_capital_to_drawdown_gate():
     assert not tight_capital.passed
     assert any("drawdown" in reason for reason in tight_capital.reasons)
     assert larger_capital.passed
+
+
+def test_embargo_check_inspects_actual_rows_not_only_configured_boundaries():
+    from v3.validation import _assert_row_embargo
+
+    times = pd.Series(pd.date_range("2026-01-01", periods=10, freq="D"))
+    train = times < pd.Timestamp("2026-01-05")
+    validation = times >= pd.Timestamp("2026-01-07")
+    _assert_row_embargo(times, train, validation, "2D", 0)
+    with pytest.raises(ValueError, match="violates embargo"):
+        _assert_row_embargo(times, train, validation, "4D", 0)
+    # A mask that leaks a train row into the embargo window is caught even if the
+    # configured boundaries look correct.
+    leaking_train = times < pd.Timestamp("2026-01-07")
+    with pytest.raises(ValueError, match="violates embargo"):
+        _assert_row_embargo(times, leaking_train, validation, "2D", 1)

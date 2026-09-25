@@ -25,4 +25,5 @@ docker run --rm \
   "$IMAGE" \
   scripts/run_walk_forward.py \
   --data-dir "$DATA_DIR" \
-  --output "$OUTPUT_DIR"
+  --output "$OUTPUT_DIR" \
+  "$@"

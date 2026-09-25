@@ -1,0 +1,25 @@
+{
+  "observation_count": 87,
+  "registration": {
+    "alpha": 0.05,
+    "block_definition": "moving_contiguous_periods",
+    "block_length": 7,
+    "direction": "two-sided",
+    "iterations": 10000,
+    "sample_unit": "daily_portfolio_pnl",
+    "seed": 20260819
+  },
+  "result": {
+    "alpha": 0.05,
+    "block_definition": "moving_contiguous_periods",
+    "block_length": 7,
+    "ci_high": -0.0001568801463916123,
+    "ci_low": -0.0014962380724186735,
+    "direction": "two-sided",
+    "iterations": 10000,
+    "observed_mean": -0.0007781461132367804,
+    "sample_unit": "daily_portfolio_pnl",
+    "seed": 20260819
+  },
+  "schema_version": 1
+}
