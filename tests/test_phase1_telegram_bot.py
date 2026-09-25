@@ -195,3 +195,19 @@ def test_compact_event_lines_are_short_korean_summaries():
     assert title == "실행 종료" and "run_window_exhausted" in summary
     title, _, _ = compact_event("start", {"status": "RESUMING", "intent_id": "abcdef12-3"})
     assert title.startswith("재시작")
+    title, summary, details = compact_event(
+        "error",
+        {
+            "submitted": False,
+            "reason": "quote transport stale",
+            "retry_next_tick": True,
+            "consecutive_denials": 2,
+            "denial_cap": 5,
+        },
+    )
+    assert title == "일시 거부 · 다음 tick 재시도" and summary == "quote transport stale · 연속 2/5"
+    assert details == {}
+    title, summary, _ = compact_event(
+        "error", {"submitted": False, "reason": "quote transport stale"}
+    )
+    assert title.startswith("오류") and "신규 주문 중단" in summary

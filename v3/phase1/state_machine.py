@@ -133,6 +133,9 @@ class InvariantSnapshot:
             )
 
 
+UNHEDGED_BUDGET_VIOLATION = "unhedged notional-duration budget exceeded"
+
+
 def invariant_violations(snapshot: InvariantSnapshot) -> tuple[str, ...]:
     violations: list[str] = []
     if any(count > 1 for count in snapshot.active_commands_by_leg.values()):
@@ -171,7 +174,7 @@ def invariant_violations(snapshot: InvariantSnapshot) -> tuple[str, ...]:
         and snapshot.unhedged_notional_milliseconds
         > snapshot.maximum_unhedged_notional_milliseconds
     ):
-        violations.append("unhedged notional-duration budget exceeded")
+        violations.append(UNHEDGED_BUDGET_VIOLATION)
     return tuple(violations)
 
 

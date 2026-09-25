@@ -9,10 +9,47 @@ talks to the venue, and every stop reason is explicit.
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
+from typing import Any
+
+# Independent-risk denials caused only by transport/observation age. They are
+# retried on the next tick because a fresh observation is the remedy; any other
+# denial or error halts the runner. The cap turns a persistently stale transport
+# into an explicit halt instead of an unbounded retry loop.
+TRANSIENT_DENIAL_REASONS = frozenset({"quote transport stale", "action observation expired"})
+MAXIMUM_CONSECUTIVE_TRANSIENT_DENIALS = 5
+
+
+def is_transient_denial(result: Mapping[str, Any]) -> bool:
+    """True for an unsubmitted management action denied only for freshness."""
+    return (
+        result.get("submitted") is False
+        and result.get("status") is None
+        and result.get("command_id") is None
+        and result.get("reason") in TRANSIENT_DENIAL_REASONS
+    )
+
+
+def retry_transient_denial(
+    result: Mapping[str, Any],
+    consecutive_denials: int,
+    cap: int = MAXIMUM_CONSECUTIVE_TRANSIENT_DENIALS,
+) -> bool:
+    """Decide whether this denial is retried on the next tick.
+
+    ``consecutive_denials`` counts earlier back-to-back transient denials. The
+    denial that reaches ``cap`` is not retried, so the runner halts after ``cap``
+    consecutive denials and never sooner.
+    """
+    if type(cap) is not int or cap < 1:
+        raise ValueError("denial cap must be a positive integer")
+    if type(consecutive_denials) is not int or consecutive_denials < 0:
+        raise ValueError("consecutive denials must be a non-negative integer")
+    return is_transient_denial(result) and consecutive_denials + 1 < cap
 
 
 class RunAction(StrEnum):

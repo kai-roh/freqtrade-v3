@@ -41,7 +41,13 @@ from v3.phase1.observations import capture_binance_carry_market_observation  # n
 from v3.phase1.position_gateway import account_execution_lock  # noqa: E402
 from v3.phase1.postgres import PostgresPhase1Ledger, apply_migrations  # noqa: E402
 from v3.phase1.rest_recovery import recover_tracked_order  # noqa: E402
-from v3.phase1.run_control import RunAction, decide_next_episode, load_run_bounds  # noqa: E402
+from v3.phase1.run_control import (  # noqa: E402
+    MAXIMUM_CONSECUTIVE_TRANSIENT_DENIALS,
+    RunAction,
+    decide_next_episode,
+    load_run_bounds,
+    retry_transient_denial,
+)
 from v3.phase1.telegram_text import compact_event  # noqa: E402
 from v3.reproducibility import (  # noqa: E402
     NO_MODEL_ARTIFACT_SHA256,
@@ -228,6 +234,7 @@ async def execute(args, runtimes):
             """Manage one episode to CLOSED (exact flat or settled residual)."""
             deadline = time.monotonic() + policy["maximum_run_seconds"]
             failures = 0
+            denials = 0
             while time.monotonic() < deadline:
                 await asyncio.sleep(2)
                 while fills:
@@ -274,7 +281,22 @@ async def execute(args, runtimes):
                     * 1000,
                 )
                 if result.get("command_id"):
+                    denials = 0
                     await report("trade", result)
+                elif retry_transient_denial(result, denials):
+                    # A freshness-only denial from the independent risk process is
+                    # retried with a fresh observation on the next tick; the cap and
+                    # the episode deadline bound the retries. No replacement order.
+                    denials += 1
+                    await report(
+                        "error",
+                        result
+                        | dict(
+                            retry_next_tick=True,
+                            consecutive_denials=denials,
+                            denial_cap=MAXIMUM_CONSECUTIVE_TRANSIENT_DENIALS,
+                        ),
+                    )
                 elif result.get("status") == "CLOSED":
                     return result | {"completed_episode": True, "exact_flat": True}
                 elif result.get("status") == "DUST_REMAINS":
@@ -294,7 +316,14 @@ async def execute(args, runtimes):
                         )
                         return result | settled | {"completed_episode": True, "exact_flat": False}
                 elif result.get("status") not in {"WAIT"}:
-                    await report("error", result)
+                    await report(
+                        "error",
+                        result
+                        | dict(
+                            consecutive_denials=denials + 1,
+                            denial_cap=MAXIMUM_CONSECUTIVE_TRANSIENT_DENIALS,
+                        ),
+                    )
                     raise ValueError("management action blocked; no replacement submitted")
             raise ValueError("bounded episode deadline exceeded; inventory requires reconciliation")
 

@@ -454,3 +454,50 @@ def test_lifecycle_enforces_unhedged_notional_duration_invariant(episode):
         unhedged_budget_notional_ms=Decimal("300") * 900 * 1000,
     )
     assert generous["state"] == "HEDGE_REQUIRED"
+    assert generous["unhedged_budget_exceeded"] is False
+
+
+def test_closing_episode_records_budget_exceedance_and_keeps_closing(episode):
+    db, _, _, _, entry, limits = episode
+    time.sleep(0.01)
+
+    def sync(**kwargs):
+        return reconcile_episode_state(
+            db,
+            intent_id=entry.intent_id,
+            account=_account(),
+            limits=limits,
+            unhedged_budget_notional_ms=Decimal("1"),
+            **kwargs,
+        )
+
+    # The runner may resume an owned-Spot episode long after the budget window (a
+    # multi-day stop). Closing must not be blocked by the exposure-duration budget:
+    # the exceedance becomes baseline evidence and the close-only path continues.
+    closing = sync(closing=True)
+    assert closing["state"] == "ABORTING" and closing["unhedged_budget_exceeded"] is True
+    evidence = db.execute(
+        "SELECT evidence->'unhedged_budget_exceeded' FROM episode_baselines WHERE intent_id=%s",
+        (entry.intent_id,),
+    ).fetchone()[0]
+    assert evidence["state"] == "ABORTING"
+    assert evidence["maximum_unhedged_notional_milliseconds"] == "1"
+    assert Decimal(evidence["unhedged_notional_milliseconds"]) > 1
+    first = evidence["first_observed_at"]
+    assert first == evidence["last_observed_at"]
+    time.sleep(0.01)
+    # Once the close request is persisted every later tick is a closing tick, the
+    # first observation is kept, and the bounded Spot sell is still planned.
+    again = sync()
+    assert again["state"] == "ABORTING" and again["unhedged_budget_exceeded"] is True
+    evidence = db.execute(
+        "SELECT evidence->'unhedged_budget_exceeded' FROM episode_baselines WHERE intent_id=%s",
+        (entry.intent_id,),
+    ).fetchone()[0]
+    assert evidence["first_observed_at"] == first
+    assert evidence["last_observed_at"] > first
+    spot = _submit(episode, closing=True)
+    assert spot["action"] == "close_spot_sell" and spot["submitted"]
+    assert (
+        db.execute("SELECT count(*) FROM state_transitions WHERE NOT accepted").fetchone()[0] == 0
+    )

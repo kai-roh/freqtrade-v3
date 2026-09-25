@@ -10,6 +10,7 @@ from .ledger import CostLedgerEntryRow, IncidentRow
 from .position_gateway import _account_fresh, _safe_account, _state, account_execution_lock
 from .postgres import PostgresPhase1Ledger
 from .state_machine import (
+    UNHEDGED_BUDGET_VIOLATION,
     CarryStateMachine,
     IntentState,
     InvariantSnapshot,
@@ -100,10 +101,46 @@ def episode_invariant_snapshot(
     )
 
 
-def _enforce_invariants(connection, **kwargs):
-    violations = invariant_violations(episode_invariant_snapshot(connection, **kwargs))
+def _record_unhedged_budget_exceeded(connection, intent_id, snapshot, now):
+    """Append the exceedance to the baseline evidence; the first observation is kept."""
+    observation = {
+        "last_observed_at": now.isoformat(),
+        "state": snapshot.state.value,
+        "unhedged_notional_milliseconds": str(snapshot.unhedged_notional_milliseconds),
+        "maximum_unhedged_notional_milliseconds": str(
+            snapshot.maximum_unhedged_notional_milliseconds
+        ),
+    }
+    connection.execute(
+        "UPDATE episode_baselines SET evidence=evidence || jsonb_build_object("
+        "'unhedged_budget_exceeded', COALESCE(evidence->'unhedged_budget_exceeded','{}'::jsonb)"
+        " || %s::jsonb || jsonb_build_object('first_observed_at', "
+        "COALESCE(evidence->'unhedged_budget_exceeded'->'first_observed_at', %s::jsonb)))"
+        " WHERE intent_id=%s",
+        (json.dumps(observation), json.dumps(now.isoformat()), intent_id),
+    )
+
+
+def _enforce_invariants(connection, *, intent_id, closing=False, **kwargs):
+    """Raise on any violated invariant; return whether the exposure budget was exceeded.
+
+    The unhedged notional-duration budget bounds how long *new* exposure may stay
+    unhedged. Once the episode is closing, the only permitted actions reduce that
+    exposure, so halting on the budget would abandon inventory (for example after
+    the runner was stopped for days with owned Spot). In that phase the exceedance
+    is recorded as audited baseline evidence and closing continues; every other
+    invariant remains fatal in every phase.
+    """
+    now = datetime.now(UTC)
+    snapshot = episode_invariant_snapshot(connection, intent_id=intent_id, now=now, **kwargs)
+    violations = list(invariant_violations(snapshot))
+    exceeded = UNHEDGED_BUDGET_VIOLATION in violations
+    if exceeded and closing:
+        violations.remove(UNHEDGED_BUDGET_VIOLATION)
+        _record_unhedged_budget_exceeded(connection, intent_id, snapshot, now)
     if violations:
         raise ValueError("episode invariant violated: " + "; ".join(violations))
+    return exceeded and closing
 
 
 def reconcile_episode_state(
@@ -163,9 +200,10 @@ def reconcile_episode_state(
         flat = snapshot.net_spot_base == snapshot.perp_filled_base == 0
 
         def enforce():
-            _enforce_invariants(
+            return _enforce_invariants(
                 connection,
                 intent_id=intent_id,
+                closing=closing,
                 snapshot=snapshot,
                 commands=commands,
                 limits=limits,
@@ -216,13 +254,14 @@ def reconcile_episode_state(
         elif machine.state == IntentState.SUBMITTING:
             move(IntentState.PARTIALLY_HEDGED, "confirmed_partial_exposure")
             move(IntentState.HEDGE_REQUIRED, "confirmed_hedge_shortfall")
-        enforce()
+        budget_exceeded = enforce()
         return {
             "state": machine.state.value,
             "flat": flat,
             "orders_submitted": False,
             "net_spot_base": str(snapshot.net_spot_base),
             "perp_base": str(snapshot.perp_filled_base),
+            "unhedged_budget_exceeded": budget_exceeded,
         }
 
 

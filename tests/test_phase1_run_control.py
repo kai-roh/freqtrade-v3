@@ -4,7 +4,15 @@ from pathlib import Path
 
 import pytest
 
-from v3.phase1.run_control import RunAction, RunBounds, decide_next_episode, load_run_bounds
+from v3.phase1.run_control import (
+    MAXIMUM_CONSECUTIVE_TRANSIENT_DENIALS,
+    RunAction,
+    RunBounds,
+    decide_next_episode,
+    is_transient_denial,
+    load_run_bounds,
+    retry_transient_denial,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 T0 = datetime(2026, 9, 16, tzinfo=UTC)
@@ -81,3 +89,30 @@ def test_episode_interval_must_cover_the_episode_window(tmp_path):
     path.write_text(json.dumps(data))
     with pytest.raises(ValueError, match="cover one full episode window"):
         load_run_bounds(path)
+
+
+def test_only_freshness_denials_without_a_submission_are_transient():
+    stale = {"submitted": False, "reason": "quote transport stale"}
+    expired = {"submitted": False, "reason": "action observation expired"}
+    assert is_transient_denial(stale) and is_transient_denial(expired)
+    assert not is_transient_denial({"submitted": False, "reason": "IOC price exceeds slippage cap"})
+    assert not is_transient_denial({"submitted": False, "reason": "action risk timeout"})
+    assert not is_transient_denial({"submitted": False, "status": "RECOVERY_BLOCKED"})
+    assert not is_transient_denial({"submitted": True, "command_id": "c", "status": "ENQUEUED"})
+    assert not is_transient_denial(
+        {"submitted": False, "reason": "quote transport stale", "status": "UNKNOWN"}
+    )
+    assert not is_transient_denial({})
+
+
+def test_transient_denials_are_retried_until_the_consecutive_cap():
+    stale = {"submitted": False, "reason": "quote transport stale"}
+    assert MAXIMUM_CONSECUTIVE_TRANSIENT_DENIALS == 5
+    # Denials 1..4 retry; the fifth consecutive denial halts the runner.
+    assert [retry_transient_denial(stale, seen) for seen in range(5)] == [True] * 4 + [False]
+    assert retry_transient_denial(stale, 0, cap=1) is False
+    assert retry_transient_denial({"submitted": False, "reason": "Demo only"}, 0) is False
+    with pytest.raises(ValueError):
+        retry_transient_denial(stale, -1)
+    with pytest.raises(ValueError):
+        retry_transient_denial(stale, 0, cap=0)

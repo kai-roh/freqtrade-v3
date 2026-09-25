@@ -72,6 +72,12 @@ def compact_event(kind: str, detail: Mapping[str, Any]) -> tuple[str, str, dict[
             return "에피소드 종료 · flat", "양 레그 0", {}
         return "중단", str(detail.get("status", "")), {}
     if kind == "error":
+        if detail.get("retry_next_tick"):
+            return (
+                "일시 거부 · 다음 tick 재시도",
+                f"{detail.get('reason')} · 연속 {detail.get('consecutive_denials')}/{detail.get('denial_cap')}",
+                {},
+            )
         return (
             f"오류 {detail.get('error_type', '')}",
             "신규 주문 중단 · 확인 필요",
