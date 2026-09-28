@@ -1,5 +1,14 @@
 # Server state
 
+## Latest verified state — 2026-09-28 16:15 KST
+
+- `phase1-demo-week-run-20260928` running (image `1a124d1`, started
+  2026-09-28 07:03:08 UTC, manifest `5a07e153…`). Episode 1 closed at 07:08:25 UTC
+  with four fills and a settled residual of `0.00000736 BTC`; next entry due
+  ~09:08 UTC. Readiness check before start: 6/6 passed, no orders.
+- Ledger: intents 31 `CLOSED`, 0 open; fills 132. `phase1-telegram-bot` up 12 days
+  (image `81999bd`, read-only); `phase1-postgres` up 13 days; `freqtrade_kai` shadow running.
+
 ## Latest verified state — 2026-09-25 20:10 KST
 
 - Close-only takeover `phase1-demo-week-run-20260915-resume5` (image `1a124d1`,

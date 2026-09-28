@@ -1,6 +1,24 @@
 # Phase 1 Demo Week Run
 
-기준일: 2026-09-15 KST
+기준일: 2026-09-28 KST
+
+## Extension run — started 2026-09-28 07:03:08 UTC
+
+Started on explicit user instruction to reach the 50-episode gate (30 closed in
+the first run). Readiness (`readiness.json`, order-free): all six checks passed.
+
+- Container `phase1-demo-week-run-20260928`, image `freqtrade-v3-demo-auto:1a124d1`
+  (`sha256:5d2dd045…`), source `1a124d1`, config `configs/phase1-week-run.json`
+  (60 episodes, 2 h interval, 7-day window → expires 2026-10-05 07:03 UTC),
+  manifest `5a07e1536b9fa0da…`. Run identity in
+  `evidence/phase1/demo-week-run-20260928/started-at.txt`; events in `run.json`.
+- Episode 1 (07:03:15–07:08:25 UTC): Spot buy `0.00264 @ 83280.61`, perp sell
+  `0.0026 @ 83212.50`, perp buy `0.0026 @ 83215.70`, Spot sell `0.00263 @ 83123.32`,
+  residual `0.00000736 BTC` settled, `CLOSED`. All events delivered to Telegram.
+- Restart rule unchanged: same `--started-at 2026-09-28T07:03:08+00:00`, new
+  container name. No manual orders on the Demo BTCUSDT account while running.
+
+## First run — 2026-09-15 to 2026-09-25
 
 Status: **finished; window expired.** The runner halted 2026-09-17 16:41 UTC, the
 7-day window expired 2026-09-22 12:07 UTC, and the open episode was closed by a
