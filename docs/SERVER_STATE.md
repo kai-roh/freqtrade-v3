@@ -1,5 +1,14 @@
 # Server state
 
+## Latest verified state — 2026-09-30 KST
+
+- `phase1-demo-week-run-20260928` exited 2 at 2026-09-29 18:31:45 UTC (sub-minimum
+  perp remainder misclassified as dust). Ledger: 47 `CLOSED` + 1 `ABORTING`
+  (`b265fcf7…`), fills 202, rejected transitions 0, unresolved recovery 0, active
+  commands 0. Demo account: Spot `0.00296052 BTC`, perp `-0.0001`, no open orders.
+- Source `5e8afe1` synced (`git archive | tar -xm`); image
+  `freqtrade-v3-demo-auto:5e8afe1` = `sha256:ef02aba8…`, source SHA baked in.
+
 ## Latest verified state — 2026-09-28 16:15 KST
 
 - `phase1-demo-week-run-20260928` running (image `1a124d1`, started

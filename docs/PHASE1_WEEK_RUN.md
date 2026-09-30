@@ -17,6 +17,16 @@ the first run). Readiness (`readiness.json`, order-free): all six checks passed.
   residual `0.00000736 BTC` settled, `CLOSED`. All events delivered to Telegram.
 - Restart rule unchanged: same `--started-at 2026-09-28T07:03:08+00:00`, new
   container name. No manual orders on the Demo BTCUSDT account while running.
+- Halted 2026-09-29 18:31:45 UTC after 17 closed episodes (cumulative 47). In
+  episode 18 (intent `b265fcf7…`) the closing perp IOC filled `0.0025` of `0.0026`;
+  the planner called the `0.0001 BTC` short remainder (about 8 USDT) dust because
+  it was under the 50 USDT minimum, the runner took the residual-settlement path,
+  and settlement refused because futures were not flat (exit 2, no bad orders).
+  Binance USD-M exempts reduce-only orders from MIN_NOTIONAL (-4164), Nautilus
+  1.231 skips notional checks for margin accounts, and Demo minQty is `0.0001`.
+  Fixed in `5e8afe1`; image `freqtrade-v3-demo-auto:5e8afe1` (`sha256:ef02aba8…`).
+  Recovery (approval needed): close-only takeover of `b265fcf7…` from manifest
+  `5a07e153…`, then restart with the same `--started-at`.
 
 ## First run — 2026-09-15 to 2026-09-25
 
