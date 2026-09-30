@@ -64,7 +64,7 @@ def episode(tmp_path, request):
             yield db, manifest, strategy, action_risk, entry, limits
 
 
-def _fill(db, command_id, quantity, *, fee="0", token="USDT"):
+def _fill(db, command_id, quantity, *, fee="0", token="USDT", status="FILLED"):
     command = db.execute(
         "SELECT leg,idempotency_key FROM order_commands WHERE id=%s", (command_id,)
     ).fetchone()
@@ -72,7 +72,7 @@ def _fill(db, command_id, quantity, *, fee="0", token="USDT"):
     snapshot = RestOrderSnapshot(
         "BINANCE_SPOT_DEMO" if command[0] == "spot" else "BINANCE_USDM_DEMO",
         command[1],
-        "FILLED",
+        status,
         command_id,
         Decimal(quantity),
         Decimal("60000"),
@@ -137,6 +137,65 @@ def _tick(episode, inspector, *, closing=False):
         market_evidence=lambda: (limits, (0, 0), time.time_ns()),
         closing=closing,
         allow_test_transport=True,
+    )
+
+
+@pytest.mark.parametrize("episode", ["0"], indirect=True)
+def test_partial_perp_close_below_min_notional_is_finished_reduce_only(episode):
+    db, manifest, strategy, risk, entry, _ = episode
+    # Demo USD-M lot 0.0001; minimum notional 50 USDT.
+    limits = EpisodeLimits("0.00001", "0.0001", "5", "50", "60000", "60001", "60000", "60001")
+
+    class Inspector:
+        perp = "0"
+        owned = "0.005"
+
+        def account(self):
+            return _account(perp=self.perp, owned=self.owned)
+
+    inspector = Inspector()
+
+    def tick(closing=False):
+        return manage_episode_once(
+            connection=db,
+            inspector=inspector,
+            runtime=strategy,
+            risk_service=risk,
+            manifest=manifest,
+            intent_id=entry.intent_id,
+            market_evidence=lambda: (limits, (0, 0), time.time_ns()),
+            closing=closing,
+            allow_test_transport=True,
+        )
+
+    hedge = tick()
+    assert hedge["action"] == "hedge_perp_sell"
+    _fill(db, hedge["command_id"], "0.005")
+    inspector.perp = "-0.005"
+    close = tick(closing=True)
+    assert close["action"] == "close_perp_buy"
+    # The closing IOC expires after a partial fill: 0.0001 BTC short (6 USDT) remains.
+    _fill(db, close["command_id"], "0.0049", status="EXPIRED")
+    inspector.perp = "-0.0001"
+    remainder = tick()
+    # The independent action-risk worker approves the sub-minimum reduce-only close.
+    assert remainder["action"] == "close_perp_buy" and remainder["submitted"]
+    assert strategy.submitted[-1]["quantity"] == Decimal("0.0001")
+    assert strategy.submitted[-1]["reduce_only"] is True
+    _fill(db, remainder["command_id"], "0.0001")
+    inspector.perp = "0"
+    sell = tick()
+    assert sell["action"] == "close_spot_sell"
+    assert strategy.submitted[-1]["quantity"] == Decimal("0.005")
+    _fill(db, sell["command_id"], "0.005")
+    inspector.owned = "0"
+    assert tick()["status"] == "CLOSED"
+    assert (
+        db.execute("SELECT state FROM intents WHERE id=%s", (entry.intent_id,)).fetchone()[0]
+        == "CLOSED"
+    )
+    assert (
+        db.execute("SELECT count(*) FROM state_transitions WHERE NOT accepted").fetchone()[0] == 0
     )
 
 

@@ -188,18 +188,25 @@ def plan_episode_action(snapshot: EpisodeSnapshot, limits: EpisodeLimits) -> Epi
 
 def _closing_action(spot: Decimal, perp: Decimal, limits: EpisodeLimits) -> EpisodeAction:
     if perp < 0:
+        # Binance USD-M exempts reduce-only orders from MIN_NOTIONAL (error -4164
+        # "... unless you choose reduce only"), so any lot-sized short remainder,
+        # such as one left by a partially filled closing IOC, is still closable.
+        # Opening perp orders keep the minimum through the hedge rule above.
+        # Nautilus 1.231 skips notional checks for margin (futures) accounts, and
+        # the Demo LOT_SIZE minQty equals the 0.0001 step, so nothing else blocks it.
         qty = _floor_to_lot(abs(perp), limits.perp_lot_size)
-        if qty > 0 and qty * limits.perp_ask >= limits.perp_min_notional:
+        if qty > 0 and qty == abs(perp):
             return EpisodeAction(
                 EpisodeActionType.CLOSE_PERP_BUY,
                 "close short perp before selling owned Spot",
                 qty,
                 reduce_only=True,
             )
+        # A venue position is always a lot multiple; anything else is not dust
+        # that residual settlement could absorb (it requires flat futures).
         return EpisodeAction(
-            EpisodeActionType.DUST_REMAINS,
-            "short perp dust remains below closing lot or notional minimum",
-            dust_base=abs(perp),
+            EpisodeActionType.BLOCKED,
+            "short perp position is not a whole perp lot; manual reconciliation required",
         )
     if spot > 0:
         qty = _floor_to_lot(spot, limits.spot_lot_size)

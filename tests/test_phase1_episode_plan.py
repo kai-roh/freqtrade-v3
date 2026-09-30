@@ -125,6 +125,40 @@ def test_perp_only_partial_fill_is_closed_reduce_only_before_any_spot_sale():
     assert action.reduce_only
 
 
+def test_short_perp_remainder_below_min_notional_is_still_closed_reduce_only():
+    # A partially filled closing IOC left 0.0001 BTC short (about 8 USDT), far
+    # below the 50 USDT minimum. Reduce-only orders are exempt on Binance USD-M,
+    # so the remainder must be closed, not reported as dust (settlement requires
+    # flat futures and would halt the runner).
+    action = plan_episode_action(
+        snapshot(
+            phase=EpisodePhase.CLOSING,
+            spot_filled_base="0.00263",
+            spot_base_fee="0.00000263",
+            perp_filled_base="-0.0001",
+        ),
+        limits(perp_lot_size="0.0001", perp_ask="83440.8", perp_bid="83440.7"),
+    )
+
+    assert action.action == EpisodeActionType.CLOSE_PERP_BUY
+    assert action.quantity == Decimal("0.0001")
+    assert action.reduce_only
+
+
+def test_short_perp_that_is_not_a_whole_lot_blocks_instead_of_dust():
+    action = plan_episode_action(
+        snapshot(
+            phase=EpisodePhase.CLOSING,
+            spot_filled_base="0.005",
+            perp_filled_base="-0.00005",
+        ),
+        limits(perp_lot_size="0.0001"),
+    )
+
+    assert action.action == EpisodeActionType.BLOCKED
+    assert "not a whole perp lot" in action.reason
+
+
 def test_closing_sells_only_owned_net_spot_after_perp_is_flat():
     action = plan_episode_action(
         snapshot(
