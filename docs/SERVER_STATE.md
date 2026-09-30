@@ -1,6 +1,13 @@
 # Server state
 
-## Latest verified state — 2026-09-30 KST
+## Latest verified state — 2026-09-30 15:45 KST
+
+- Takeover `phase1-demo-week-run-20260928-takeover1` exited 0 (episode `b265fcf7…`
+  closed); `phase1-demo-week-run-20260928-restart1` running on image `5e8afe1`
+  since 06:37:39 UTC. Ledger: 49 `CLOSED`, 0 open; fills 210; 48 settled
+  residuals; rejected transitions, unresolved recovery, active commands all 0.
+
+## Before the recovery — 2026-09-30 KST
 
 - `phase1-demo-week-run-20260928` exited 2 at 2026-09-29 18:31:45 UTC (sub-minimum
   perp remainder misclassified as dust). Ledger: 47 `CLOSED` + 1 `ABORTING`

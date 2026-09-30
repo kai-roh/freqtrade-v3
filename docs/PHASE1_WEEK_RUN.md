@@ -25,8 +25,13 @@ the first run). Readiness (`readiness.json`, order-free): all six checks passed.
   Binance USD-M exempts reduce-only orders from MIN_NOTIONAL (-4164), Nautilus
   1.231 skips notional checks for margin accounts, and Demo minQty is `0.0001`.
   Fixed in `5e8afe1`; image `freqtrade-v3-demo-auto:5e8afe1` (`sha256:ef02aba8…`).
-  Recovery (approval needed): close-only takeover of `b265fcf7…` from manifest
-  `5a07e153…`, then restart with the same `--started-at`.
+- Recovery 2026-09-30 (user-approved), image `5e8afe1`:
+  `…-takeover1` 06:36:48 `RESUMING`, perp buy reduce-only `0.0001 @ 83088.60`,
+  Spot sell `0.00262 @ 83118.64`, residual `0.00000737 BTC` settled, `CLOSED`,
+  exit 0. Then `…-restart1` (same `--started-at`, manifest `41683c98…`, which also
+  owns the transferred episode) started 06:37:39; its first episode closed at
+  06:42:52 with four fills and a `0.00000736 BTC` residual. Cumulative CLOSED 49,
+  fills 210, rejected transitions 0.
 
 ## First run — 2026-09-15 to 2026-09-25
 
