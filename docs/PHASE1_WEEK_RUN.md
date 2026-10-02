@@ -239,6 +239,40 @@ The container does not auto-restart. Each deliberate restart uses the same
 first. Three or more such restarts are required for the Phase 1E gate.
 
 
+## Recovery after a fatal halt
+
+This is the documented human recovery required by the amended Phase 1 gate
+item 5 (Decision 0011). Target: the open episode is closed within **24 hours**
+of the Telegram error notification while any runner is active. The runner never
+unwinds by itself; it stops new orders and waits.
+
+1. **Read the cause, order-free.** The last `error` event in the run's JSON file
+   names the failing frame; the container exit code is in `docker ps -a`.
+2. **Read the account, order-free.** Compare the Demo account (Spot BTC, perp
+   quantity, open orders) with the open intent's fills. They must reconcile; if
+   not, stop and investigate instead of restarting.
+3. **Decide whether the cause blocks closing.** If the same image would fail
+   again on resume (a code defect on the closing path), fix it first: test
+   locally against PostgreSQL, commit, `git archive HEAD | ssh ft-tokyo 'cd
+   /home/kai/freqtrade-v3 && tar -xm'`, and build `freqtrade-v3-demo-auto:<short-sha>`.
+4. **Close the episode (Demo orders; user approval).**
+   - Same image: restart with the same `--started-at` and a new container name;
+     the runner resumes the open episode before anything else.
+   - New image: the manifest changes, so use the close-only takeover. Add
+     `--resume-intent <intent id> --previous-manifest <64-hex manifest id>` to the
+     start command. The runner transfers the intent, closes it, settles any
+     residual, and exits without a new entry.
+5. **Verify.** No open intent; rejected transitions, unresolved recovery checks,
+   unapplied inbox rows, and active commands all zero; account perp `0`, no open
+   orders, Spot BTC equal to the sum of settled residuals.
+6. **Resume the run only if wanted**, with the same `--started-at` (window and
+   episode budget continue), and record the incident in this file and
+   `PROGRESS.md`.
+
+Exercised on 2026-09-25 (`…-resume5`, takeover of `1fe50ea6…`) and 2026-09-30
+(`…-takeover1`, takeover of `b265fcf7…`); both closed with exit 0.
+
+
 ## Telegram commands
 
 `scripts/run_phase1_telegram_bot.py` answers, for the configured chat only:

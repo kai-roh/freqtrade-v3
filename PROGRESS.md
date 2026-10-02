@@ -5,10 +5,11 @@
 
 ## 한 줄 요약
 
-Phase 1E 관측을 **2026-10-02에 종료**했다([Decision 0010](docs/decisions/0010-phase1e-observation-close.md)).
-주간 run 에피소드 67개(원장 전체 70개 CLOSED), 종료 게이트 12개 중 11개 충족. **"실패 후 열린 무헤지 노출 0"
-1개 항목이 미충족**이라 Phase 1은 완료로 표시하지 않았다(정지 2회가 각각 약 186시간·12시간 노출을 남김).
-Phase 2는 **STOP_NO_EDGE**로 기각됐고 Phase 3 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
+Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/0010-phase1e-observation-close.md)),
+게이트 5번을 Demo 한정으로 개정해([Decision 0011](docs/decisions/0011-amend-phase1-gate-item5.md))
+**Phase 1은 Demo 기준 완료**다(09-17 정지의 186시간 대응은 기록된 예외). Phase 2는 STOP_NO_EDGE로 기각됐고,
+후속 **Phase 2b(저회전 maker 펀딩 캐리)를 사전등록**했다([Decision 0012](docs/decisions/0012-phase2b-maker-carry-preregistration.md),
+미실행). Phase 3 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 현재 상태
 
@@ -17,13 +18,14 @@ Phase 2는 **STOP_NO_EDGE**로 기각됐고 Phase 3 후보 전략은 없다. 실
 | Phase 0 연구·비용·재현성 | 완료. Milestone 1 `STOP_BEFORE_CLASSIFIER`, 자본기준 지표로 재검증해도 동일 | [MILESTONE_1](docs/MILESTONE_1.md), `research_results/validation-b6d3bbd/` |
 | Phase 1A~1D 집행 인프라 | 완료. 명령 289건(전부 Demo), 체결 296건, 거부 전이 0, 중복·고아 0, 강제 재시작 복구 3회 | [Decision 0010](docs/decisions/0010-phase1e-observation-close.md) |
 | Phase 1E 관측 | **종료.** 주간 run 67 에피소드, 실행기 정지(10-02 03:38 UTC, 대기 구간), 열린 intent 0 | [PHASE1_WEEK_RUN](docs/PHASE1_WEEK_RUN.md) |
-| Phase 1 종료 게이트 | **11/12.** 5번 "실패 후 열린 무헤지 노출 0" 미충족 | [Decision 0010](docs/decisions/0010-phase1e-observation-close.md) |
+| Phase 1 종료 게이트 | **12/12 (Demo 기준 완료).** 5번은 fail-closed·알림·문서화된 복구·24시간 대응으로 개정, 09-17 건은 예외 기록. Phase 3 전 재결정 | [Decision 0011](docs/decisions/0011-amend-phase1-gate-item5.md) |
 | quote-age SLA | 96 ms 유지. USD-M 307,696표본 p99 48 ms로 재확인. 현물 bookTicker는 미측정 | `evidence/phase1/phase1e-close-20261002/sla-evidence-20261002.json` |
 | 헤지 지연 | 69표본, 중위 4.4 s, p99 7.3 s. 실행기 2초 tick이 지배하는 Demo 엔지니어링 수치, 운영 SLA 아님 | 같은 파일 |
 | Mainnet 수수료 | 10-02 GET 갱신: 현물 10/10 bps, 선물 2/5 bps(변동 없음) | `evidence/phase1/phase1e-close-20261002/binance-mainnet-fees-20261002.json` |
 | Telegram | 알림 2줄 포맷, 명령 봇 `/status /profit /balance /daily /help` 실행 중 | [PHASE1_WEEK_RUN](docs/PHASE1_WEEK_RUN.md#telegram-commands) |
 | Phase 2 바스켓 연구 | 완료·기각 `STOP_NO_EDGE`. 펀딩 +3.4 USDT vs 비용 13.8 USDT, PBO 0.77 | [Decision 0009](docs/decisions/0009-phase2-basket-result-stop-no-edge.md), `research_results/phase2/REPORT.md` |
-| Phase 3 | 착수 불가(후보 없음, Phase 1 미완료) | Decision 0006 §Constraints |
+| Phase 2b maker 캐리 연구 | **등록됨, 미실행.** H3(일 단위·최소 보유 5일·maker) + 진단 H3T. 단계 A(오염, 진단)·단계 B(07-31~10-01 미사용 구간, 판정) | [PHASE2B_PREREGISTRATION](docs/PHASE2B_PREREGISTRATION.md), [Decision 0012](docs/decisions/0012-phase2b-maker-carry-preregistration.md) |
+| Phase 3 | 착수 불가(후보 없음). 실자본 전 게이트 5번 재결정 필요 | Decision 0006 §Constraints, Decision 0011 |
 
 서버(`ft-tokyo`, `/home/kai/freqtrade-v3`) 컨테이너: `phase1-postgres` 실행, `phase1-telegram-bot` 실행,
 `freqtrade_kai`(zero-entry shadow) 실행. **주간 실행기는 없다**(마지막 `phase1-demo-week-run-20260928-restart1` exit 137,
@@ -33,20 +35,18 @@ Phase 2는 **STOP_NO_EDGE**로 기각됐고 Phase 3 후보 전략은 없다. 실
 
 ## 열린 문제
 
-1. **Phase 1 게이트 5번 미충족.** 실행기는 치명 오류 시 신규 주문만 멈추고 청산하지 않으며 사람이 재시작한다.
-   해소 방법은 둘 중 하나이고 어느 쪽이든 새 결정이다. (a) 치명 오류 시 열린 에피소드를 자동 close-only로 넘기는
-   경로 구현과 장애 주입 Demo 검증, (b) 5번을 "fail-closed + 알림 + 문서화된 사람 복구"로 개정하고 최대 대응 시간 명시.
+1. Phase 2b는 등록만 됐다. 단계 B(62일 미사용 구간)는 **한 번만** 쓸 수 있으므로 실행 전 등록 내용 검토가 의미 있다.
 2. `1a124d1`의 일시 거부 재시도와 청산 단계 예산 규칙은 테스트만 있고 실제 Demo 거부로는 아직 작동한 적 없다.
-3. 진입 위험 결정 행에 관측 레버리지가 저장되지 않는다(디스패치 payload에는 있음). 감사 편의상 보완 권장, 게이트 실패 아님.
+3. 진입 위험 결정 행에 관측 레버리지가 저장되지 않는다(디스패치 payload에는 있음). 감사 편의상 보완 권장.
 4. 서버 격리 스키마 테스트(`freqtrade-v3-tests`)는 `1a124d1` 이후 실행하지 않았다(권한 분류기 차단). 로컬 PostgreSQL 16.14로 대체.
 5. 테스트 이미지에서 manifest CLI 테스트 1건이 `.git` 부재로 실패한다(환경 문제, 코드 결함 아님).
 
 ## 다음 할 일 (순서대로)
 
-1. 게이트 5번 해소 방식 결정: 자동 close-only 복구 구현 또는 게이트 개정(열린 문제 1).
+1. Phase 2b 실행([사전등록 §9](docs/PHASE2B_PREREGISTRATION.md#9-실행-순서)): 서버에서 2026-09-16~10-01 데이터 추가와
+   기존 패널 해시 확인, `exchangeInfo`·GTX 확인 → `v3/phase2/` 확장(Phase 2 결과 불변 회귀 테스트) → H0·H3·H3T 실행 → ADR.
 2. 저장소: 로컬 커밋(`1a124d1`~) push, `codex/v2-to-v3-infrastructure` → `main` PR·머지.
-3. Phase 2 후속은 **새 사전등록**으로만(Decision 0008). 유력 후보는 H1을 maker/post-only·일 단위 결정·낮은 회전율로 재정의.
-4. (선택) 진입 위험 결정에 레버리지 기록, 서버 격리 스키마 테스트 재확인.
+3. (선택) 진입 위험 결정에 레버리지 기록, 서버 격리 스키마 테스트 재확인.
 
 ## 운영 규칙 (요약)
 

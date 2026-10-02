@@ -414,7 +414,8 @@ transition 기록을 assertion한다.
 - unknown leverage 승인 0건, 2x 초과 승인 0건
 - 미설명 reconciliation residual은 Phase 1E에서 정한 금액 임계 미만이고 제한시간 내 분류
 - 중복 venue order 0, 고아 fill 0
-- 실패 후 열린 무헤지 노출 0
+- 실패 후 열린 무헤지 노출 0 — Decision 0011로 개정: fail-closed 정지, 모든 정지 알림 전달,
+  문서화된 사람 복구, 알림 후 24시간 내 청산(Demo 한정; Phase 3 전에 재결정)
 - 모든 order command에 intent, cost ledger, manifest 참조 존재
 - 강제 종료 recovery 3회 이상 성공
 - 21개 transition과 6개 invariant 테스트 통과
