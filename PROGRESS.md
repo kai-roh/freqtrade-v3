@@ -7,9 +7,9 @@
 
 Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/0010-phase1e-observation-close.md)),
 게이트 5번을 Demo 한정으로 개정해([Decision 0011](docs/decisions/0011-amend-phase1-gate-item5.md))
-**Phase 1은 Demo 기준 완료**다(09-17 정지의 186시간 대응은 기록된 예외). Phase 2는 STOP_NO_EDGE로 기각됐고,
-후속 **Phase 2b(저회전 maker 펀딩 캐리)를 사전등록**했다([Decision 0012](docs/decisions/0012-phase2b-maker-carry-preregistration.md),
-미실행). Phase 3 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
+**Phase 1은 Demo 기준 완료**다(09-17 정지의 186시간 대응은 기록된 예외). Phase 2(taker)와 후속 **Phase 2b(저회전 maker 펀딩 캐리)도 STOP_NO_EDGE**로
+기각됐다([Decision 0013](docs/decisions/0013-phase2b-result-stop-no-edge.md)). 대형 8종의 펀딩 횡단면 스프레드가 확인 구간 62일 동안
+진입 기준 1 bp에 한 번도 닿지 않았다. Phase 3 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 현재 상태
 
@@ -24,7 +24,7 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 | Mainnet 수수료 | 10-02 GET 갱신: 현물 10/10 bps, 선물 2/5 bps(변동 없음) | `evidence/phase1/phase1e-close-20261002/binance-mainnet-fees-20261002.json` |
 | Telegram | 알림 2줄 포맷, 명령 봇 `/status /profit /balance /daily /help` 실행 중 | [PHASE1_WEEK_RUN](docs/PHASE1_WEEK_RUN.md#telegram-commands) |
 | Phase 2 바스켓 연구 | 완료·기각 `STOP_NO_EDGE`. 펀딩 +3.4 USDT vs 비용 13.8 USDT, PBO 0.77 | [Decision 0009](docs/decisions/0009-phase2-basket-result-stop-no-edge.md), `research_results/phase2/REPORT.md` |
-| Phase 2b maker 캐리 연구 | **등록됨, 미실행.** H3(일 단위·최소 보유 5일·maker) + 진단 H3T. 단계 A(오염, 진단)·단계 B(07-31~10-01 미사용 구간, 판정) | [PHASE2B_PREREGISTRATION](docs/PHASE2B_PREREGISTRATION.md), [Decision 0012](docs/decisions/0012-phase2b-maker-carry-preregistration.md) |
+| Phase 2b maker 캐리 연구 | **완료·기각 `STOP_NO_EDGE`.** 단계 A PF 0.58·양수 fold 0/6·PBO 0.60, 단계 B 거래 0건(스프레드가 1 bp 미만). maker 체결률 94%(모델), 거래 24건(Phase 2 H1은 347건) | [Decision 0013](docs/decisions/0013-phase2b-result-stop-no-edge.md), `research_results/phase2b/REPORT.md` |
 | Phase 3 | 착수 불가(후보 없음). 실자본 전 게이트 5번 재결정 필요 | Decision 0006 §Constraints, Decision 0011 |
 
 서버(`ft-tokyo`, `/home/kai/freqtrade-v3`) 컨테이너: `phase1-postgres` 실행, `phase1-telegram-bot` 실행,
@@ -35,17 +35,18 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 
 ## 열린 문제
 
-1. Phase 2b는 등록만 됐다. 단계 B(62일 미사용 구간)는 **한 번만** 쓸 수 있으므로 실행 전 등록 내용 검토가 의미 있다.
-2. `1a124d1`의 일시 거부 재시도와 청산 단계 예산 규칙은 테스트만 있고 실제 Demo 거부로는 아직 작동한 적 없다.
-3. 진입 위험 결정 행에 관측 레버리지가 저장되지 않는다(디스패치 payload에는 있음). 감사 편의상 보완 권장.
-4. 서버 격리 스키마 테스트(`freqtrade-v3-tests`)는 `1a124d1` 이후 실행하지 않았다(권한 분류기 차단). 로컬 PostgreSQL 16.14로 대체.
-5. 테스트 이미지에서 manifest CLI 테스트 1건이 `.git` 부재로 실패한다(환경 문제, 코드 결함 아님).
+1. **다음 연구 후보가 없다.** 펀딩 횡단면 가족은 두 번(taker 8시간, maker 일 단위) 기각됐다. 같은 유니버스에서
+   필터를 낮추거나 창을 줄이는 변형은 Decision 0013 수치상 비용·가격 위험을 넘기 어렵다. 새 가설의 방향은 사용자 결정이다.
+2. 단계 B 데이터(2026-07-31~10-01)는 한 번 썼다. 이후 확인 검증은 2026-10-01 이후 데이터가 필요하다.
+3. `1a124d1`의 일시 거부 재시도와 청산 단계 예산 규칙은 테스트만 있고 실제 Demo 거부로는 아직 작동한 적 없다.
+4. 진입 위험 결정 행에 관측 레버리지가 저장되지 않는다(디스패치 payload에는 있음). 감사 편의상 보완 권장.
+5. 서버 격리 스키마 테스트(`freqtrade-v3-tests`)는 `1a124d1` 이후 실행하지 않았다(권한 분류기 차단). 로컬 PostgreSQL 16.14로 대체.
 
 ## 다음 할 일 (순서대로)
 
-1. Phase 2b 실행([사전등록 §9](docs/PHASE2B_PREREGISTRATION.md#9-실행-순서)): 서버에서 2026-09-16~10-01 데이터 추가와
-   기존 패널 해시 확인, `exchangeInfo`·GTX 확인 → `v3/phase2/` 확장(Phase 2 결과 불변 회귀 테스트) → H0·H3·H3T 실행 → ADR.
-2. 저장소: 로컬 커밋(`1a124d1`~) push, `codex/v2-to-v3-infrastructure` → `main` PR·머지.
+1. 다음 연구 방향 결정(사용자): 새 가설은 사전등록 → 데이터 동결 → 실행 → ADR 순서를 따른다. ML은 Decision 0002에 따라
+   결정론적 전략이 두 비용 regime을 통과한 뒤에만 허용된다.
+2. 저장소: 로컬 커밋 push, `codex/v2-to-v3-infrastructure` → `main` PR·머지.
 3. (선택) 진입 위험 결정에 레버리지 기록, 서버 격리 스키마 테스트 재확인.
 
 ## 운영 규칙 (요약)

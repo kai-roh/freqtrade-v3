@@ -20,6 +20,7 @@ file are historical records and are not rewritten.
 | 0010 | Close the Phase 1E observation; Phase 1 gate has one unmet item | 2026-10-02 |
 | 0011 | Amend Phase 1 gate item 5 (Demo): fail-closed, alerting, 24 h human recovery | 2026-10-02 |
 | 0012 | Register the Phase 2b low-turnover maker funding carry | 2026-10-02 |
+| 0013 | Phase 2b maker funding carry result: STOP_NO_EDGE | 2026-10-02 |
 
 ## Phase 1 (Binance Demo two-leg carry execution)
 
@@ -33,7 +34,7 @@ file are historical records and are not rewritten.
 ## Phase 2 (perp-only market-neutral basket research)
 
 - `PHASE2_PREREGISTRATION.md` — frozen hypotheses, universe, costs, validation, gates.
-- `PHASE2B_PREREGISTRATION.md` — Phase 2b follow-up: low-turnover maker funding carry, two-stage validation (registered, not run).
+- `PHASE2B_PREREGISTRATION.md` — Phase 2b follow-up: low-turnover maker funding carry, two-stage validation. Result `STOP_NO_EDGE` (Decision 0013); outputs in `../research_results/phase2b/`, evidence in `../evidence/phase2b/`.
 - Results: `../research_results/phase2/REPORT.md`, evidence in `../evidence/phase2/`.
 
 ## Phase 0 and research foundations
