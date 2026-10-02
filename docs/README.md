@@ -28,6 +28,7 @@ file are historical records and are not rewritten.
 | 0018 | User decision: MA200 at a 1,000 USDT sleeve (plan departure) — OBSERVE_ELIGIBLE | 2026-10-02 |
 | 0019 | Register the order-free MA200 forward observation with a 7-day operational dry run | 2026-10-02 |
 | 0020 | MA200 live risk contract: −10% stop (incompatible at 1,000 USDT), automatic guard, Demo first, Mainnet locked | 2026-10-02 |
+| 0021 | User decision: MA200 loss stop at −20% (800 USDT), Demo included; risk level stays at 25% | 2026-10-03 |
 
 ## Phase 1 (Binance Demo two-leg carry execution)
 

@@ -92,6 +92,28 @@ class StateStore:
             raise FileExistsError("live state already initialized")
         self._write("config.json", config.to_json())
 
+    def update_stop(self, stop_equity: Decimal, note: str) -> tuple[Decimal, Decimal]:
+        """Change only the loss-stop level, with an audit record (a user decision)."""
+        if stop_equity <= 0:
+            raise ValueError("stop equity must be positive")
+        if not note.strip():
+            raise ValueError("a stop change needs a note naming the decision")
+        config = self.config()
+        if stop_equity >= config.starting_capital:
+            raise ValueError("stop must be below the starting capital")
+        data = config.to_json()
+        data["stop_equity"] = str(stop_equity)
+        self._write("config.json", data)
+        self.journal(
+            {
+                "event": "stop_changed",
+                "from": str(config.stop_equity),
+                "to": str(stop_equity),
+                "note": note,
+            }
+        )
+        return config.stop_equity, stop_equity
+
     def heartbeat(self) -> dict[str, Any] | None:
         return self._read("heartbeat.json")
 

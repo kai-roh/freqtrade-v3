@@ -339,3 +339,18 @@ def test_average_price_falls_back_to_cum_quote(tmp_path):
     report = run_executor(client, store, now=NOW)
     btc = next(r for r in report["results"] if r["symbol"] == "BTCUSDT")
     assert Decimal(btc["avg_price"]) == exchange.price["BTCUSDT"]
+
+
+def test_stop_change_is_audited_and_used_by_the_guard(tmp_path):
+    exchange, client, store = make(tmp_path)
+    run_executor(client, store, now=NOW)
+    with pytest.raises(ValueError):
+        store.update_stop(Decimal(800), "")
+    with pytest.raises(ValueError):
+        store.update_stop(Decimal(1200), "above capital")
+    assert store.update_stop(Decimal(800), "Decision 0021") == (Decimal(900), Decimal(800))
+    assert store.config().stop_equity == Decimal(800)
+    journal = (tmp_path / "journal.jsonl").read_text()
+    assert '"event": "stop_changed"' in journal and '"to": "800"' in journal
+    report = run_guard(client, store, now=NOW)
+    assert report["status"] == "ok" and report["stop_used"] == "800"

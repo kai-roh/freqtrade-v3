@@ -6,6 +6,7 @@ Subcommands:
   execute      daily rebalance (after 01:00 UTC)
   guard        loss stop / stale executor / mismatch check; flattens and halts on trigger
   clear-halt   lift a halt after review (records the actual positions as the baseline)
+  set-stop     change the loss-stop level with an audit record (user decision)
   status       print the state without trading
 
 Demo-only verification options: --test-override-weights, --test-stop-equity, --test-now.
@@ -138,7 +139,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter
     )
-    parser.add_argument("command", choices=["init", "execute", "guard", "clear-halt", "status"])
+    parser.add_argument(
+        "command", choices=["init", "execute", "guard", "clear-halt", "set-stop", "status"]
+    )
     parser.add_argument("--state-dir", type=Path, required=True)
     parser.add_argument("--credentials-env-file", type=Path, required=True)
     parser.add_argument("--environment", choices=["demo", "mainnet"], default="demo")
@@ -192,6 +195,13 @@ def main() -> int:
         stop = Decimal(args.test_stop_equity) if args.test_stop_equity else None
         report = run_guard(client, store, now=now, test_stop_equity=stop)
         message = guard_message(report, config.environment)
+    elif args.command == "set-stop":
+        before, after = store.update_stop(Decimal(args.stop_equity), args.note)
+        report = {"kind": "set-stop", "from": str(before), "to": str(after), "note": args.note}
+        message = (
+            f"[{config.environment.upper()}][MA200 보호] 손실 중단선 변경: "
+            f"{before} → {after} USDT ({args.note})"
+        )
     elif args.command == "clear-halt":
         positions = client.positions()
         previous = store.clear_halt(
