@@ -170,8 +170,12 @@ def simulate_trend(
     filters: VenueFilters | None = None,
     weights_cache: dict[TrendRule, pd.DataFrame] | None = None,
     market: str = "perp",
+    flatten_at_end: bool = True,
 ) -> TrendResult:
-    """One continuous account over [start, end]; flat at the end.
+    """One continuous account over [start, end]; flat at the end unless told otherwise.
+
+    ``flatten_at_end=False`` (forward observation) keeps the positions open and
+    values them at the last hour's open; the open positions are in ``extra``.
 
     ``market="spot"`` refuses short targets and uses the panel without funding.
     The end-of-window flattening is an accounting close and ignores the filters.
@@ -219,6 +223,7 @@ def simulate_trend(
     qty = np.zeros(m)
     fees = slippage = funding_total = traded = 0.0
     trades = skips = attempts = 0
+    trade_log: list[dict[str, Any]] = []
     long_pnl = short_pnl = 0.0
     sym_price = np.zeros(m)
     sym_funding = np.zeros(m)
@@ -252,6 +257,17 @@ def simulate_trend(
         before = qty[j]
         after = target_qty if abs(target_qty) > EPSILON else 0.0
         qty[j] = after
+        trade_log.append(
+            {
+                "time": t.isoformat(),
+                "symbol": symbols[j],
+                "qty_before": float(before),
+                "qty_after": float(after),
+                "price": float(price),
+                "fee": fee,
+                "slippage": slip,
+            }
+        )
         if before != 0.0 and (after == 0.0 or (before > 0) != (after > 0)):
             spells[j]["costs"] += fee + slip
             close_spell(j, t)
@@ -288,7 +304,7 @@ def simulate_trend(
                     spells[j]["funding"] += paid
         if hour_of_day[row] == 0:
             daily_equity[t] = cash + float(qty @ price_row)
-        if row == n - 1:
+        if row == n - 1 and flatten_at_end:
             for j in range(m):
                 trade(j, 0.0, float(price_row[j]), t)
             break
@@ -324,7 +340,7 @@ def simulate_trend(
                 pending = orders
                 pending_row = row + 1
 
-    end_equity = cash
+    end_equity = cash + float(qty @ opens[-1])
     equity = pd.Series(daily_equity).sort_index()
     equity.loc[times[-1].normalize() + pd.Timedelta(days=1)] = end_equity
     equity = equity[~equity.index.duplicated(keep="last")].sort_index()
@@ -354,21 +370,34 @@ def simulate_trend(
         traded_notional=traded,
         time_in_market={symbols[j]: int(in_market[j]) / n for j in range(m)},
         rounding_skips=skips,
-        extra={"order_attempts": attempts, "market": market},
+        extra={
+            "order_attempts": attempts,
+            "market": market,
+            "open_positions": {symbols[j]: float(qty[j]) for j in range(m)},
+            "last_open": {symbols[j]: float(opens[-1, j]) for j in range(m)},
+            "last_hour": times[-1].isoformat(),
+            "pending_orders": {symbols[j]: w for j, w in (pending or {}).items()},
+            "trade_log": trade_log,
+        },
     )
 
 
 def load_spot_panel(
-    data_dir: Path, *, manifest_path: Path, symbols: tuple[str, ...] = SYMBOLS
+    data_dir: Path, *, manifest_path: Path | None, symbols: tuple[str, ...] = SYMBOLS
 ) -> Phase2Panel:
-    """Spot 1h candles as a panel without funding (mark = close), hash-checked."""
-    files = json.loads(Path(manifest_path).read_text())["files"]
+    """Spot 1h candles as a panel without funding (mark = close).
+
+    With a manifest every file is hash-checked (frozen research data); without
+    one (live forward observation) the files are read as they are.
+    """
+    files = json.loads(Path(manifest_path).read_text())["files"] if manifest_path else None
     opens, closes = {}, {}
     for symbol in symbols:
         path = Path(data_dir) / f"{symbol}_USDT-1h.feather"
-        recorded = files.get(f"{symbol}/spot", {}).get("sha256")
-        if recorded != hashlib.sha256(path.read_bytes()).hexdigest():
-            raise ValueError(f"{path.name} differs from the frozen spot manifest")
+        if files is not None:
+            recorded = files.get(f"{symbol}/spot", {}).get("sha256")
+            if recorded != hashlib.sha256(path.read_bytes()).hexdigest():
+                raise ValueError(f"{path.name} differs from the frozen spot manifest")
         frame = pd.read_feather(path)
         index = pd.to_datetime(frame["date"], utc=True)
         opens[symbol] = pd.Series(frame["open"].astype(float).to_numpy(), index=index)

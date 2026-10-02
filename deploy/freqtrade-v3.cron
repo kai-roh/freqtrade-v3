@@ -7,3 +7,7 @@ TZ=Asia/Seoul
 
 # V3 data refresh, walk-forward research, archived result, and weekly report.
 10 23 * * 0 cd /home/kai/freqtrade-v3 && ./scripts/run_scheduled_research.sh >> /home/kai/freqtrade-v3/reports/logs/weekly-research-cron.log 2>&1
+
+# Order-free MA200 forward observation: daily at 11:10 KST (02:10 UTC), after the
+# 01:00 UTC execution candle closes. Public data only; Telegram report.
+10 11 * * * cd /home/kai/freqtrade-v3 && ./scripts/run_ma200_observation.sh >> /home/kai/freqtrade-v3/reports/logs/ma200-observation.log 2>&1

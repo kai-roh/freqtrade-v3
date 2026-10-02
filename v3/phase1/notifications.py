@@ -119,6 +119,37 @@ def send_phase1_telegram(
     return NotificationResult(True)
 
 
+def send_telegram_text(
+    text: str,
+    *,
+    token: str,
+    chat_id: str,
+    opener: Callable[..., Any] | None = None,
+    timeout: float = TELEGRAM_SEND_TIMEOUT_SECONDS,
+) -> NotificationResult:
+    """Deliver plain text (for example the order-free MA200 observation report).
+
+    Same delivery and failure contract as ``send_phase1_telegram`` without the
+    Phase 1 Demo header; never raises on delivery failure.
+    """
+
+    if not token or not chat_id:
+        return NotificationResult(False, "missing_credentials")
+    if timeout <= 0 or timeout > 30:
+        raise ValueError("timeout must be in the range (0, 30]")
+    selected_opener = opener or _telegram_opener
+    try:
+        for chunk in split_telegram(text):
+            response = _post_telegram_chunk(
+                chunk, token=token, chat_id=chat_id, opener=selected_opener, timeout=timeout
+            )
+            if not isinstance(response, dict) or response.get("ok") is not True:
+                return NotificationResult(False, "telegram_rejected")
+    except (OSError, TimeoutError, urllib.error.URLError, json.JSONDecodeError) as exc:
+        return NotificationResult(False, type(exc).__name__)
+    return NotificationResult(True)
+
+
 def split_telegram(text: str, limit: int = TELEGRAM_MESSAGE_LIMIT) -> tuple[str, ...]:
     if limit <= 0:
         raise ValueError("limit must be positive")
