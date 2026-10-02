@@ -64,14 +64,14 @@ def _flips(panel, start, end) -> dict[str, int]:
     return out
 
 
-def _run(panel, rule, cost, window, *, filters, market, cache) -> dict[str, Any]:
+def _run(panel, rule, cost, window, *, filters, market, cache, sleeve) -> dict[str, Any]:
     result = simulate_trend(
         panel,
         [(window[0], rule)],
         cost=cost,
         start=window[0],
         end=window[1],
-        sleeve=500.0,
+        sleeve=sleeve,
         filters=filters,
         weights_cache=cache,
         market=market,
@@ -123,8 +123,10 @@ def run_comparison(
     spot_filters_path: Path,
     output_dir: Path,
     *,
+    sleeve: float = 500.0,
     generated_at: str | None = None,
 ) -> dict[str, Any]:
+    """Run the plan. ``sleeve`` 500 is the pre-committed value; 1,000 is Decision 0018."""
     perp = load_phase2_panel(perp_dir, manifest_path=perp_manifest, symbols=SYMBOLS)
     spot = load_spot_panel(spot_dir, manifest_path=spot_manifest)
     perp_filters = load_venue_filters(perp_filters_path)
@@ -141,10 +143,24 @@ def run_comparison(
                 ("constrained", perp_filters, spot_filters),
             ):
                 runs[f"MA200-perp/{mode}"] = _run(
-                    perp, MA200, cost, window, filters=pf, market="perp", cache=perp_cache
+                    perp,
+                    MA200,
+                    cost,
+                    window,
+                    filters=pf,
+                    market="perp",
+                    cache=perp_cache,
+                    sleeve=sleeve,
                 )
                 runs[f"BHVT-perp/{mode}"] = _run(
-                    perp, BH_VT, cost, window, filters=pf, market="perp", cache=perp_cache
+                    perp,
+                    BH_VT,
+                    cost,
+                    window,
+                    filters=pf,
+                    market="perp",
+                    cache=perp_cache,
+                    sleeve=sleeve,
                 )
                 runs[f"BHVT-spot/{mode}"] = _run(
                     spot,
@@ -154,6 +170,7 @@ def run_comparison(
                     filters=sf,
                     market="spot",
                     cache=spot_cache,
+                    sleeve=sleeve,
                 )
             block[period_name] = {
                 "window": [window[0].isoformat(), window[1].isoformat()],
@@ -167,7 +184,7 @@ def run_comparison(
         block["criteria_vs_perp_reference"] = _criteria(
             primary["MA200-perp/constrained"], primary["BHVT-perp/constrained"]
         )
-        h4 = walk_forward(perp, cost, sleeve=500.0, filters=perp_filters, cache=perp_cache)
+        h4 = walk_forward(perp, cost, sleeve=sleeve, filters=perp_filters, cache=perp_cache)
         block["h4_walk_forward_constrained_corrected"] = h4["summary"]
         costs[cost.name] = block
     passed = all(all(costs[c]["criteria_vs_spot"].values()) for c in costs)
@@ -178,7 +195,10 @@ def run_comparison(
         "plan": "docs/PHASE2C_MA200_COMPARISON.md",
         "decision": "OBSERVE_ELIGIBLE" if passed else "PAUSE_RESEARCH",
         "criteria": CRITERIA,
-        "sleeve": Phase2cConfig().sleeve,
+        "sleeve": sleeve,
+        "plan_departure": None
+        if sleeve == Phase2cConfig().sleeve
+        else "Decision 0018: sleeve chosen by the user after the 500 USDT result",
         "spot_fee_bps": SPOT_FEE_BPS,
         "costs": costs,
     }
@@ -198,7 +218,12 @@ def render_report(result: dict[str, Any]) -> str:
         f"- generated_at: `{result['generated_at']}`",
         f"- plan: `{result['plan']}` (diagnosis on already-seen data; never a promotion basis)",
         f"- decision: **{result['decision']}**",
-        "- sleeve 500 USDT, half per asset, at most 1x; spot taker fee "
+        *(
+            [f"- **plan departure:** {result['plan_departure']}"]
+            if result.get("plan_departure")
+            else []
+        ),
+        f"- sleeve {result['sleeve']:.0f} USDT, half per asset, at most 1x; spot taker fee "
         f"{result['spot_fee_bps']:.0f} bps, perpetual taker fee 5 bps",
         "",
     ]

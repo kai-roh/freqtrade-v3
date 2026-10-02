@@ -70,3 +70,9 @@ Phase 2c 8번 게이트의 "목표 보유량 기준" 검사를 거래소 규칙�
 
 `v3/phase2c/` 시뮬레이터의 수정된 제약 규칙(기록된 Phase 2c 실행은 `--legacy-holding-min-notional`로 재현), 현물 패널 로더,
 `scripts/run_phase2c_ma200_comparison.py`, `research_results/phase2c/ma200-comparison/`의 `results.json`·`REPORT.md`, ADR.
+
+## 7. 계획 이탈 기록 (2026-10-02)
+
+사용자가 슬리브를 1,000 USDT로 바꾸기로 결정했다([Decision 0018](decisions/0018-ma200-sleeve-1000-plan-departure.md)).
+500 USDT 결과(C5 실패)와 1,000 USDT에서의 대략적 동작을 본 뒤의 결정이므로 사전 고정 판정보다 약한 근거다.
+규칙·기준·비용·필터·기간은 그대로 두고 `research_results/phase2c/ma200-comparison-sleeve1000/`에 한 번 다시 실행한다.

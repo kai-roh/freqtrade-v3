@@ -39,6 +39,12 @@ def main() -> int:
         "--output", type=Path, default=Path("research_results/phase2c/ma200-comparison")
     )
     parser.add_argument("--generated-at", default=os.environ.get("V3_GENERATED_AT"))
+    parser.add_argument(
+        "--sleeve",
+        type=float,
+        default=500.0,
+        help="500 is the pre-committed value; 1000 is the user decision in Decision 0018.",
+    )
     args = parser.parse_args()
     result = run_comparison(
         args.perp_dir,
@@ -48,6 +54,7 @@ def main() -> int:
         args.perp_filters,
         args.spot_filters,
         args.output,
+        sleeve=args.sleeve,
         generated_at=args.generated_at,
     )
     print(f"decision={result['decision']}")
