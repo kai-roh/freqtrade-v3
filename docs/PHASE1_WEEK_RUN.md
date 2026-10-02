@@ -1,6 +1,14 @@
 # Phase 1 Demo Week Run
 
-기준일: 2026-09-28 KST
+기준일: 2026-10-02 KST
+
+Status: **observation closed** (Decision 0010). The extension runner
+`phase1-demo-week-run-20260928-restart1` was stopped on user instruction at
+2026-10-02 03:38 UTC during the idle interval (last episode closed 02:32:26 UTC,
+no open intent; exit 137 because the process did not exit within the 10 s
+SIGTERM grace, harmless while idle). Totals: 67 week-run episodes (70 ledger
+intents), all `CLOSED`; Demo perp `0`, no open orders, Spot BTC equals the 69
+settled residuals (`0.00050308 BTC`).
 
 ## Extension run — started 2026-09-28 07:03:08 UTC
 

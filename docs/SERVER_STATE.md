@@ -1,5 +1,16 @@
 # Server state
 
+## Latest verified state — 2026-10-02 12:45 KST
+
+- No week runner. `phase1-demo-week-run-20260928-restart1` stopped at 03:38 UTC
+  (idle, zero open intents). `phase1-telegram-bot`, `phase1-postgres`, and the
+  `freqtrade_kai` shadow are running.
+- Ledger: 70 intents `CLOSED`; commands/dispatches/orders 289; fills 296;
+  rejected transitions, unresolved recovery, unapplied inbox, active commands all 0.
+- Demo account: perp `0`, open orders none, Spot BTC `0.00050308`.
+- Phase 1E close evidence written to `evidence/phase1/phase1e-close-20261002/`
+  (SLA summary in a read-only DB session; GET-only fee and connectivity probe).
+
 ## Latest verified state — 2026-09-30 15:45 KST
 
 - Takeover `phase1-demo-week-run-20260928-takeover1` exited 0 (episode `b265fcf7…`

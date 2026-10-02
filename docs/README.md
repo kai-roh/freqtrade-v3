@@ -17,6 +17,7 @@ file are historical records and are not rewritten.
 | 0007 | Settle unsellable residual inventory; project funding conservatively | 2026-09-15 |
 | 0008 | Register the Phase 2 basket hypotheses before any code | 2026-09-16 |
 | 0009 | Phase 2 basket result: STOP_NO_EDGE | 2026-09-17 |
+| 0010 | Close the Phase 1E observation; Phase 1 gate has one unmet item | 2026-10-02 |
 
 ## Phase 1 (Binance Demo two-leg carry execution)
 

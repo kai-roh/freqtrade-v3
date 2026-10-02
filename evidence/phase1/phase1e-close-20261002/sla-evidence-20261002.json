@@ -1,0 +1,29 @@
+{
+  "environment": "demo",
+  "generated_at": "2026-10-02T03:39:22.458986+00:00",
+  "hedge_latency_demo_lower_bound": {
+    "median_ms": 4437.0,
+    "p99_ms": 7339.519999999945,
+    "sample_count": 69,
+    "sufficient": true
+  },
+  "interpretation": "Proposal only. Applying maximum_quote_age_ms requires a reviewed policy commit; Demo hedge latency is a lower bound and never becomes an operating SLA",
+  "orders_submitted": false,
+  "phase1e_complete": false,
+  "policy_maximum_quote_age_ms": 96,
+  "policy_rewritten": false,
+  "proposed_maximum_quote_age_ms": 96,
+  "quote_age_perp": {
+    "median_ms": 10.0,
+    "p99_ms": 48.0,
+    "sample_count": 307696,
+    "sufficient": true
+  },
+  "schema_version": 1,
+  "source_sha": "5e8afe17e47f12cf7a96fd28ffd7e5be835c3125",
+  "spot_quote_exchange_age": {
+    "measured": false,
+    "reason": "Spot bookTicker has no exchange event timestamp; receive-gap is separate",
+    "unmeasured_quotes": 403739
+  }
+}
