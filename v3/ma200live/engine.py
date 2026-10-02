@@ -30,6 +30,7 @@ ASSET = {"BTCUSDT": "BTC", "ETHUSDT": "ETH"}
 GUARD_PRICE_CAP_BPS = Decimal(50)
 GUARD_IOC_ATTEMPTS = 5
 UNKNOWN_QUERIES = 3
+SETTLE_QUERIES = 3
 
 
 @dataclass(frozen=True)
@@ -336,7 +337,13 @@ def execute_step(
         if avg <= 0 and executed > 0:
             # The immediate reply can report avgPrice and cumQuote as 0 (seen on Demo);
             # the order query has the settled values.
-            settled = client.order_by_client_id(step.symbol, client_id) or result
+            settled = result
+            for wait in range(SETTLE_QUERIES):
+                if wait:
+                    time.sleep(0.5)
+                settled = client.order_by_client_id(step.symbol, client_id) or settled
+                if Decimal(str(settled.get("avgPrice", "0") or "0")) > 0:
+                    break
             executed = Decimal(str(settled.get("executedQty", executed)))
             avg = Decimal(str(settled.get("avgPrice", "0") or "0"))
             if avg <= 0:
