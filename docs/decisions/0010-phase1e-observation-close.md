@@ -2,6 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-10-02
+- Amended by: [0011](0011-amend-phase1-gate-item5.md) — item 5 redefined for Demo; Phase 1 is now complete for Demo
 
 ## Context
 
