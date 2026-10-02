@@ -14,6 +14,10 @@ DAYS="${V3_PHASE2_DATA_DAYS:-450}"
 TIMERANGE="${V3_PHASE2_TIMERANGE:-}"
 DATADIR="${V3_PHASE2_DATADIR:-user_data/data-phase2}"
 PAIRS=(BTC/USDT:USDT ETH/USDT:USDT SOL/USDT:USDT BNB/USDT:USDT XRP/USDT:USDT DOGE/USDT:USDT ADA/USDT:USDT LINK/USDT:USDT)
+# Optional space-separated override, e.g. Phase 2c: "BTC/USDT:USDT ETH/USDT:USDT".
+if [[ -n "${V3_PHASE2_PAIRS:-}" ]]; then
+  read -r -a PAIRS <<< "$V3_PHASE2_PAIRS"
+fi
 
 if [[ ! -f .env ]]; then
   echo ".env is required by Docker Compose. Copy .env.example and use non-secret dry-run values." >&2
