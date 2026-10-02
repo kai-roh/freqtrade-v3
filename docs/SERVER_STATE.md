@@ -1,5 +1,11 @@
 # Server state
 
+## Latest verified state — 2026-10-03 00:17 KST
+
+- Demo loss stop changed 900 → 800 USDT with `set-stop` (Decision 0021, journaled); image `freqtrade-v3-live:current`
+  = `sha256:e3497210…` (source `c34544c`). Guard uses 800: strategy equity 990.46 USDT, 190.46 above the stop.
+- Guard ran every 10 minutes since 22:40 KST, all `ok`; no halt. First scheduled executor run 10:05 KST, observation 11:10 KST.
+
 ## Latest verified state — 2026-10-02 22:33 KST
 
 - MA200 Demo executor and guard deployed (Decision 0020). Image `freqtrade-v3-live:current` =

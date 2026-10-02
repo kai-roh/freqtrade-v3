@@ -1,6 +1,7 @@
 # 0020 — MA200 live risk contract: −10% stop, risk sizing, automatic protection, Demo first
 
 - Status: Accepted; risk-level result: **the −10% stop is incompatible** (see below)
+- Amended by: [0021](0021-ma200-stop-20-percent.md) — stop relaxed to −20% (800 USDT), risk level kept at 25%
 - Date: 2026-10-02
 
 ## Context
