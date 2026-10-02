@@ -1,0 +1,24 @@
+{
+  "captured_at": "2026-10-02T09:31:07.054560+00:00",
+  "source": "https://api.binance.com/api/v3/exchangeInfo (public GET from Oracle Tokyo)",
+  "symbols": {
+    "BTCUSDT": {
+      "LOT_SIZE.minQty": "0.00001000",
+      "LOT_SIZE.stepSize": "0.00001000",
+      "MARKET_LOT_SIZE.stepSize": "0.00000000",
+      "applyMinToMarket": true,
+      "minNotional": "5.00000000",
+      "notional_filter": "NOTIONAL",
+      "status": "TRADING"
+    },
+    "ETHUSDT": {
+      "LOT_SIZE.minQty": "0.00010000",
+      "LOT_SIZE.stepSize": "0.00010000",
+      "MARKET_LOT_SIZE.stepSize": "0.00000000",
+      "applyMinToMarket": true,
+      "minNotional": "5.00000000",
+      "notional_filter": "NOTIONAL",
+      "status": "TRADING"
+    }
+  }
+}

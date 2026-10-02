@@ -52,3 +52,11 @@ Register `docs/PHASE2C_PREREGISTRATION.md` as the frozen Phase 2c contract.
   metrics are sleeve ratios, so only gate 8 depends on the sleeve size.
 - Code lives under `v3/phase2c/`. Nothing here authorizes orders, real capital,
   leverage above 1x, or a venue change.
+
+## Correction (2026-10-02)
+
+"Holding long and short together in the same asset only adds fees and funding"
+is wrong about funding. On the same contract and settlement, funding nets to the
+net notional: one side pays and the other receives. What grows is trading fees
+and margin and liquidation management. Conviction as one net position remains
+the right design.

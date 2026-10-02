@@ -1,6 +1,6 @@
 # 0016 — Phase 2c BTC/ETH low-frequency trend result: STOP_NO_EDGE
 
-- Status: Accepted
+- Status: Accepted; corrected 2026-10-02 after review (see "Corrections")
 - Date: 2026-10-02
 
 ## Context
@@ -84,3 +84,28 @@ is not started.
   Phase 2 and Phase 2b. The next step is a user decision: stop directional
   research, register a new hypothesis with forward-only confirmation, or pause
   research.
+
+## Corrections (2026-10-02, after review)
+
+The decision stands. These statements are corrected.
+
+- **"The MA200 control is not a finding"** was too strong. MA200 was registered
+  as a control before the results, so its result is valid development evidence.
+  Because it was singled out after seeing the results, it supports a follow-up
+  hypothesis but is not enough for promotion.
+- **MA200 is long/short, not long/cash.** Below its 200-day average it holds a
+  short. Its exposure time is 100%. Its advantage over BH-VT is lower drawdown,
+  not higher return: it made 0.94 USDT more over the whole period, with MDD
+  13.4% against 24.8%. That advantage is concentrated in a few regimes. In
+  2022 (Aug–Dec) MA200 made +46 against −47, and in 2026 +104 against −2.5;
+  but in 2023 BH-VT made +232 against MA200's +77.
+- **"The selection procedure showed overfitting"** overstates PBO. PBO 0.34 is a
+  diagnostic: the configuration that won in training tended to rank lower out
+  of sample within this candidate set. It is not a probability of loss, and it
+  does not prove that trend following has no edge.
+- **The bootstrap interval is about H4's own mean daily return.** It is not about
+  the difference from BH-VT.
+- **Gate 8 used a holding-based minimum-notional check.** The exchange applies the
+  minimum to the order delta and exempts perpetual reduce-only orders. The
+  controls were also run without exchange filters. Both are corrected in the
+  pre-committed MA200 comparison (`docs/PHASE2C_MA200_COMPARISON.md`).
