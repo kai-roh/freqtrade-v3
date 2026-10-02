@@ -49,11 +49,16 @@ class TrendRule:
     kind: str  # "trend", "bh_vt", "ma200", "none"
     lookback_days: int = 0
     mapping: str = ""  # "binary" or "linear" for trend
+    vol_target: float = VOL_TARGET
 
     def label(self) -> str:
         if self.kind == "trend":
-            return f"H4 L={self.lookback_days}d {self.mapping}"
-        return {"bh_vt": "BH-VT", "ma200": "MA200", "none": "H0"}[self.kind]
+            base = f"H4 L={self.lookback_days}d {self.mapping}"
+        else:
+            base = {"bh_vt": "BH-VT", "ma200": "MA200", "none": "H0"}[self.kind]
+        if self.vol_target != VOL_TARGET:
+            base += f" vol={self.vol_target:.0%}"
+        return base
 
 
 def trend_grid() -> tuple[TrendRule, ...]:
@@ -75,10 +80,20 @@ def daily_closes(panel: Phase2Panel) -> pd.DataFrame:
 
 def target_weights(panel: Phase2Panel, rule: TrendRule) -> pd.DataFrame:
     """Target weight per asset in [-1, 1] at each 00:00 decision (NaN while warming up)."""
-    dc = daily_closes(panel)
+    return weights_from_daily(daily_closes(panel), rule)
+
+
+def weights_from_daily(dc: pd.DataFrame, rule: TrendRule) -> pd.DataFrame:
+    """Target weights from completed daily closes indexed at their decision time.
+
+    Shared by the research simulator and the live executor so both compute the
+    same signal from the same closes.
+    """
+    if rule.vol_target <= 0:
+        raise ValueError("vol_target must be positive")
     log_close = np.log(dc)
     sigma = log_close.diff().rolling(VOL_WINDOW, min_periods=VOL_WINDOW).std()
-    scale = (VOL_TARGET / (sigma * math.sqrt(365.0))).clip(upper=1.0)
+    scale = (rule.vol_target / (sigma * math.sqrt(365.0))).clip(upper=1.0)
     if rule.kind == "none":
         return pd.DataFrame(0.0, index=dc.index, columns=dc.columns)
     if rule.kind == "bh_vt":
@@ -206,12 +221,17 @@ def simulate_trend(
     hour_of_day = times.hour.to_numpy()
     # Target weights in force at each 00:00 decision (NaN elsewhere or while warming up).
     targets = np.full((n, m), np.nan)
+    # The rebalance threshold is in units of the registered 25% exposure, so a lower
+    # volatility target scales the threshold with the positions (Decision 0020).
+    thresholds = np.full(n, REBALANCE_THRESHOLD)
     effective = [t for t, _ in schedule]
     decision_rows = np.flatnonzero(hour_of_day == 0)
     for row in decision_rows:
         t = times[row]
         k = max(i for i, eff in enumerate(effective) if eff <= t) if effective[0] <= t else 0
-        frame = cache[schedule[k][1]]
+        rule = schedule[k][1]
+        frame = cache[rule]
+        thresholds[row] = REBALANCE_THRESHOLD * rule.vol_target / VOL_TARGET
         if t in frame.index:
             targets[row] = frame.loc[t].to_numpy(dtype=float)
 
@@ -334,7 +354,7 @@ def simulate_trend(
                 current = qty[j] * price_row[j] / cap
                 flip = current != 0.0 and target != 0.0 and (current > 0) != (target > 0)
                 to_flat = target == 0.0 and current != 0.0
-                if flip or to_flat or abs(target - current) >= REBALANCE_THRESHOLD:
+                if flip or to_flat or abs(target - current) >= thresholds[row]:
                     orders[j] = float(target)
             if orders:
                 pending = orders

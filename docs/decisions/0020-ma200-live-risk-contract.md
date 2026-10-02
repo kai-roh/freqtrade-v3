@@ -1,6 +1,6 @@
 # 0020 — MA200 live risk contract: −10% stop, risk sizing, automatic protection, Demo first
 
-- Status: Accepted (risk-level selection result appended below)
+- Status: Accepted; risk-level result: **the −10% stop is incompatible** (see below)
 - Date: 2026-10-02
 
 ## Context
@@ -98,3 +98,52 @@ verification covers:
 The forward observation has not started yet. It is amended to the chosen
 volatility target, for both MA200 and the holds, so that it remains the
 reconciliation baseline.
+
+## Risk-level result (2026-10-02)
+
+Output: `research_results/phase2c/ma200-live-risk-selection.json`.
+
+### Correction found while computing
+
+The registered rebalance threshold (0.20) is an absolute weight, but the target
+weights scale with the volatility target. Below about 15%, entries from flat
+never reached 0.20. At an 8% target, for example, ETH was never bought. A lower
+target therefore changed the trading itself instead of scaling it, against the
+intent of this decision. The threshold now scales with the target
+(`0.20 × target / 25%`). At 25% it is unchanged, and the recorded Phase 2c
+results still reproduce exactly.
+
+### Measuring the stop correctly
+
+The sleeve is fixed: positions do not grow with profit. A peak-to-trough
+percentage therefore understates what the stop sees. The stop is measured from
+starting capital, so the relevant risk is the largest peak-to-trough drop in
+USDT divided by 1,000. That is the loss of someone who starts at the worst
+moment.
+
+| Vol target | Worst drop from any start (2022–26 / 2020–26) | Skipped orders | Annual return (2022–26 / 2020–26) |
+|---:|---:|---:|---:|
+| 8% | 5.6% / 10.1% | 79% / 76% | 4.5% / 5.1% |
+| 10% | 7.1% / 8.7% | 74% / 74% | 5.7% / 7.0% |
+| 12% | 7.8% / 13.3% | 77% / 75% | 6.9% / 8.0% |
+| 15% | 10.3% / 19.9% | 55% / 47% | 8.2% / 9.4% |
+| 20% | 13.8% / 20.9% | 9% / 6% | 11.1% / 12.5% |
+| 25% | 17.8% / 24.8% | 3% / 2% | 13.2% / 14.6% |
+
+All figures are for constrained mode at normal cost.
+
+**No candidate qualifies under either measure.**
+
+- Targets small enough to keep the worst drop near 10% make BTC orders
+  unexecutable at 1,000 USDT. A 0.001 BTC lot is worth 16–126 USDT, against
+  BTC positions of roughly 50–100 USDT.
+- Targets that can be executed, 20% and 25%, had worst drops of 14–25%. A
+  −10% stop would have fired in those periods.
+
+Under the rule, the −10% stop and this strategy at 1,000 USDT are
+**incompatible**. Choosing between a looser stop, a lower risk level that
+cannot trade BTC properly, and more capital is a user decision.
+
+Until that decision, Demo verification uses the observation's 25% target, so
+the two stay reconciled, together with the user's −10% stop. If the stop fires
+on Demo, that is part of the verification.
