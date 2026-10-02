@@ -39,6 +39,7 @@ class FakeExchange:
         self.fail_next_place = 0
         self.placed = 0
         self.trend = trend
+        self.zero_avg = False
 
     def klines(self, symbol):
         rows = []
@@ -154,7 +155,8 @@ class FakeExchange:
             "clientOrderId": q["newClientOrderId"],
             "status": "FILLED" if fill == qty else "EXPIRED",
             "executedQty": str(fill),
-            "avgPrice": str(price),
+            "avgPrice": "0" if self.zero_avg else str(price),
+            "cumQuote": str(fill * price),
         }
         self.orders[q["newClientOrderId"]] = order
         self.placed += 1
@@ -326,3 +328,12 @@ def test_exchange_errors_carry_codes():
         client.place_ioc(
             "BTCUSDT", "SELL", Decimal("0.001"), Decimal(100_000), reduce_only=True, client_id="x"
         )
+
+
+def test_average_price_falls_back_to_cum_quote(tmp_path):
+    exchange = FakeExchange()
+    exchange.zero_avg = True
+    exchange, client, store = make(tmp_path, exchange)
+    report = run_executor(client, store, now=NOW)
+    btc = next(r for r in report["results"] if r["symbol"] == "BTCUSDT")
+    assert Decimal(btc["avg_price"]) == exchange.price["BTCUSDT"]

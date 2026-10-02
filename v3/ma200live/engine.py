@@ -333,6 +333,9 @@ def execute_step(
                     continue
         executed = Decimal(str(result.get("executedQty", "0")))
         avg = Decimal(str(result.get("avgPrice", "0") or "0"))
+        if avg <= 0 and executed > 0:
+            # Some responses (Demo RESULT) report avgPrice 0; derive it from the quote filled.
+            avg = Decimal(str(result.get("cumQuote", "0") or "0")) / executed
         filled += executed
         notional += executed * avg
         remaining -= executed
