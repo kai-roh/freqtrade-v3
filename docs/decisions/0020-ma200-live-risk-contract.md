@@ -147,3 +147,43 @@ cannot trade BTC properly, and more capital is a user decision.
 Until that decision, Demo verification uses the observation's 25% target, so
 the two stay reconciled, together with the user's −10% stop. If the stop fires
 on Demo, that is part of the verification.
+
+## Demo verification (2026-10-02, 13:28–13:32 UTC)
+
+The code is in `v3/ma200live/`, with `scripts/run_ma200_live.py` and
+`run_ma200_live.sh`. There are 12 tests against an in-memory exchange. The runs
+used the Binance Demo USD-M account, the image `freqtrade-v3-live:current`, and
+state in `evidence/ma200-live-demo/` on the server.
+
+| Step | Result |
+|---|---|
+| Initial entry from the real signal (BTC long 0.60, ETH long 0.44) | BTC 0.0034 and ETH 0.080 bought by IOC. Isolated 2x was set on ETHUSDT |
+| Same-day rerun | No order (change below threshold). Client IDs are unique per run |
+| Forced flip (Demo override BTC −0.4) | Reduce-only sell of 0.0034, then a new short of 0.0023 |
+| Flip back with the real signal | Reduce-only buy of 0.0023, then a new long of 0.0034 |
+| Guard, normal | `ok` |
+| Guard with a forced stop level of 2,000 | `loss_stop`: both legs closed reduce-only, halt written |
+| Executor while halted | No order |
+| Clear halt, re-enter | Positions restored; the baseline was reset to actual |
+| Guard at +51 h (staleness) | `executor_stale`: closed and halted. Cleared, then re-entered |
+| Final guard | `ok`, strategy equity 998.5 USDT (verification round trips cost about 1.4 USDT in fees) |
+
+Two venue behaviours were found and fixed during the run:
+
+- The IOC reply reported `avgPrice` 0. The executor now re-queries the order
+  for the settled price.
+- The query itself can lag briefly, so it retries.
+
+One difference is expected and handled in the reconciliation: the Demo BTC lot
+is 0.0001, while Mainnet's is 0.001.
+
+Scheduled since 2026-10-02 22:32 KST:
+
+- the executor daily at 10:05 KST;
+- the guard every 10 minutes;
+- the observation at 11:10 KST, which now reconciles Demo positions against
+  the virtual account.
+
+Not verified on Demo: a position mismatch, because it needs an outside order
+(unit-tested only), and real staleness over 50 hours (simulated with a time
+override). Mainnet remains locked.

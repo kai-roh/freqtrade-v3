@@ -1,5 +1,15 @@
 # Server state
 
+## Latest verified state — 2026-10-02 22:33 KST
+
+- MA200 Demo executor and guard deployed (Decision 0020). Image `freqtrade-v3-live:current` =
+  `freqtrade-v3-observe:current` = `sha256:0b453043…` (source `20561ad`). State in `evidence/ma200-live-demo/`
+  (config: start 2026-10-02 13:28 UTC, capital 1,000, vol 25%, stop 900).
+- Demo USD-M positions: BTCUSDT 0.0034 long, ETHUSDT 0.080 long, isolated 2x; strategy equity 998.5 USDT.
+- Crontab (backup under `/tmp/crontab.before.*`): operations report 23:00, weekly research Sun 23:10,
+  MA200 observation 11:10, MA200 Demo executor 10:05, MA200 Demo guard every 10 minutes.
+- Mainnet orders impossible: the client refuses Mainnet without a real-capital authorization record.
+
 ## Latest verified state — 2026-10-02 19:10 KST
 
 - MA200 forward observation deployed (Decision 0019). Source `2648efb` synced; image
