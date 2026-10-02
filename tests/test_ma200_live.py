@@ -155,7 +155,7 @@ class FakeExchange:
             "clientOrderId": q["newClientOrderId"],
             "status": "FILLED" if fill == qty else "EXPIRED",
             "executedQty": str(fill),
-            "avgPrice": "0" if self.zero_avg else str(price),
+            "avgPrice": str(price),
             "cumQuote": str(fill * price),
         }
         self.orders[q["newClientOrderId"]] = order
@@ -163,6 +163,8 @@ class FakeExchange:
         if self.fail_next_place:
             self.fail_next_place -= 1
             return 503, {"msg": "timeout"}
+        if self.zero_avg:  # immediate reply without settled prices; the query has them
+            return 200, {**order, "avgPrice": "0.00", "cumQuote": "0.00000"}
         return 200, order
 
 

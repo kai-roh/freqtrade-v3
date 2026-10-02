@@ -334,8 +334,15 @@ def execute_step(
         executed = Decimal(str(result.get("executedQty", "0")))
         avg = Decimal(str(result.get("avgPrice", "0") or "0"))
         if avg <= 0 and executed > 0:
-            # Some responses (Demo RESULT) report avgPrice 0; derive it from the quote filled.
-            avg = Decimal(str(result.get("cumQuote", "0") or "0")) / executed
+            # The immediate reply can report avgPrice and cumQuote as 0 (seen on Demo);
+            # the order query has the settled values.
+            settled = client.order_by_client_id(step.symbol, client_id) or result
+            executed = Decimal(str(settled.get("executedQty", executed)))
+            avg = Decimal(str(settled.get("avgPrice", "0") or "0"))
+            if avg <= 0:
+                quote = Decimal(str(settled.get("cumQuote", "0") or "0"))
+                avg = quote / executed if executed else Decimal(0)
+            result = settled
         filled += executed
         notional += executed * avg
         remaining -= executed
