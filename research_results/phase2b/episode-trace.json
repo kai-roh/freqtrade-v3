@@ -1,0 +1,826 @@
+{
+  "analysis": {
+    "blocked_decisions_while_holding": [
+      {
+        "held_after": {
+          "longs": [
+            "ETH",
+            "SOL",
+            "XRP"
+          ],
+          "shorts": [
+            "BNB",
+            "LINK"
+          ]
+        },
+        "spread_bp": 0.9116166666666667,
+        "t": "2026-02-14T00:00:00+00:00"
+      },
+      {
+        "held_after": {
+          "longs": [
+            "ETH",
+            "SOL",
+            "XRP"
+          ],
+          "shorts": [
+            "BNB",
+            "LINK"
+          ]
+        },
+        "spread_bp": 0.870080303030303,
+        "t": "2026-02-15T00:00:00+00:00"
+      },
+      {
+        "held_after": {
+          "longs": [
+            "ETH",
+            "SOL",
+            "XRP"
+          ],
+          "shorts": [
+            "BNB",
+            "LINK"
+          ]
+        },
+        "spread_bp": 0.7329121212121212,
+        "t": "2026-02-16T00:00:00+00:00"
+      },
+      {
+        "held_after": {
+          "longs": [
+            "ETH",
+            "SOL",
+            "XRP"
+          ],
+          "shorts": [
+            "BNB",
+            "LINK"
+          ]
+        },
+        "spread_bp": 0.6950590909090908,
+        "t": "2026-02-17T00:00:00+00:00"
+      },
+      {
+        "held_after": {
+          "longs": [
+            "ETH",
+            "SOL",
+            "XRP"
+          ],
+          "shorts": [
+            "BNB",
+            "LINK"
+          ]
+        },
+        "spread_bp": 0.6637181818181819,
+        "t": "2026-02-18T00:00:00+00:00"
+      },
+      {
+        "held_after": {
+          "longs": [
+            "ETH",
+            "SOL",
+            "XRP"
+          ],
+          "shorts": [
+            "BNB",
+            "LINK"
+          ]
+        },
+        "spread_bp": 0.6312666666666668,
+        "t": "2026-02-19T00:00:00+00:00"
+      },
+      {
+        "held_after": {
+          "longs": [
+            "ETH",
+            "SOL",
+            "XRP"
+          ],
+          "shorts": [
+            "BNB",
+            "LINK"
+          ]
+        },
+        "spread_bp": 0.5381227272727273,
+        "t": "2026-02-20T00:00:00+00:00"
+      }
+    ],
+    "episodes": [
+      {
+        "by_side": {
+          "long": {
+            "funding": 0.00016256972586818478,
+            "legs": [
+              "SOL",
+              "XRP",
+              "DOGE"
+            ],
+            "price_pnl": -14.938737345018659
+          },
+          "short": {
+            "funding": 0.001356451334467945,
+            "legs": [
+              "BTC",
+              "BNB",
+              "LINK"
+            ],
+            "price_pnl": 10.601514616973851
+          }
+        },
+        "end": "2026-02-05T16:00:00+00:00",
+        "entry_betas_to_btc": {
+          "BNB": 0.8588802552385724,
+          "BTC": 1.0,
+          "DOGE": 1.3698272280024262,
+          "LINK": 1.3151112089138763,
+          "SOL": 1.2900942238291877,
+          "XRP": 1.2149767601407435
+        },
+        "episode": 1,
+        "hours": 15,
+        "imbalance": {
+          "hours": 16,
+          "hours_unequal_leg_counts": 0,
+          "max_abs_net_notional": 3.6991721060400096,
+          "mean_net_notional": -1.362797810027864,
+          "price_pnl_while_unequal": 0.0
+        },
+        "legs": [
+          {
+            "costs": 0.056302181938497155,
+            "decided_at": "2026-02-05T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.0,
+            "entry_price": 72838.9,
+            "entry_score_bp": 0.2438318181818182,
+            "entry_time": "2026-02-05T01:00:00+00:00",
+            "exit_label": "taker_risk",
+            "exit_price": 67452.0,
+            "exit_time": "2026-02-05T16:00:00+00:00",
+            "expected_funding": 0.002312643779534303,
+            "funding": -0.002150816881294748,
+            "hours_held": 15,
+            "net_pnl": 3.6393650626830514,
+            "price_pnl": 3.6978180615028435,
+            "rebalances": 0,
+            "settlements": 2,
+            "side": "short",
+            "symbol": "BTC",
+            "underlying_return": -0.07395636123005689
+          },
+          {
+            "costs": 0.05610141766630316,
+            "decided_at": "2026-02-05T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.0,
+            "entry_price": 91.7,
+            "entry_score_bp": -1.5572363636363635,
+            "entry_time": "2026-02-05T01:00:00+00:00",
+            "exit_label": "taker_risk",
+            "exit_price": 84.55,
+            "exit_time": "2026-02-05T16:00:00+00:00",
+            "expected_funding": 0.014862716562006224,
+            "funding": 0.0006035021036959651,
+            "hours_held": 15,
+            "net_pnl": -3.954080249259451,
+            "price_pnl": -3.8985823336968437,
+            "rebalances": 0,
+            "settlements": 2,
+            "side": "long",
+            "symbol": "SOL",
+            "underlying_return": -0.07797164667393686
+          },
+          {
+            "costs": 0.057313040480363155,
+            "decided_at": "2026-02-05T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.00000000000001,
+            "entry_price": 696.14,
+            "entry_score_bp": 0.042027272727272774,
+            "entry_time": "2026-02-05T01:00:00+00:00",
+            "exit_label": "taker_risk",
+            "exit_price": 658.73,
+            "exit_time": "2026-02-05T16:00:00+00:00",
+            "expected_funding": 0.0004075776438140204,
+            "funding": 0.0,
+            "hours_held": 15,
+            "net_pnl": 2.6296464791564946,
+            "price_pnl": 2.686959519636858,
+            "rebalances": 0,
+            "settlements": 2,
+            "side": "short",
+            "symbol": "BNB",
+            "underlying_return": -0.053739190392737
+          },
+          {
+            "costs": 0.05348993288590605,
+            "decided_at": "2026-02-05T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.0,
+            "entry_price": 1.49,
+            "entry_score_bp": -0.45360909090909096,
+            "entry_time": "2026-02-05T01:00:00+00:00",
+            "exit_label": "taker_risk",
+            "exit_price": 1.296,
+            "exit_time": "2026-02-05T16:00:00+00:00",
+            "expected_funding": 0.004151588706528372,
+            "funding": -0.0021890609395973154,
+            "hours_held": 15,
+            "net_pnl": -6.56574610791946,
+            "price_pnl": -6.510067114093957,
+            "rebalances": 0,
+            "settlements": 2,
+            "side": "long",
+            "symbol": "XRP",
+            "underlying_return": -0.13020134228187918
+          },
+          {
+            "costs": 0.05546991210277214,
+            "decided_at": "2026-02-05T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.0,
+            "entry_price": 0.10353,
+            "entry_score_bp": -0.5260363636363635,
+            "entry_time": "2026-02-05T01:00:00+00:00",
+            "exit_label": "taker_risk",
+            "exit_price": 0.09415,
+            "exit_time": "2026-02-05T16:00:00+00:00",
+            "expected_funding": 0.004960330339032163,
+            "funding": 0.001748128561769535,
+            "hours_held": 15,
+            "net_pnl": -4.583809680768861,
+            "price_pnl": -4.530087897227858,
+            "rebalances": 0,
+            "settlements": 2,
+            "side": "long",
+            "symbol": "DOGE",
+            "underlying_return": -0.09060175794455716
+          },
+          {
+            "costs": 0.05578326296416585,
+            "decided_at": "2026-02-05T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.0,
+            "entry_price": 9.237,
+            "entry_score_bp": 0.42939090909090905,
+            "entry_time": "2026-02-05T01:00:00+00:00",
+            "exit_label": "taker_risk",
+            "exit_price": 8.458,
+            "exit_time": "2026-02-05T16:00:00+00:00",
+            "expected_funding": 0.004069780342972678,
+            "funding": 0.003507268215762693,
+            "hours_held": 15,
+            "net_pnl": 4.1644610410857466,
+            "price_pnl": 4.21673703583415,
+            "rebalances": 0,
+            "settlements": 2,
+            "side": "short",
+            "symbol": "LINK",
+            "underlying_return": -0.0843347407166829
+          }
+        ],
+        "market": {
+          "btc_return": -0.07395636123005689,
+          "equal_weight_universe_return": -0.08545749774547196,
+          "symbol_returns": {
+            "ADA": -0.08452672022354168,
+            "BNB": -0.053739190392737,
+            "BTC": -0.07395636123005689,
+            "DOGE": -0.09060175794455716,
+            "ETH": -0.08832822250038397,
+            "LINK": -0.0843347407166829,
+            "SOL": -0.07797164667393686,
+            "XRP": -0.13020134228187918
+          }
+        },
+        "net_beta_notional_usdt": 35.04533739099542,
+        "pnl_usdt": -4.610163455022558,
+        "price_pnl_path": {
+          "after_24h": -4.337222728044811,
+          "after_5d": -4.337222728044811,
+          "end": -4.337222728044811,
+          "minimum": -4.337222728044811,
+          "minimum_at": "2026-02-05T16:00:00+00:00"
+        },
+        "start": "2026-02-05T01:00:00+00:00"
+      },
+      {
+        "by_side": {
+          "long": {
+            "funding": 0.39804765291875743,
+            "legs": [
+              "ETH",
+              "SOL",
+              "XRP"
+            ],
+            "price_pnl": -4.407642151338763
+          },
+          "short": {
+            "funding": 0.02142055036750519,
+            "legs": [
+              "BTC",
+              "LINK",
+              "BNB"
+            ],
+            "price_pnl": 2.123158992870927
+          }
+        },
+        "end": "2026-02-21T02:00:00+00:00",
+        "entry_betas_to_btc": {
+          "BNB": 0.8617752341267817,
+          "BTC": 1.0,
+          "ETH": 1.2569928878936558,
+          "LINK": 1.1870450369983865,
+          "SOL": 1.243757204017573,
+          "XRP": 1.1644019690550869
+        },
+        "episode": 2,
+        "hours": 337,
+        "imbalance": {
+          "hours": 338,
+          "hours_unequal_leg_counts": 169,
+          "max_abs_net_notional": 59.04499448641889,
+          "mean_net_notional": 25.294974206293197,
+          "price_pnl_while_unequal": -2.881980064422989
+        },
+        "legs": [
+          {
+            "costs": 0.019877712494207438,
+            "decided_at": "2026-02-07T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.00000000000001,
+            "entry_price": 69917.2,
+            "entry_score_bp": -0.08430909090909089,
+            "entry_time": "2026-02-07T01:00:00+00:00",
+            "exit_label": "maker",
+            "exit_price": 69062.2,
+            "exit_time": "2026-02-14T01:00:00+00:00",
+            "expected_funding": -0.008678420529897922,
+            "funding": -0.025917832677660575,
+            "hours_held": 168,
+            "net_pnl": 0.5656419837909633,
+            "price_pnl": 0.6114375289628313,
+            "rebalances": 0,
+            "settlements": 21,
+            "side": "short",
+            "symbol": "BTC",
+            "underlying_return": -0.012228750579256653
+          },
+          {
+            "costs": 0.019604569549065386,
+            "decided_at": "2026-02-07T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.0,
+            "entry_price": 2043.09,
+            "entry_score_bp": -0.5581045454545455,
+            "entry_time": "2026-02-07T01:00:00+00:00",
+            "exit_label": "maker",
+            "exit_price": 1962.3,
+            "exit_time": "2026-02-21T01:00:00+00:00",
+            "expected_funding": 0.11512503185166935,
+            "funding": 0.07261369203924718,
+            "hours_held": 336,
+            "net_pnl": -1.9241431321828832,
+            "price_pnl": -1.977152254673065,
+            "rebalances": 0,
+            "settlements": 42,
+            "side": "long",
+            "symbol": "ETH",
+            "underlying_return": -0.039543045093461404
+          },
+          {
+            "costs": 0.01975609756097561,
+            "decided_at": "2026-02-07T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.0,
+            "entry_price": 86.51,
+            "entry_score_bp": -2.1312772727272726,
+            "entry_time": "2026-02-07T01:00:00+00:00",
+            "exit_label": "maker",
+            "exit_price": 84.4,
+            "exit_time": "2026-02-21T01:00:00+00:00",
+            "expected_funding": 0.4358029136588525,
+            "funding": 0.19608118241657374,
+            "hours_held": 336,
+            "net_pnl": -1.0431871102663524,
+            "price_pnl": -1.2195121951219505,
+            "rebalances": 0,
+            "settlements": 42,
+            "side": "long",
+            "symbol": "SOL",
+            "underlying_return": -0.024390243902439046
+          },
+          {
+            "costs": 0.01975780445969125,
+            "decided_at": "2026-02-07T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.0,
+            "entry_price": 1.4575,
+            "entry_score_bp": -0.73885,
+            "entry_time": "2026-02-07T01:00:00+00:00",
+            "exit_label": "maker",
+            "exit_price": 1.4222,
+            "exit_time": "2026-02-21T01:00:00+00:00",
+            "expected_funding": 0.15258373810696566,
+            "funding": 0.12935277846293652,
+            "hours_held": 336,
+            "net_pnl": -1.1013827275405021,
+            "price_pnl": -1.2109777015437473,
+            "rebalances": 0,
+            "settlements": 42,
+            "side": "long",
+            "symbol": "XRP",
+            "underlying_return": -0.024219554030874835
+          },
+          {
+            "costs": 0.02008039859585551,
+            "decided_at": "2026-02-07T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.0,
+            "entry_price": 8.831,
+            "entry_score_bp": 0.3690590909090909,
+            "entry_time": "2026-02-07T01:00:00+00:00",
+            "exit_label": "maker",
+            "exit_price": 8.902,
+            "exit_time": "2026-02-21T01:00:00+00:00",
+            "expected_funding": 0.07648354075889045,
+            "funding": 0.05061775665580908,
+            "hours_held": 336,
+            "net_pnl": -0.37145562121759074,
+            "price_pnl": -0.4019929792775443,
+            "rebalances": 0,
+            "settlements": 42,
+            "side": "short",
+            "symbol": "LINK",
+            "underlying_return": 0.008039859585550868
+          },
+          {
+            "costs": 0.04366039988977005,
+            "decided_at": "2026-02-07T00:00:00+00:00",
+            "entry_label": "maker",
+            "entry_notional": 50.0,
+            "entry_price": 653.18,
+            "entry_score_bp": 0.007863636363636413,
+            "entry_time": "2026-02-07T01:00:00+00:00",
+            "exit_label": "taker_fallback",
+            "exit_price": 628.18,
+            "exit_time": "2026-02-21T02:00:00+00:00",
+            "expected_funding": 0.001569825324788131,
+            "funding": -0.003279373610643315,
+            "hours_held": 337,
+            "net_pnl": 1.8667746696852265,
+            "price_pnl": 1.9137144431856399,
+            "rebalances": 0,
+            "settlements": 42,
+            "side": "short",
+            "symbol": "BNB",
+            "underlying_return": -0.03827428886371287
+          }
+        ],
+        "market": {
+          "btc_return": -0.02861956714513736,
+          "equal_weight_universe_return": -0.008771585468246426,
+          "symbol_returns": {
+            "ADA": 0.0384756320996702,
+            "BNB": -0.03827428886371287,
+            "BTC": -0.02861956714513736,
+            "DOGE": 0.023315267409755647,
+            "ETH": -0.0380404191690038,
+            "LINK": 0.013248782697316441,
+            "SOL": -0.021615998150502858,
+            "XRP": -0.018662092624356807
+          }
+        },
+        "net_beta_notional_usdt": 30.816589492057368,
+        "pnl_usdt": -1.9477519377310557,
+        "price_pnl_path": {
+          "after_24h": 0.8700839588832853,
+          "after_5d": -1.1539747214623117,
+          "end": -2.284483158467828,
+          "minimum": -2.707943549012051,
+          "minimum_at": "2026-02-13T02:00:00+00:00"
+        },
+        "start": "2026-02-07T01:00:00+00:00"
+      }
+    ],
+    "legs": [
+      {
+        "costs": 0.056302181938497155,
+        "decided_at": "2026-02-05T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.0,
+        "entry_price": 72838.9,
+        "entry_score_bp": 0.2438318181818182,
+        "entry_time": "2026-02-05T01:00:00+00:00",
+        "exit_label": "taker_risk",
+        "exit_price": 67452.0,
+        "exit_time": "2026-02-05T16:00:00+00:00",
+        "expected_funding": 0.002312643779534303,
+        "funding": -0.002150816881294748,
+        "hours_held": 15,
+        "net_pnl": 3.6393650626830514,
+        "price_pnl": 3.6978180615028435,
+        "rebalances": 0,
+        "settlements": 2,
+        "side": "short",
+        "symbol": "BTC",
+        "underlying_return": -0.07395636123005689
+      },
+      {
+        "costs": 0.05610141766630316,
+        "decided_at": "2026-02-05T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.0,
+        "entry_price": 91.7,
+        "entry_score_bp": -1.5572363636363635,
+        "entry_time": "2026-02-05T01:00:00+00:00",
+        "exit_label": "taker_risk",
+        "exit_price": 84.55,
+        "exit_time": "2026-02-05T16:00:00+00:00",
+        "expected_funding": 0.014862716562006224,
+        "funding": 0.0006035021036959651,
+        "hours_held": 15,
+        "net_pnl": -3.954080249259451,
+        "price_pnl": -3.8985823336968437,
+        "rebalances": 0,
+        "settlements": 2,
+        "side": "long",
+        "symbol": "SOL",
+        "underlying_return": -0.07797164667393686
+      },
+      {
+        "costs": 0.057313040480363155,
+        "decided_at": "2026-02-05T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.00000000000001,
+        "entry_price": 696.14,
+        "entry_score_bp": 0.042027272727272774,
+        "entry_time": "2026-02-05T01:00:00+00:00",
+        "exit_label": "taker_risk",
+        "exit_price": 658.73,
+        "exit_time": "2026-02-05T16:00:00+00:00",
+        "expected_funding": 0.0004075776438140204,
+        "funding": 0.0,
+        "hours_held": 15,
+        "net_pnl": 2.6296464791564946,
+        "price_pnl": 2.686959519636858,
+        "rebalances": 0,
+        "settlements": 2,
+        "side": "short",
+        "symbol": "BNB",
+        "underlying_return": -0.053739190392737
+      },
+      {
+        "costs": 0.05348993288590605,
+        "decided_at": "2026-02-05T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.0,
+        "entry_price": 1.49,
+        "entry_score_bp": -0.45360909090909096,
+        "entry_time": "2026-02-05T01:00:00+00:00",
+        "exit_label": "taker_risk",
+        "exit_price": 1.296,
+        "exit_time": "2026-02-05T16:00:00+00:00",
+        "expected_funding": 0.004151588706528372,
+        "funding": -0.0021890609395973154,
+        "hours_held": 15,
+        "net_pnl": -6.56574610791946,
+        "price_pnl": -6.510067114093957,
+        "rebalances": 0,
+        "settlements": 2,
+        "side": "long",
+        "symbol": "XRP",
+        "underlying_return": -0.13020134228187918
+      },
+      {
+        "costs": 0.05546991210277214,
+        "decided_at": "2026-02-05T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.0,
+        "entry_price": 0.10353,
+        "entry_score_bp": -0.5260363636363635,
+        "entry_time": "2026-02-05T01:00:00+00:00",
+        "exit_label": "taker_risk",
+        "exit_price": 0.09415,
+        "exit_time": "2026-02-05T16:00:00+00:00",
+        "expected_funding": 0.004960330339032163,
+        "funding": 0.001748128561769535,
+        "hours_held": 15,
+        "net_pnl": -4.583809680768861,
+        "price_pnl": -4.530087897227858,
+        "rebalances": 0,
+        "settlements": 2,
+        "side": "long",
+        "symbol": "DOGE",
+        "underlying_return": -0.09060175794455716
+      },
+      {
+        "costs": 0.05578326296416585,
+        "decided_at": "2026-02-05T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.0,
+        "entry_price": 9.237,
+        "entry_score_bp": 0.42939090909090905,
+        "entry_time": "2026-02-05T01:00:00+00:00",
+        "exit_label": "taker_risk",
+        "exit_price": 8.458,
+        "exit_time": "2026-02-05T16:00:00+00:00",
+        "expected_funding": 0.004069780342972678,
+        "funding": 0.003507268215762693,
+        "hours_held": 15,
+        "net_pnl": 4.1644610410857466,
+        "price_pnl": 4.21673703583415,
+        "rebalances": 0,
+        "settlements": 2,
+        "side": "short",
+        "symbol": "LINK",
+        "underlying_return": -0.0843347407166829
+      },
+      {
+        "costs": 0.019877712494207438,
+        "decided_at": "2026-02-07T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.00000000000001,
+        "entry_price": 69917.2,
+        "entry_score_bp": -0.08430909090909089,
+        "entry_time": "2026-02-07T01:00:00+00:00",
+        "exit_label": "maker",
+        "exit_price": 69062.2,
+        "exit_time": "2026-02-14T01:00:00+00:00",
+        "expected_funding": -0.008678420529897922,
+        "funding": -0.025917832677660575,
+        "hours_held": 168,
+        "net_pnl": 0.5656419837909633,
+        "price_pnl": 0.6114375289628313,
+        "rebalances": 0,
+        "settlements": 21,
+        "side": "short",
+        "symbol": "BTC",
+        "underlying_return": -0.012228750579256653
+      },
+      {
+        "costs": 0.019604569549065386,
+        "decided_at": "2026-02-07T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.0,
+        "entry_price": 2043.09,
+        "entry_score_bp": -0.5581045454545455,
+        "entry_time": "2026-02-07T01:00:00+00:00",
+        "exit_label": "maker",
+        "exit_price": 1962.3,
+        "exit_time": "2026-02-21T01:00:00+00:00",
+        "expected_funding": 0.11512503185166935,
+        "funding": 0.07261369203924718,
+        "hours_held": 336,
+        "net_pnl": -1.9241431321828832,
+        "price_pnl": -1.977152254673065,
+        "rebalances": 0,
+        "settlements": 42,
+        "side": "long",
+        "symbol": "ETH",
+        "underlying_return": -0.039543045093461404
+      },
+      {
+        "costs": 0.01975609756097561,
+        "decided_at": "2026-02-07T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.0,
+        "entry_price": 86.51,
+        "entry_score_bp": -2.1312772727272726,
+        "entry_time": "2026-02-07T01:00:00+00:00",
+        "exit_label": "maker",
+        "exit_price": 84.4,
+        "exit_time": "2026-02-21T01:00:00+00:00",
+        "expected_funding": 0.4358029136588525,
+        "funding": 0.19608118241657374,
+        "hours_held": 336,
+        "net_pnl": -1.0431871102663524,
+        "price_pnl": -1.2195121951219505,
+        "rebalances": 0,
+        "settlements": 42,
+        "side": "long",
+        "symbol": "SOL",
+        "underlying_return": -0.024390243902439046
+      },
+      {
+        "costs": 0.01975780445969125,
+        "decided_at": "2026-02-07T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.0,
+        "entry_price": 1.4575,
+        "entry_score_bp": -0.73885,
+        "entry_time": "2026-02-07T01:00:00+00:00",
+        "exit_label": "maker",
+        "exit_price": 1.4222,
+        "exit_time": "2026-02-21T01:00:00+00:00",
+        "expected_funding": 0.15258373810696566,
+        "funding": 0.12935277846293652,
+        "hours_held": 336,
+        "net_pnl": -1.1013827275405021,
+        "price_pnl": -1.2109777015437473,
+        "rebalances": 0,
+        "settlements": 42,
+        "side": "long",
+        "symbol": "XRP",
+        "underlying_return": -0.024219554030874835
+      },
+      {
+        "costs": 0.02008039859585551,
+        "decided_at": "2026-02-07T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.0,
+        "entry_price": 8.831,
+        "entry_score_bp": 0.3690590909090909,
+        "entry_time": "2026-02-07T01:00:00+00:00",
+        "exit_label": "maker",
+        "exit_price": 8.902,
+        "exit_time": "2026-02-21T01:00:00+00:00",
+        "expected_funding": 0.07648354075889045,
+        "funding": 0.05061775665580908,
+        "hours_held": 336,
+        "net_pnl": -0.37145562121759074,
+        "price_pnl": -0.4019929792775443,
+        "rebalances": 0,
+        "settlements": 42,
+        "side": "short",
+        "symbol": "LINK",
+        "underlying_return": 0.008039859585550868
+      },
+      {
+        "costs": 0.04366039988977005,
+        "decided_at": "2026-02-07T00:00:00+00:00",
+        "entry_label": "maker",
+        "entry_notional": 50.0,
+        "entry_price": 653.18,
+        "entry_score_bp": 0.007863636363636413,
+        "entry_time": "2026-02-07T01:00:00+00:00",
+        "exit_label": "taker_fallback",
+        "exit_price": 628.18,
+        "exit_time": "2026-02-21T02:00:00+00:00",
+        "expected_funding": 0.001569825324788131,
+        "funding": -0.003279373610643315,
+        "hours_held": 337,
+        "net_pnl": 1.8667746696852265,
+        "price_pnl": 1.9137144431856399,
+        "rebalances": 0,
+        "settlements": 42,
+        "side": "short",
+        "symbol": "BNB",
+        "underlying_return": -0.03827428886371287
+      }
+    ],
+    "lock_effects": [
+      {
+        "exit_time": "2026-02-14T01:00:00+00:00",
+        "first_kept_by_lock": "2026-02-10T00:00:00+00:00",
+        "funding_after_lock": -0.011307057815974367,
+        "held_hours_after_lock": 49,
+        "lock_window_end": "2026-02-12T01:00:00+00:00",
+        "price_pnl_after_lock": 1.9157660775889258,
+        "side": "short",
+        "symbol": "BTC"
+      },
+      {
+        "exit_time": "2026-02-21T01:00:00+00:00",
+        "first_kept_by_lock": "2026-02-10T00:00:00+00:00",
+        "funding_after_lock": 0.03447002424930209,
+        "held_hours_after_lock": 49,
+        "lock_window_end": "2026-02-12T01:00:00+00:00",
+        "price_pnl_after_lock": -3.5801163923273074,
+        "side": "long",
+        "symbol": "ETH"
+      }
+    ],
+    "stops": [
+      {
+        "day_start": 200.0,
+        "equity": 195.60429629301555,
+        "t": "2026-02-05T16:00:00+00:00"
+      }
+    ],
+    "totals": {
+      "costs_legs": 0.4771967305875727,
+      "expected_funding_legs": 0.803651266545156,
+      "funding_legs": 0.42098722434659874,
+      "price_pnl_legs": -6.621705886512643
+    }
+  },
+  "cost": "normal",
+  "fold": 0,
+  "recorded_decomposition": {
+    "fees": 0.3303495994572062,
+    "funding_pnl": 0.42098722434659863,
+    "price_pnl": -6.621705886512502,
+    "slippage": 0.14684713113036663,
+    "total_pnl": -6.6779153927534765
+  },
+  "replay_matches": true,
+  "rule": "H3 W=168h k=3",
+  "schema_version": 1,
+  "window": [
+    "2026-01-17T00:00:00+00:00",
+    "2026-03-02T00:00:00+00:00"
+  ]
+}

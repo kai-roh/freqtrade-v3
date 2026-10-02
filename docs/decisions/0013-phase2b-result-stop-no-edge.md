@@ -1,6 +1,6 @@
 # 0013 — Phase 2b maker funding carry result: STOP_NO_EDGE
 
-- Status: Accepted
+- Status: Accepted; corrected 2026-10-02 after review (see the last two sections)
 - Date: 2026-10-02
 
 ## Context
@@ -85,3 +85,99 @@ result (Decision 0002).
   decisions (this decision). Further work on this family is not recommended
   without a materially different source of carry.
 - Phase 3 still has no candidate strategy.
+
+## Corrections (2026-10-02, after an external review)
+
+The decision stands: `STOP_NO_EDGE`, no promotion. The statements above are
+corrected as follows.
+
+1. **Stage B was not fully untouched.** Phase 2 (Decision 0009) computed its PBO
+   matrix to the panel end, 2026-09-16, over 437 rows. So 2026-07-31 to 09-16
+   entered a Phase 2 gate statistic. It was used only inside that one aggregate,
+   never for training, selection, or exits, but "no Phase 2 run used it" is false.
+   Only 2026-09-17 to 10-01 was fully unused. The Phase 2 PBO matrix now ends at
+   the last fold's exit observation (`Phase2Config.pbo_through_panel_end=False`).
+   The flag `--historical-pbo-through-panel-end` reproduces the recorded run
+   exactly. With the bounded window, Phase 2 PBO is H1 0.79 (normal) and 0.77
+   (stress), and H2 0.39 and 0.17. The Phase 2 decision does not change.
+2. **Stage A day counts.** "270 days" is six overlapping 45-day windows joined
+   together: 30 validation days, 14 exit-observation days, and one boundary day.
+   It is not one continuous account. Per-day expectancy, drawdown, and annual
+   turnover share that denominator. The Decision 0009 figures have the same
+   limitation. Stage B's 62 days are recorded as 63 for the same boundary reason.
+3. **"0/6 positive folds".** Only fold 0 traded. Folds 1 to 5 had no trade and a
+   0% return. There were two episodes in total. This is not repeated loss across
+   six regimes. PBO 0.60 on a grid that rarely trades is dominated by ties. It is
+   not a probability of failure.
+4. **"94% maker fills"** is 17 of 18 judgements by the hourly trade-through model.
+   It is not an observed rate. The model cannot see queue position, partial
+   fills, or whether a post-only order at the open would be rejected for
+   crossing (Binance rejects post-only orders that would take liquidity). The
+   result supports "lower cost under the registered approximation", not "maker
+   execution verified".
+5. **347 to 24 trades** cannot be credited to low turnover. The filter (fixed
+   1 bp), window set (48h removed), cadence, minimum hold, rebalance band, and
+   execution all changed at once, and the opportunity set itself shrank. The
+   maker effect proper is H3 against H3T: costs 0.423 USDT lower, price result
+   0.246 worse, net 0.177 better.
+6. **Lower filters.** "Cannot cover even maker round trips plus price risk" was
+   too strong. At 0.5 bp per settlement, an all-maker round trip (0.12 USDT on
+   300 USDT gross) is repaid by funding in about 5.3 days. The binding constraint
+   is price risk, taker fallback, and stop costs. The 4.1% a year is gross on the
+   sleeve. At a 20% allocation it is about 0.8% of total capital, before costs
+   and price P&L.
+7. **"The family failed twice"** overstates the evidence. Phase 2 H1 is a tested
+   failure with 15 episodes. Phase 2b produced two episodes: a gate failure with
+   weak evidence about the edge. The accurate summary is that the registered
+   gate was not met and the recent window had no opportunity. In the few trades
+   taken, price risk overwhelmed the carry. Confirmation independence and some
+   aggregate metrics are limited, as listed here.
+8. **Reproducing Phase 2 is not the same as verifying the contract.** The Phase 2b
+   simulator inherits Phase 2's structure. The stop is checked at hourly opens.
+   When entries are blocked, held legs stay without replacement, which can leave
+   unequal leg counts. That happened in episode 2 below.
+
+## Episode diagnosis (`research_results/phase2b/EPISODE_TRACE.md`)
+
+The H3 normal-cost fold 0 replay matches the recorded fold decomposition exactly.
+
+| | Episode 1 | Episode 2 | Total |
+|---|---|---|---:|
+| Window (UTC) | 02-05 01:00 to 16:00 (15 h) | 02-07 01:00 to 02-21 02:00 (337 h) | |
+| Price P&L | −4.337 | −2.284 | −6.622 |
+| Funding | +0.002 | +0.419 | +0.421 |
+| Costs | 0.334 | 0.143 | 0.477 |
+| Net | −4.670 | −2.008 | −6.678 |
+| Long basket price / short basket price | −14.94 / +10.60 | −4.41 / +2.12 | |
+| Net beta-weighted notional (30-day beta to BTC) | +35.0 USDT | +30.8 USDT | |
+
+- **Beta mismatch is the main cause.** The low-funding names chosen as longs had
+  higher BTC beta than the shorts: SOL 1.29, XRP 1.21, and DOGE 1.37 against
+  BTC 1.00 and BNB 0.86 in episode 1. Both baskets were dollar-neutral but net
+  long about 10–12% of gross in beta terms. In episode 1 the universe fell 8.6%
+  in 15 hours. The long basket fell further, and the daily stop closed
+  everything at −2.2%. This one episode is 70% of the total loss, and funding
+  played no part in it.
+- **A partial basket made episode 2 worse.** On 02-14 the ranking dropped the BTC
+  short while new entries were blocked (spread 0.91 bp, falling to 0.54 bp). For
+  169 of 338 hours the basket held two shorts against three longs, net long 25
+  USDT on average and 59 at most. Price P&L in those hours was −2.88 USDT, more
+  than the episode's whole price result.
+- **Funding came in at half of what was expected.** Realized funding was 0.421
+  USDT against 0.804 implied by the trailing scores at entry. For example, the
+  SOL long earned 0.196 against an implied 0.436. Trailing funding overstated
+  forward funding.
+- **The minimum hold is inconclusive.** The lock kept two legs against the
+  ranking. During the locked window the BTC short earned +1.92 and the ETH long
+  lost −3.58. The replacement legs were not simulated, so there is no net
+  verdict.
+- **Costs were minor:** 0.477 USDT, 7% of the loss.
+
+Any future cross-sectional registration needs:
+
+- beta-neutral sizing or same-beta pairing, instead of dollar neutrality alone;
+- a full-basket exit or forced replacement whenever entries are blocked, so leg
+  counts never become unequal;
+- non-overlapping aggregation of fold returns;
+- forward rather than trailing funding in the economic check;
+- confirmation data strictly after 2026-10-01.

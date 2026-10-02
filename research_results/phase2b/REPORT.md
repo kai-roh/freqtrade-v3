@@ -5,9 +5,11 @@
 - registration: `docs/PHASE2B_PREREGISTRATION.md`
 - universe: BTC, ETH, SOL, BNB, XRP, DOGE, ADA, LINK
 - panel: 2025-06-23T00:00 → 2026-10-01T23:00
-- Stage B evaluation: 2026-07-31 → 2026-10-01 (untouched by Phase 2)
+- Stage B evaluation: 2026-07-31 → 2026-10-01 (not used by Phase 2 training, validation, or exits; 2026-07-31..09-16 was inside the Phase 2 PBO matrix)
 
 ## Stage A — Phase 2 folds (contaminated, diagnostic)
+
+Days are six overlapping 45-day fold windows (30-day validation, 14-day exit observation, one boundary day) joined together. They are not one continuous account, so per-day and per-year figures below share that denominator.
 
 | Hypothesis | Cost | Days | PF | Expectancy/day | MDD | Positive folds | Fold conc. | Asset conc. | PBO | Pass |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
@@ -17,6 +19,8 @@
 | H3T | stress | 270 | 0.553 | -0.000131 | 3.65% | 0 | 1.00 | 0.37 | 0.57 | FAIL |
 
 ## Stage B — confirmatory window
+
+The 62-day window is recorded as 63 daily returns because the end-of-window close adds one boundary day.
 
 | Hypothesis | Cost | Selected | Net PnL | Funding | Fees | Slippage | MDD | Cycles | Verdict |
 |---|---|---|---:|---:|---:|---:|---:|---:|---|
@@ -64,4 +68,4 @@
 
 ## Interpretation
 
-H3 passes only if Stage A and Stage B both pass under both cost regimes. Stage A reuses folds whose Phase 2 results were known when H3 was designed, so it cannot pass H3 alone. H3T is a taker diagnostic and is never promoted. Maker fills use a trade-through rule on hourly candles, which cannot see queue position; live fill rates can be lower. Passing authorizes only a Demo/shadow observation, never real capital.
+H3 passes only if Stage A and Stage B both pass under both cost regimes. Stage A reuses folds whose Phase 2 results were known when H3 was designed, so it cannot pass H3 alone. H3T is a taker diagnostic and is never promoted. Maker fills use a trade-through rule on hourly candles, which cannot see queue position, partial fills, or whether a post-only order at the open would have been rejected for crossing; the fill rate is a model judgement on few attempts, not an observed rate. Passing authorizes only a Demo/shadow observation, never real capital. Leg-level diagnosis: EPISODE_TRACE.md.

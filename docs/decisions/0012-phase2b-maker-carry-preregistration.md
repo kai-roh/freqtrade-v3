@@ -39,3 +39,9 @@ Register `docs/PHASE2B_PREREGISTRATION.md` as the frozen Phase 2b contract.
 - Stage B can be used once. Any rerun after seeing Stage B needs a new
   registration and fresh untouched data.
 - Nothing here authorizes orders, real capital, or a venue change.
+
+## Correction (2026-10-02)
+
+Stage B was described as data "no Phase 2 run used". In fact 2026-07-31 to 09-16
+was inside the Phase 2 PBO matrix. Only 2026-09-17 to 10-01 was fully unused.
+See Decision 0013, "Corrections".

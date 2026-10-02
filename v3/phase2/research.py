@@ -43,6 +43,10 @@ class Phase2Config:
     min_positive_folds: int = 4
     max_contribution: float = 0.50
     pbo_max: float = 0.20
+    # The PBO matrix ends at the last fold's exit observation so it never reads data
+    # reserved for later confirmation. True reproduces the recorded 2026-09-17 run,
+    # whose matrix ran to the panel end (2026-09-16); see Decision 0013 corrections.
+    pbo_through_panel_end: bool = False
 
 
 @dataclass(frozen=True)
@@ -109,6 +113,18 @@ def _contribution(values: dict[str, float]) -> float:
     return max(positives) / sum(positives)
 
 
+def pbo_window(folds, panel_end: pd.Timestamp, config: Phase2Config):
+    """Start and end of the PBO matrix: first training day to the last fold's exit observation.
+
+    ``pbo_through_panel_end`` reproduces the recorded 2026-09-17 run, which read to the
+    panel end and therefore into data later reserved for confirmation.
+    """
+    start = folds[0].train_start
+    if config.pbo_through_panel_end:
+        return start, panel_end
+    return start, min(folds[-1].validation_end + pd.Timedelta(days=EXIT_EXTENSION_DAYS), panel_end)
+
+
 def evaluate_hypothesis(
     panel: Phase2Panel,
     grid: tuple[Rule, ...],
@@ -170,8 +186,8 @@ def evaluate_hypothesis(
     positive_folds = sum(1 for value in fold_pnls.values() if value > 0)
     fold_contribution = _contribution(fold_pnls)
     asset_contribution = _contribution(asset_pnls)
-    # PBO over the full registered period for the whole grid of this hypothesis.
-    start, end = folds[0].train_start, panel_end
+    # PBO over the registered research period for the whole grid of this hypothesis.
+    start, end = pbo_window(folds, panel_end, config)
     full = [simulate_basket(panel, rule, cost=cost, start=start, end=end) for rule in grid]
     matrix = pd.concat([r.daily_returns.rename(r.rule.label()) for r in full], axis=1).fillna(0.0)
     pbo = probability_of_backtest_overfitting(matrix, partitions=config.pbo_partitions)

@@ -23,12 +23,17 @@ def main() -> int:
     parser.add_argument("--manifest", type=Path, default=Path("evidence/phase2/data-manifest.json"))
     parser.add_argument("--output", type=Path, default=Path("research_results/phase2"))
     parser.add_argument("--generated-at", default=os.environ.get("V3_GENERATED_AT"))
+    parser.add_argument(
+        "--historical-pbo-through-panel-end",
+        action="store_true",
+        help="Reproduce the recorded 2026-09-17 run, whose PBO matrix read to the panel end.",
+    )
     args = parser.parse_args()
     result = run_phase2_research(
         args.data_dir,
         args.output,
         manifest_path=args.manifest,
-        config=Phase2Config(),
+        config=Phase2Config(pbo_through_panel_end=args.historical_pbo_through_panel_end),
         generated_at=args.generated_at,
     )
     print(f"decision={result['decision']} promoted={result['promoted']}")

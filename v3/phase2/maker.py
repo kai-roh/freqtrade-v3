@@ -110,11 +110,14 @@ def simulate_maker_basket(
     entry_end: pd.Timestamp | None = None,
     final_slippage_bps: float | None = None,
     contract: BasketContract = PHASE2B_CONTRACT,
+    trace: list[dict[str, Any]] | None = None,
 ) -> SimulationResult:
     """Run one rule over [start, end]; decisions stop after entry_end; flat at end.
 
     ``final_slippage_bps`` sets the taker slippage of the end-of-window close
     (Stage B uses the stress value); by default the regime's taker slippage.
+    ``trace``, when given, receives hourly snapshots, decisions, trades, funding
+    payments, and stop events for diagnosis. It never changes the simulation.
     """
     base = panel.base
     entry_end = entry_end or end
@@ -176,7 +179,11 @@ def simulate_maker_basket(
     def equity_at(prices: pd.Series) -> float:
         return cash + sum(qty[s] * float(prices[s]) for s in symbols if qty[s])
 
-    def trade(symbol, target_qty, price, fee_bps, slip_bps, opened_at, kind) -> None:
+    def record(event: dict[str, Any]) -> None:
+        if trace is not None:
+            trace.append(event)
+
+    def trade(symbol, target_qty, price, fee_bps, slip_bps, opened_at, kind, label) -> None:
         nonlocal cash, fees, slippage, traded_notional, trades
         delta = target_qty - qty[symbol]
         if abs(delta) < EPSILON:
@@ -198,6 +205,20 @@ def simulate_maker_basket(
             entered_at.pop(symbol, None)
         elif previous == 0.0 or (previous > 0) != (qty[symbol] > 0):
             entered_at[symbol] = opened_at
+        record(
+            {
+                "type": "trade",
+                "t": now,
+                "symbol": symbol,
+                "label": label,
+                "qty_before": previous,
+                "qty_after": qty[symbol],
+                "price": price,
+                "fee": fee,
+                "slippage": slip,
+                "decided_at": opened_at,
+            }
+        )
 
     def taker(symbol, target_notional, prices, when, slip_bps, kind) -> None:
         price = float(prices[symbol])
@@ -209,6 +230,7 @@ def simulate_maker_basket(
             slip_bps,
             when,
             "taker",
+            kind,
         )
         fills[kind] += 1
 
@@ -216,7 +238,9 @@ def simulate_maker_basket(
         for symbol in held():
             taker(symbol, 0.0, prices, when, slip_bps, "taker_risk")
 
+    now = hours[0]
     for t in hours:
+        now = t
         opens = open_rows[t]
         # 1. Funding on positions held into this settlement (Phase 2 accounting).
         if t in settlements:
@@ -226,6 +250,17 @@ def simulate_maker_basket(
                 if pd.isna(mark):
                     mark = float(opens[symbol])
                 paid = -qty[symbol] * mark * float(rates[symbol])
+                record(
+                    {
+                        "type": "funding",
+                        "t": t,
+                        "symbol": symbol,
+                        "rate": float(rates[symbol]),
+                        "mark": mark,
+                        "qty": qty[symbol],
+                        "paid": paid,
+                    }
+                )
                 cash += paid
                 funding_total += paid
                 sym_funding[symbol] += paid
@@ -235,6 +270,7 @@ def simulate_maker_basket(
             day_start_equity = equity
             daily_equity[t.normalize()] = equity
         if held() and equity <= day_start_equity * (1 - contract.daily_stop_fraction):
+            record({"type": "stop", "t": t, "equity": equity, "day_start": day_start_equity})
             maker_queue, fallback_queue = [], []
             close_all(opens, STOP_SLIPPAGE_BPS, t)
             stops += 1
@@ -276,6 +312,7 @@ def simulate_maker_basket(
                         execution.maker_fee_bps,
                         0.0,
                         decided,
+                        "maker",
                         "maker",
                     )
                     fills["maker_filled"] += 1
@@ -331,6 +368,7 @@ def simulate_maker_basket(
                 if symbol not in longs and symbol not in shorts:
                     longs.append(symbol)
             candidate = Selection(tuple(shorts), tuple(longs))
+            proposed = candidate
             allow_entries = t <= entry_end
             if allow_entries:
                 spread = funding_spread(row, candidate)
@@ -359,7 +397,32 @@ def simulate_maker_basket(
             if orders:
                 maker_queue = orders
                 maker_due = t + one_hour
+            record(
+                {
+                    "type": "decision",
+                    "t": t,
+                    "scores": {s: float(row[s]) for s in symbols if pd.notna(row[s])},
+                    "ranked": {"shorts": list(ranked.shorts), "longs": list(ranked.longs)},
+                    "locked": {"shorts": locked_shorts, "longs": locked_longs},
+                    "capped": capped,
+                    "proposed": {"shorts": list(proposed.shorts), "longs": list(proposed.longs)},
+                    "spread": funding_spread(row, proposed),
+                    "entries_allowed": allow_entries,
+                    "final": {"shorts": list(candidate.shorts), "longs": list(candidate.longs)},
+                    "orders": [(sym, target) for sym, target, _ in orders],
+                }
+            )
             selection = candidate
+        # Snapshot after this hour's trades: these positions earn the next hour's move.
+        record(
+            {
+                "type": "hour",
+                "t": t,
+                "equity": equity_at(opens),
+                "qty": {s: qty[s] for s in symbols if qty[s]},
+                "open": {s: float(opens[s]) for s in symbols},
+            }
+        )
         # 7. Episode bookkeeping (flat to flat, as in Phase 2).
         if held() and episode_start is None:
             episode_start = t

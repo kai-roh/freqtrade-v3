@@ -14,6 +14,7 @@ from v3.phase2.maker import (
     h3_grid,
     simulate_maker_basket,
 )
+from v3.phase2.research import Phase2Config, pbo_window
 
 ROOT = Path(__file__).resolve().parents[1]
 SYMBOLS = ("A", "B", "C", "D")
@@ -146,3 +147,19 @@ def test_phase2_simulator_is_unchanged_on_the_frozen_panel():
     expected = row["validation_summary"]["decomposition"]
     for key, value in expected.items():
         assert result.decomposition[key] == pytest.approx(value, rel=1e-12, abs=1e-12)
+
+
+def test_phase2_pbo_window_stops_at_the_last_exit_observation():
+    from types import SimpleNamespace
+
+    folds = [
+        SimpleNamespace(train_start=pd.Timestamp("2025-07-07", tz="UTC")),
+        SimpleNamespace(validation_end=pd.Timestamp("2026-07-16", tz="UTC")),
+    ]
+    panel_end = pd.Timestamp("2026-10-01 23:00", tz="UTC")
+    assert pbo_window(folds, panel_end, Phase2Config()) == (
+        pd.Timestamp("2025-07-07", tz="UTC"),
+        pd.Timestamp("2026-07-30", tz="UTC"),
+    )
+    # The recorded 2026-09-17 run read to the panel end; the flag reproduces it.
+    assert pbo_window(folds, panel_end, Phase2Config(pbo_through_panel_end=True))[1] == panel_end

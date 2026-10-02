@@ -404,9 +404,14 @@ def render_report(result: dict[str, Any]) -> str:
         f"- universe: {', '.join(result['universe'])}",
         f"- panel: {result['panel']['start'][:16]} → {result['panel']['end'][:16]}",
         f"- Stage B evaluation: {result['stage_b']['evaluation'][0][:10]} → "
-        f"{result['stage_b']['evaluation'][1][:10]} (untouched by Phase 2)",
+        f"{result['stage_b']['evaluation'][1][:10]} (not used by Phase 2 training, validation, "
+        "or exits; 2026-07-31..09-16 was inside the Phase 2 PBO matrix)",
         "",
         "## Stage A — Phase 2 folds (contaminated, diagnostic)",
+        "",
+        "Days are six overlapping 45-day fold windows (30-day validation, 14-day exit observation, "
+        "one boundary day) joined together. They are not one continuous account, so per-day and "
+        "per-year figures below share that denominator.",
         "",
         "| Hypothesis | Cost | Days | PF | Expectancy/day | MDD | Positive folds | Fold conc. | "
         "Asset conc. | PBO | Pass |",
@@ -425,6 +430,9 @@ def render_report(result: dict[str, Any]) -> str:
     lines += [
         "",
         "## Stage B — confirmatory window",
+        "",
+        "The 62-day window is recorded as 63 daily returns because the end-of-window close adds "
+        "one boundary day.",
         "",
         "| Hypothesis | Cost | Selected | Net PnL | Funding | Fees | Slippage | MDD | Cycles | "
         "Verdict |",
@@ -494,8 +502,10 @@ def render_report(result: dict[str, Any]) -> str:
         "H3 passes only if Stage A and Stage B both pass under both cost regimes. Stage A reuses "
         "folds whose Phase 2 results were known when H3 was designed, so it cannot pass H3 alone. "
         "H3T is a taker diagnostic and is never promoted. Maker fills use a trade-through rule on "
-        "hourly candles, which cannot see queue position; live fill rates can be lower. Passing "
-        "authorizes only a Demo/shadow observation, never real capital.",
+        "hourly candles, which cannot see queue position, partial fills, or whether a post-only "
+        "order at the open would have been rejected for crossing; the fill rate is a model "
+        "judgement on few attempts, not an observed rate. Passing authorizes only a Demo/shadow "
+        "observation, never real capital. Leg-level diagnosis: EPISODE_TRACE.md.",
         "",
     ]
     return "\n".join(lines)

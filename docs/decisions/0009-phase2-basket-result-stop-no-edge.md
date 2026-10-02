@@ -63,3 +63,14 @@ registered contract.
 - Phase 3 (small real capital) has no candidate strategy. The Phase 1 Demo
   observation continues as infrastructure evidence only.
 - The next admissible research step is a new pre-registration, not a rerun.
+
+## Correction (2026-10-02)
+
+- "Two months of data after the last validation window were unused" is
+  inaccurate. The PBO matrix for both hypotheses ran to the panel end
+  (2026-09-16, 437 rows), so 2026-07-31 to 09-16 entered the PBO gate. Folds
+  and exits did not use it. With the matrix bounded to the last exit observation
+  (2026-07-30, 389 rows), PBO is H1 0.79 and 0.77, and H2 0.39 and 0.17. The
+  decision is unchanged. See Decision 0013, "Corrections".
+- The "270 days" behind the per-day figures are six overlapping 45-day fold
+  windows. They are not one continuous account.
