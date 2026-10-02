@@ -1,0 +1,2520 @@
+{
+  "diagnosis_only": true,
+  "generated_at": "2026-10-02T06:45:44Z",
+  "plan": "docs/PHASE2B_RISK_DIAGNOSIS.md",
+  "schema_version": 1,
+  "stage_one": {
+    "normal": {
+      "effects": {
+        "constrained": {
+          "net": {
+            "balance_V1_minus_V0": 2.1843168659360686,
+            "beta_V2_minus_V0": 1.8546152291878286,
+            "combined_V3_minus_V0": 21.949929829556766,
+            "interaction": 17.91099773443287
+          },
+          "price": {
+            "balance_V1_minus_V0": 2.1598399999997575,
+            "beta_V2_minus_V0": 1.8629499999998913,
+            "combined_V3_minus_V0": 21.439149999999852,
+            "interaction": 17.416360000000203
+          }
+        },
+        "ideal": {
+          "net": {
+            "balance_V1_minus_V0": 0.7014594375987713,
+            "beta_V2_minus_V0": 1.2070641878052015,
+            "combined_V3_minus_V0": 1.7827651516616072,
+            "interaction": -0.1257584737423656
+          },
+          "price": {
+            "balance_V1_minus_V0": 0.7500511963647769,
+            "beta_V2_minus_V0": 1.2640699622831324,
+            "combined_V3_minus_V0": 1.8810570707154985,
+            "interaction": -0.13306408793241076
+          }
+        }
+      },
+      "fold": 0,
+      "rows": {
+        "V0-constrained": {
+          "balance_full_exits": 0,
+          "balance_orders": 0,
+          "costs": 0.6540377619999999,
+          "days": 45,
+          "decisions": 42,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -5.305885467154468,
+            -6.599676505550434
+          ],
+          "episodes": 2,
+          "funding": 0.2971449552950135,
+          "max_drawdown": 0.06001941403352429,
+          "mean_abs_net_beta": 52.92402020420247,
+          "mean_abs_net_dollar": 28.800311909547737,
+          "min_notional_skips": 4,
+          "net": -12.003882806704866,
+          "net_minus_best_episode": -6.6979973395503976,
+          "price": -11.64698999999988,
+          "sharpe": -3.856762030959149,
+          "stop_events": 2,
+          "trades": 22
+        },
+        "V0-ideal": {
+          "balance_full_exits": 0,
+          "balance_orders": 0,
+          "costs": 0.47719673058757284,
+          "days": 45,
+          "decisions": 43,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.610163455022558,
+            -1.9477519377310557
+          ],
+          "episodes": 2,
+          "funding": 0.42098722434659863,
+          "max_drawdown": 0.03405773731235495,
+          "mean_abs_net_beta": 52.06081603919847,
+          "mean_abs_net_dollar": 24.915297256980935,
+          "min_notional_skips": 0,
+          "net": -6.6779153927534765,
+          "net_minus_best_episode": -4.730163455022421,
+          "price": -6.621705886512502,
+          "sharpe": -2.321776281401522,
+          "stop_events": 1,
+          "trades": 24
+        },
+        "V1-constrained": {
+          "balance_full_exits": 0,
+          "balance_orders": 6,
+          "costs": 0.5558659020000001,
+          "days": 45,
+          "decisions": 42,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.194052380106939,
+            -5.553949862661881
+          ],
+          "episodes": 2,
+          "funding": 0.2234499612313242,
+          "max_drawdown": 0.04909782970384424,
+          "mean_abs_net_beta": 16.59807409192165,
+          "mean_abs_net_dollar": 2.108573252427187,
+          "min_notional_skips": 4,
+          "net": -9.819565940768797,
+          "net_minus_best_episode": -5.625513560661858,
+          "price": -9.487150000000122,
+          "sharpe": -3.6190219522447338,
+          "stop_events": 2,
+          "trades": 26
+        },
+        "V1-ideal": {
+          "balance_full_exits": 0,
+          "balance_orders": 2,
+          "costs": 0.47734674082684575,
+          "days": 45,
+          "decisions": 43,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.610163455022558,
+            -1.2462925001322844
+          ],
+          "episodes": 2,
+          "funding": 0.37254547581986486,
+          "max_drawdown": 0.03405773731235495,
+          "mean_abs_net_beta": 25.03654678966237,
+          "mean_abs_net_dollar": 2.1111124631177676,
+          "min_notional_skips": 0,
+          "net": -5.976455955154705,
+          "net_minus_best_episode": -4.730163455022421,
+          "price": -5.871654690147725,
+          "sharpe": -2.4100437545388065,
+          "stop_events": 1,
+          "trades": 27
+        },
+        "V2-constrained": {
+          "balance_full_exits": 0,
+          "balance_orders": 0,
+          "costs": 0.63274758,
+          "days": 45,
+          "decisions": 42,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.736377356589571,
+            -5.317626130927408
+          ],
+          "episodes": 2,
+          "funding": 0.26752000248295255,
+          "max_drawdown": 0.05074633788758487,
+          "mean_abs_net_beta": 31.733800203257626,
+          "mean_abs_net_dollar": 25.302644747474737,
+          "min_notional_skips": 4,
+          "net": -10.149267577517037,
+          "net_minus_best_episode": -5.412890220927466,
+          "price": -9.784039999999989,
+          "sharpe": -3.7140216294601585,
+          "stop_events": 2,
+          "trades": 22
+        },
+        "V2-ideal": {
+          "balance_full_exits": 0,
+          "balance_orders": 0,
+          "costs": 0.4867249498892596,
+          "days": 45,
+          "decisions": 43,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.43270658995317,
+            -0.9181446149951
+          ],
+          "episodes": 2,
+          "funding": 0.37350966917035466,
+          "max_drawdown": 0.02896720998077602,
+          "mean_abs_net_beta": 25.968830689884737,
+          "mean_abs_net_dollar": 28.088624696758178,
+          "min_notional_skips": 0,
+          "net": -5.470851204948275,
+          "net_minus_best_episode": -4.552706589953175,
+          "price": -5.35763592422937,
+          "sharpe": -2.282167825313139,
+          "stop_events": 1,
+          "trades": 24
+        },
+        "V3-constrained": {
+          "balance_full_exits": 0,
+          "balance_orders": 14,
+          "costs": 0.18076054700000005,
+          "days": 45,
+          "decisions": 44,
+          "entry_allowed_decisions": 9,
+          "episode_pnl": [
+            9.981928022851918
+          ],
+          "episodes": 1,
+          "funding": 0.33464756985192706,
+          "max_drawdown": 0.01134616006925233,
+          "mean_abs_net_beta": 3.665128124353165,
+          "mean_abs_net_dollar": 15.303338783382802,
+          "min_notional_skips": 5,
+          "net": 9.9460470228519,
+          "net_minus_best_episode": -0.03588100000001759,
+          "price": 9.792159999999972,
+          "sharpe": 4.280358827555395,
+          "stop_events": 0,
+          "trades": 27
+        },
+        "V3-ideal": {
+          "balance_full_exits": 0,
+          "balance_orders": 3,
+          "costs": 0.486848347310946,
+          "days": 45,
+          "decisions": 43,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.43270658995317,
+            -0.34244365113869435
+          ],
+          "episodes": 2,
+          "funding": 0.3323469220160806,
+          "max_drawdown": 0.02447575120545964,
+          "mean_abs_net_beta": 3.2076272029200923,
+          "mean_abs_net_dollar": 21.842085783773328,
+          "min_notional_skips": 0,
+          "net": -4.895150241091869,
+          "net_minus_best_episode": -4.552706589953175,
+          "price": -4.7406488157970035,
+          "sharpe": -2.2402561332966107,
+          "stop_events": 1,
+          "trades": 27
+        }
+      },
+      "rule": "H3 W=168h k=3",
+      "window": [
+        "2026-01-17T00:00:00+00:00",
+        "2026-03-02T00:00:00+00:00"
+      ]
+    },
+    "stress": {
+      "effects": {
+        "constrained": {
+          "net": {
+            "balance_V1_minus_V0": 2.1843168659360686,
+            "beta_V2_minus_V0": 1.8546152291878286,
+            "combined_V3_minus_V0": 20.719018402846416,
+            "interaction": 16.68008630772252
+          },
+          "price": {
+            "balance_V1_minus_V0": 2.1598399999997575,
+            "beta_V2_minus_V0": 1.8629499999998913,
+            "combined_V3_minus_V0": 20.294709999999917,
+            "interaction": 16.271920000000264
+          }
+        },
+        "ideal": {
+          "net": {
+            "balance_V1_minus_V0": 0.7014594375987713,
+            "beta_V2_minus_V0": 1.2030745828645308,
+            "combined_V3_minus_V0": 1.7787755467209365,
+            "interaction": -0.1257584737423656
+          },
+          "price": {
+            "balance_V1_minus_V0": 0.7500511963647769,
+            "beta_V2_minus_V0": 1.2640699622831235,
+            "combined_V3_minus_V0": 1.8810570707154897,
+            "interaction": -0.13306408793241076
+          }
+        }
+      },
+      "fold": 0,
+      "rows": {
+        "V0-constrained": {
+          "balance_full_exits": 0,
+          "balance_orders": 0,
+          "costs": 0.6540377619999999,
+          "days": 45,
+          "decisions": 42,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -5.305885467154468,
+            -6.599676505550434
+          ],
+          "episodes": 2,
+          "funding": 0.2971449552950135,
+          "max_drawdown": 0.06001941403352429,
+          "mean_abs_net_beta": 52.92402020420247,
+          "mean_abs_net_dollar": 28.800311909547737,
+          "min_notional_skips": 4,
+          "net": -12.003882806704866,
+          "net_minus_best_episode": -6.6979973395503976,
+          "price": -11.64698999999988,
+          "sharpe": -3.856762030959149,
+          "stop_events": 2,
+          "trades": 22
+        },
+        "V0-ideal": {
+          "balance_full_exits": 0,
+          "balance_orders": 0,
+          "costs": 0.4916226162546171,
+          "days": 45,
+          "decisions": 43,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.610163455022558,
+            -1.9621778233980933
+          ],
+          "episodes": 2,
+          "funding": 0.42098722434659863,
+          "max_drawdown": 0.03405773731235495,
+          "mean_abs_net_beta": 52.06081603919847,
+          "mean_abs_net_dollar": 24.915297256980935,
+          "min_notional_skips": 0,
+          "net": -6.692341278420514,
+          "net_minus_best_episode": -4.730163455022421,
+          "price": -6.621705886512495,
+          "sharpe": -2.3267884588691463,
+          "stop_events": 1,
+          "trades": 24
+        },
+        "V1-constrained": {
+          "balance_full_exits": 0,
+          "balance_orders": 6,
+          "costs": 0.5558659020000001,
+          "days": 45,
+          "decisions": 42,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.194052380106939,
+            -5.553949862661881
+          ],
+          "episodes": 2,
+          "funding": 0.2234499612313242,
+          "max_drawdown": 0.04909782970384424,
+          "mean_abs_net_beta": 16.59807409192165,
+          "mean_abs_net_dollar": 2.108573252427187,
+          "min_notional_skips": 4,
+          "net": -9.819565940768797,
+          "net_minus_best_episode": -5.625513560661858,
+          "price": -9.487150000000122,
+          "sharpe": -3.6190219522447338,
+          "stop_events": 2,
+          "trades": 26
+        },
+        "V1-ideal": {
+          "balance_full_exits": 0,
+          "balance_orders": 2,
+          "costs": 0.4917726264938901,
+          "days": 45,
+          "decisions": 43,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.610163455022558,
+            -1.260718385799322
+          ],
+          "episodes": 2,
+          "funding": 0.37254547581986486,
+          "max_drawdown": 0.03405773731235495,
+          "mean_abs_net_beta": 25.03654678966237,
+          "mean_abs_net_dollar": 2.1111124631177676,
+          "min_notional_skips": 0,
+          "net": -5.990881840821743,
+          "net_minus_best_episode": -4.730163455022421,
+          "price": -5.871654690147718,
+          "sharpe": -2.415894331688293,
+          "stop_events": 1,
+          "trades": 27
+        },
+        "V2-constrained": {
+          "balance_full_exits": 0,
+          "balance_orders": 0,
+          "costs": 0.63274758,
+          "days": 45,
+          "decisions": 42,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.736377356589571,
+            -5.317626130927408
+          ],
+          "episodes": 2,
+          "funding": 0.26752000248295255,
+          "max_drawdown": 0.05074633788758487,
+          "mean_abs_net_beta": 31.733800203257626,
+          "mean_abs_net_dollar": 25.302644747474737,
+          "min_notional_skips": 4,
+          "net": -10.149267577517037,
+          "net_minus_best_episode": -5.412890220927466,
+          "price": -9.784039999999989,
+          "sharpe": -3.7140216294601585,
+          "stop_events": 2,
+          "trades": 22
+        },
+        "V2-ideal": {
+          "balance_full_exits": 0,
+          "balance_orders": 0,
+          "costs": 0.5051404404969663,
+          "days": 45,
+          "decisions": 43,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.43270658995317,
+            -0.9365601056028083
+          ],
+          "episodes": 2,
+          "funding": 0.37350966917035466,
+          "max_drawdown": 0.029059134740305047,
+          "mean_abs_net_beta": 25.968830689884737,
+          "mean_abs_net_dollar": 28.088624696758178,
+          "min_notional_skips": 0,
+          "net": -5.489266695555983,
+          "net_minus_best_episode": -4.552706589953175,
+          "price": -5.357635924229371,
+          "sharpe": -2.2896907791899217,
+          "stop_events": 1,
+          "trades": 24
+        },
+        "V3-constrained": {
+          "balance_full_exits": 0,
+          "balance_orders": 12,
+          "costs": 0.271533872,
+          "days": 45,
+          "decisions": 44,
+          "entry_allowed_decisions": 9,
+          "episode_pnl": [
+            8.751016596141568
+          ],
+          "episodes": 1,
+          "funding": 0.3389494681415128,
+          "max_drawdown": 0.01236467029548855,
+          "mean_abs_net_beta": 2.346369405045205,
+          "mean_abs_net_dollar": 14.40031035608309,
+          "min_notional_skips": 5,
+          "net": 8.71513559614155,
+          "net_minus_best_episode": -0.03588100000001759,
+          "price": 8.647720000000037,
+          "sharpe": 3.8694313592068945,
+          "stop_events": 0,
+          "trades": 25
+        },
+        "V3-ideal": {
+          "balance_full_exits": 0,
+          "balance_orders": 3,
+          "costs": 0.5052638379186527,
+          "days": 45,
+          "decisions": 43,
+          "entry_allowed_decisions": 8,
+          "episode_pnl": [
+            -4.43270658995317,
+            -0.36085914174640266
+          ],
+          "episodes": 2,
+          "funding": 0.3323469220160806,
+          "max_drawdown": 0.02456782865849827,
+          "mean_abs_net_beta": 3.2076272029200923,
+          "mean_abs_net_dollar": 21.842085783773328,
+          "min_notional_skips": 0,
+          "net": -4.9135657316995776,
+          "net_minus_best_episode": -4.552706589953175,
+          "price": -4.740648815797005,
+          "sharpe": -2.2486020695082205,
+          "stop_events": 1,
+          "trades": 27
+        }
+      },
+      "rule": "H3 W=168h k=3",
+      "window": [
+        "2026-01-17T00:00:00+00:00",
+        "2026-03-02T00:00:00+00:00"
+      ]
+    }
+  },
+  "stage_two": {
+    "H3 W=168h k=2": {
+      "normal": {
+        "effects": {
+          "constrained": {
+            "net": {
+              "balance_V1_minus_V0": 8.583889405325436,
+              "beta_V2_minus_V0": -8.580147065384523,
+              "combined_V3_minus_V0": 9.531638539697468,
+              "interaction": 9.527896199756555
+            },
+            "price": {
+              "balance_V1_minus_V0": 7.724300000000085,
+              "beta_V2_minus_V0": -8.02750000000006,
+              "combined_V3_minus_V0": 8.705390000000378,
+              "interaction": 9.008590000000353
+            }
+          },
+          "ideal": {
+            "net": {
+              "balance_V1_minus_V0": 8.225693158861361,
+              "beta_V2_minus_V0": 1.1276954432533728,
+              "combined_V3_minus_V0": 5.686573785160363,
+              "interaction": -3.6668148169543713
+            },
+            "price": {
+              "balance_V1_minus_V0": 7.993681198332344,
+              "beta_V2_minus_V0": 1.8684473897405072,
+              "combined_V3_minus_V0": 6.178721758013207,
+              "interaction": -3.683406830059644
+            }
+          }
+        },
+        "rows": {
+          "V0-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 2.0412812970000003,
+            "days": 389,
+            "decisions": 382,
+            "entry_allowed_decisions": 32,
+            "episode_pnl": [
+              -0.5212736568177263,
+              -4.5973059174354205,
+              -4.18021308370993,
+              3.4819583327869736,
+              -6.035877632037284,
+              0.12640667060748,
+              15.154844697453257
+            ],
+            "episodes": 7,
+            "funding": 1.9948050018474044,
+            "max_drawdown": 0.09516097319737461,
+            "mean_abs_net_beta": 38.87812536243606,
+            "mean_abs_net_dollar": 23.68909386591482,
+            "min_notional_skips": 1,
+            "net": 3.0954937048473425,
+            "net_minus_best_episode": -12.059350992605914,
+            "price": 3.1419699999999384,
+            "sharpe": 0.17866785528418908,
+            "stop_events": 6,
+            "trades": 60
+          },
+          "V0-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.7882448653912453,
+            "days": 389,
+            "decisions": 384,
+            "entry_allowed_decisions": 33,
+            "episode_pnl": [
+              2.6984632419133163,
+              -6.125525741984774,
+              -7.18215669498926,
+              -6.054243649054001,
+              1.0777285637319949,
+              14.218019029148593
+            ],
+            "episodes": 6,
+            "funding": 2.0379338426944447,
+            "max_drawdown": 0.12609118295869812,
+            "mean_abs_net_beta": 30.98880907900679,
+            "mean_abs_net_dollar": 18.84973857561532,
+            "min_notional_skips": 0,
+            "net": -1.6977152512337739,
+            "net_minus_best_episode": -15.915734280382367,
+            "price": -1.947404228536973,
+            "sharpe": -0.025768129951095436,
+            "stop_events": 4,
+            "trades": 54
+          },
+          "V1-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 28,
+            "costs": 0.9243240359999999,
+            "days": 389,
+            "decisions": 387,
+            "entry_allowed_decisions": 35,
+            "episode_pnl": [
+              -0.23977092009772605,
+              -0.30770342144535334,
+              -2.376710274788394,
+              10.34214119025225,
+              4.443165482251999
+            ],
+            "episodes": 5,
+            "funding": 1.7374371461727562,
+            "max_drawdown": 0.06509817466606521,
+            "mean_abs_net_beta": 14.159464682751691,
+            "mean_abs_net_dollar": 4.548750587871291,
+            "min_notional_skips": 13,
+            "net": 11.679383110172779,
+            "net_minus_best_episode": 1.3372419199205297,
+            "price": 10.866270000000023,
+            "sharpe": 0.7916738777013179,
+            "stop_events": 1,
+            "trades": 75
+          },
+          "V1-ideal": {
+            "balance_full_exits": 1,
+            "balance_orders": 0,
+            "costs": 1.421098170809757,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 33,
+            "episode_pnl": [
+              2.6984632419133163,
+              -6.125525741984774,
+              -4.489007646391826,
+              -2.4075582564086346,
+              3.5799046140845974,
+              13.60170169641458
+            ],
+            "episodes": 6,
+            "funding": 1.902799108641973,
+            "max_drawdown": 0.101915294340498,
+            "mean_abs_net_beta": 13.369719337366645,
+            "mean_abs_net_dollar": 3.191105168838128,
+            "min_notional_skips": 0,
+            "net": 6.527977907627587,
+            "net_minus_best_episode": -7.073723788786992,
+            "price": 6.046276969795371,
+            "sharpe": 0.38082060496884806,
+            "stop_events": 2,
+            "trades": 60
+          },
+          "V2-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 2.2138682370000002,
+            "days": 389,
+            "decisions": 381,
+            "entry_allowed_decisions": 30,
+            "episode_pnl": [
+              -4.343056058118663,
+              -0.5780127358043785,
+              -7.2013454077616075,
+              -3.9444477539299783,
+              4.299680030683049,
+              -5.335400884753227,
+              -0.3763988764655437,
+              12.358515067613354
+            ],
+            "episodes": 8,
+            "funding": 1.6147448764629415,
+            "max_drawdown": 0.10471864215925797,
+            "mean_abs_net_beta": 33.29202986950589,
+            "mean_abs_net_dollar": 23.326290265029115,
+            "min_notional_skips": 2,
+            "net": -5.48465336053718,
+            "net_minus_best_episode": -17.843168428150534,
+            "price": -4.885530000000122,
+            "sharpe": -0.16061351077127556,
+            "stop_events": 7,
+            "trades": 64
+          },
+          "V2-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 2.050844607853126,
+            "days": 389,
+            "decisions": 383,
+            "entry_allowed_decisions": 32,
+            "episode_pnl": [
+              -4.394938607262333,
+              -2.8353380865216593,
+              -3.58021064575658,
+              5.0640725658540475,
+              -5.344886413119269,
+              0.36267313931736567,
+              10.55088644011633
+            ],
+            "episodes": 7,
+            "funding": 1.559781638669191,
+            "max_drawdown": 0.06523246665927052,
+            "mean_abs_net_beta": 22.745740348552612,
+            "mean_abs_net_dollar": 29.942445888484606,
+            "min_notional_skips": 0,
+            "net": -0.5700198079804011,
+            "net_minus_best_episode": -11.12090624809673,
+            "price": -0.07895683879646587,
+            "sharpe": 0.018613681511438874,
+            "stop_events": 5,
+            "trades": 62
+          },
+          "V3-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 29,
+            "costs": 0.9197242409999999,
+            "days": 389,
+            "decisions": 387,
+            "entry_allowed_decisions": 35,
+            "episode_pnl": [
+              0.908862185192163,
+              0.9349027145334219,
+              -2.0645386412499818,
+              9.637765217114406,
+              3.3907400589547763
+            ],
+            "episodes": 5,
+            "funding": 1.6994964855444936,
+            "max_drawdown": 0.059957036701760114,
+            "mean_abs_net_beta": 5.646176660830615,
+            "mean_abs_net_dollar": 7.164695166872687,
+            "min_notional_skips": 13,
+            "net": 12.62713224454481,
+            "net_minus_best_episode": 2.9893670274304043,
+            "price": 11.847360000000316,
+            "sharpe": 0.8327421619982138,
+            "stop_events": 1,
+            "trades": 75
+          },
+          "V3-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.6877743808171863,
+            "days": 389,
+            "decisions": 385,
+            "entry_allowed_decisions": 32,
+            "episode_pnl": [
+              -4.394938607262333,
+              -2.8353380865216593,
+              -3.58021064575658,
+              4.1186464712857,
+              -1.7728168012684762,
+              2.8368996525511534,
+              10.008894751507057
+            ],
+            "episodes": 7,
+            "funding": 1.4453153852675402,
+            "max_drawdown": 0.0592985182709963,
+            "mean_abs_net_beta": 6.073905682249442,
+            "mean_abs_net_dollar": 15.914707241901414,
+            "min_notional_skips": 0,
+            "net": 3.9888585339265887,
+            "net_minus_best_episode": -6.0200362175804685,
+            "price": 4.231317529476234,
+            "sharpe": 0.2657167819429811,
+            "stop_events": 3,
+            "trades": 70
+          }
+        }
+      },
+      "stress": {
+        "effects": {
+          "constrained": {
+            "net": {
+              "balance_V1_minus_V0": 11.323160809099619,
+              "beta_V2_minus_V0": -9.158306313384202,
+              "combined_V3_minus_V0": 12.279786109417472,
+              "interaction": 10.114931613702055
+            },
+            "price": {
+              "balance_V1_minus_V0": 10.400730000000209,
+              "beta_V2_minus_V0": -8.557299999999739,
+              "combined_V3_minus_V0": 11.386810000000375,
+              "interaction": 9.543379999999905
+            }
+          },
+          "ideal": {
+            "net": {
+              "balance_V1_minus_V0": 8.06492396931776,
+              "beta_V2_minus_V0": 0.19812278355843205,
+              "combined_V3_minus_V0": 4.601329305716888,
+              "interaction": -3.6617174471593046
+            },
+            "price": {
+              "balance_V1_minus_V0": 7.864243492001208,
+              "beta_V2_minus_V0": 1.0701224591405982,
+              "combined_V3_minus_V0": 5.256746353604489,
+              "interaction": -3.6776195975373165
+            }
+          }
+        },
+        "rows": {
+          "V0-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 2.212237342,
+            "days": 389,
+            "decisions": 382,
+            "entry_allowed_decisions": 32,
+            "episode_pnl": [
+              -0.5212736568177263,
+              -4.5973059174354205,
+              -4.224956538709932,
+              -0.4758361705551124,
+              -6.035877632037284,
+              0.12640667060748,
+              14.980525697453231
+            ],
+            "episodes": 7,
+            "funding": 1.971593088505338,
+            "max_drawdown": 0.11469337469836277,
+            "mean_abs_net_beta": 37.77095274480922,
+            "mean_abs_net_dollar": 22.789993573667754,
+            "min_notional_skips": 1,
+            "net": -1.0545742534947635,
+            "net_minus_best_episode": -16.035099950947995,
+            "price": -0.8139300000001016,
+            "sharpe": 0.010979821985175867,
+            "stop_events": 6,
+            "trades": 60
+          },
+          "V0-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.9742682524745199,
+            "days": 389,
+            "decisions": 384,
+            "entry_allowed_decisions": 33,
+            "episode_pnl": [
+              2.6984632419133163,
+              -6.125525741984774,
+              -7.248050458746093,
+              -6.054243649054001,
+              0.5074474771314783,
+              13.990534821073993
+            ],
+            "episodes": 6,
+            "funding": 2.038414803203869,
+            "max_drawdown": 0.12897208796551657,
+            "mean_abs_net_beta": 31.03201565935635,
+            "mean_abs_net_dollar": 18.97360113315962,
+            "min_notional_skips": 0,
+            "net": -2.5313743096658072,
+            "net_minus_best_episode": -16.5219091307398,
+            "price": -2.5955208603951565,
+            "sharpe": -0.06350194637433043,
+            "stop_events": 4,
+            "trades": 54
+          },
+          "V1-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 27,
+            "costs": 1.0568071039999998,
+            "days": 389,
+            "decisions": 387,
+            "entry_allowed_decisions": 35,
+            "episode_pnl": [
+              -0.24303021009774284,
+              -1.5365664797115812,
+              -2.5324220040901366,
+              10.319178713252285,
+              4.443165482251999
+            ],
+            "episodes": 5,
+            "funding": 1.7385936596047487,
+            "max_drawdown": 0.0709360924088365,
+            "mean_abs_net_beta": 14.233974289503355,
+            "mean_abs_net_dollar": 4.66483456064356,
+            "min_notional_skips": 13,
+            "net": 10.268586555604855,
+            "net_minus_best_episode": -0.0505921576474293,
+            "price": 9.586800000000107,
+            "sharpe": 0.6973220004944088,
+            "stop_events": 1,
+            "trades": 74
+          },
+          "V1-ideal": {
+            "balance_full_exits": 1,
+            "balance_orders": 0,
+            "costs": 1.6382778199141865,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 33,
+            "episode_pnl": [
+              2.6984632419133163,
+              -6.125525741984774,
+              -4.554901410148659,
+              -2.5690319243527426,
+              3.0096235274841376,
+              13.37492196674043
+            ],
+            "episodes": 6,
+            "funding": 1.9031048479600885,
+            "max_drawdown": 0.10223283844507065,
+            "mean_abs_net_beta": 13.42838595570947,
+            "mean_abs_net_dollar": 3.3279614089853493,
+            "min_notional_skips": 0,
+            "net": 5.533549659651953,
+            "net_minus_best_episode": -7.841372307088477,
+            "price": 5.268722631606051,
+            "sharpe": 0.3295205388978674,
+            "stop_events": 2,
+            "trades": 60
+          },
+          "V2-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 2.4331835300000004,
+            "days": 389,
+            "decisions": 381,
+            "entry_allowed_decisions": 30,
+            "episode_pnl": [
+              -4.343056058118663,
+              -0.5780127358043785,
+              -7.696595407761606,
+              -3.9857790569299425,
+              0.24275372734112466,
+              -5.335400884753284,
+              -0.3763988764655437,
+              12.184196067613385
+            ],
+            "episodes": 8,
+            "funding": 1.5915329631208757,
+            "max_drawdown": 0.1275482165909675,
+            "mean_abs_net_beta": 32.242602300540696,
+            "mean_abs_net_dollar": 23.494497815126095,
+            "min_notional_skips": 2,
+            "net": -10.212880566878965,
+            "net_minus_best_episode": -22.39707663449235,
+            "price": -9.37122999999984,
+            "sharpe": -0.38751401368593524,
+            "stop_events": 7,
+            "trades": 64
+          },
+          "V2-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 2.366862729751767,
+            "days": 389,
+            "decisions": 383,
+            "entry_allowed_decisions": 32,
+            "episode_pnl": [
+              -4.394938607262333,
+              -3.2054875661563926,
+              -3.621793344844349,
+              4.60843278213224,
+              -5.344886413119269,
+              -0.31369067767738557,
+              10.282708512157996
+            ],
+            "episodes": 7,
+            "funding": 1.5590096048989504,
+            "max_drawdown": 0.07265764551710019,
+            "mean_abs_net_beta": 22.92478805320485,
+            "mean_abs_net_dollar": 30.293424127490265,
+            "min_notional_skips": 0,
+            "net": -2.333251526107375,
+            "net_minus_best_episode": -12.61596003826537,
+            "price": -1.5253984012545583,
+            "sharpe": -0.0690551920269207,
+            "stop_events": 5,
+            "trades": 62
+          },
+          "V3-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 29,
+            "costs": 1.042564764,
+            "days": 389,
+            "decisions": 387,
+            "entry_allowed_decisions": 35,
+            "episode_pnl": [
+              0.908862185192163,
+              -0.30580194943766514,
+              -2.2006235519008897,
+              9.612634403114384,
+              3.3907400589547194
+            ],
+            "episodes": 5,
+            "funding": 1.694896619922435,
+            "max_drawdown": 0.06576166787219136,
+            "mean_abs_net_beta": 5.713274461135057,
+            "mean_abs_net_dollar": 7.28253619283066,
+            "min_notional_skips": 13,
+            "net": 11.225211855922709,
+            "net_minus_best_episode": 1.612577452808324,
+            "price": 10.572880000000273,
+            "sharpe": 0.7427480480691845,
+            "stop_events": 1,
+            "trades": 75
+          },
+          "V3-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 2.0356826904401557,
+            "days": 389,
+            "decisions": 385,
+            "entry_allowed_decisions": 32,
+            "episode_pnl": [
+              -4.394938607262333,
+              -3.2054875661563926,
+              -3.621793344844349,
+              3.6729417188119555,
+              -1.93925415192615,
+              2.160535835556402,
+              9.74154732320983
+            ],
+            "episodes": 7,
+            "funding": 1.4444121932819034,
+            "max_drawdown": 0.06341533394323362,
+            "mean_abs_net_beta": 6.273275107244897,
+            "mean_abs_net_dollar": 16.254229652791434,
+            "min_notional_skips": 0,
+            "net": 2.069954996051081,
+            "net_minus_best_episode": -7.6715923271587485,
+            "price": 2.661225493209333,
+            "sharpe": 0.1579400661392439,
+            "stop_events": 3,
+            "trades": 70
+          }
+        }
+      }
+    },
+    "H3 W=168h k=3": {
+      "normal": {
+        "effects": {
+          "constrained": {
+            "net": {
+              "balance_V1_minus_V0": 4.178656889234901,
+              "beta_V2_minus_V0": 1.669452820925386,
+              "combined_V3_minus_V0": 22.630600855280647,
+              "interaction": 16.78249114512036
+            },
+            "price": {
+              "balance_V1_minus_V0": 3.6980499999995295,
+              "beta_V2_minus_V0": 1.6435099999997007,
+              "combined_V3_minus_V0": 21.646029999999822,
+              "interaction": 16.30447000000059
+            }
+          },
+          "ideal": {
+            "net": {
+              "balance_V1_minus_V0": 0.7014594375987713,
+              "beta_V2_minus_V0": 0.4272277491704699,
+              "combined_V3_minus_V0": 1.6018960664027873,
+              "interaction": 0.4732088796335461
+            },
+            "price": {
+              "balance_V1_minus_V0": 0.7500511963647769,
+              "beta_V2_minus_V0": -0.07114599811090372,
+              "combined_V3_minus_V0": 1.3346013770697782,
+              "interaction": 0.6556961788159059
+            }
+          }
+        },
+        "rows": {
+          "V0-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.306460728,
+            "days": 389,
+            "decisions": 384,
+            "entry_allowed_decisions": 14,
+            "episode_pnl": [
+              7.093280389370676,
+              -6.659005819421935,
+              -5.305885467154468,
+              -6.599676505550434
+            ],
+            "episodes": 4,
+            "funding": 0.4668462552436839,
+            "max_drawdown": 0.11128366530737832,
+            "mean_abs_net_beta": 53.80257167019509,
+            "mean_abs_net_dollar": 29.478389972222242,
+            "min_notional_skips": 7,
+            "net": -11.6741544727561,
+            "net_minus_best_episode": -18.767434862126777,
+            "price": -10.834539999999786,
+            "sharpe": -0.7356569738891262,
+            "stop_events": 4,
+            "trades": 44
+          },
+          "V0-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.2179360337006397,
+            "days": 389,
+            "decisions": 385,
+            "entry_allowed_decisions": 14,
+            "episode_pnl": [
+              5.891569120673154,
+              -7.336957762607398,
+              -4.610163455022558,
+              -1.9477519377310557
+            ],
+            "episodes": 4,
+            "funding": 0.6015792743807398,
+            "max_drawdown": 0.09022734541752674,
+            "mean_abs_net_beta": 43.01981764951388,
+            "mean_abs_net_dollar": 18.145463208557732,
+            "min_notional_skips": 0,
+            "net": -8.243304034687668,
+            "net_minus_best_episode": -14.134873155360822,
+            "price": -7.626947275367768,
+            "sharpe": -0.5609945890170775,
+            "stop_events": 3,
+            "trades": 48
+          },
+          "V1-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 20,
+            "costs": 0.7297260879999998,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              2.3600072892476476,
+              -4.194052380106939,
+              -5.553949862661909
+            ],
+            "episodes": 3,
+            "funding": 0.37071850447905563,
+            "max_drawdown": 0.05685889671061877,
+            "mean_abs_net_beta": 16.184782420924574,
+            "mean_abs_net_dollar": 5.800387878228791,
+            "min_notional_skips": 8,
+            "net": -7.4954975835212,
+            "net_minus_best_episode": -9.855504872768847,
+            "price": -7.136490000000256,
+            "sharpe": -0.7449564862361262,
+            "stop_events": 2,
+            "trades": 53
+          },
+          "V1-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 2,
+            "costs": 1.2180860439399126,
+            "days": 389,
+            "decisions": 385,
+            "entry_allowed_decisions": 14,
+            "episode_pnl": [
+              5.891569120673154,
+              -7.336957762607398,
+              -4.610163455022558,
+              -1.2462925001322844
+            ],
+            "episodes": 4,
+            "funding": 0.5531375258540062,
+            "max_drawdown": 0.09022734541752674,
+            "mean_abs_net_beta": 24.584657231225666,
+            "mean_abs_net_dollar": 2.5891200933642544,
+            "min_notional_skips": 0,
+            "net": -7.541844597088897,
+            "net_minus_best_episode": -13.43341371776205,
+            "price": -6.876896079002991,
+            "sharpe": -0.5369829318631948,
+            "stop_events": 3,
+            "trades": 51
+          },
+          "V2-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.239381534,
+            "days": 389,
+            "decisions": 384,
+            "entry_allowed_decisions": 14,
+            "episode_pnl": [
+              6.743094456146281,
+              -6.501101956459962,
+              -4.736377356589571,
+              -5.317626130927408
+            ],
+            "episodes": 4,
+            "funding": 0.42570988216937045,
+            "max_drawdown": 0.10110180873362273,
+            "mean_abs_net_beta": 40.77355180675979,
+            "mean_abs_net_dollar": 27.14359281337048,
+            "min_notional_skips": 7,
+            "net": -10.004701651830715,
+            "net_minus_best_episode": -16.747796107976995,
+            "price": -9.191030000000085,
+            "sharpe": -0.667724528275908,
+            "stop_events": 4,
+            "trades": 44
+          },
+          "V2-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 0.7750774708525616,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              -2.285225080569063,
+              -4.43270658995317,
+              -0.9181446149950432
+            ],
+            "episodes": 3,
+            "funding": 0.6570944588140352,
+            "max_drawdown": 0.08201919720890172,
+            "mean_abs_net_beta": 27.297861767374172,
+            "mean_abs_net_dollar": 24.185993097831254,
+            "min_notional_skips": 0,
+            "net": -7.816076285517198,
+            "net_minus_best_episode": -6.897931670522155,
+            "price": -7.698093273478672,
+            "sharpe": -0.5495423671339837,
+            "stop_events": 2,
+            "trades": 41
+          },
+          "V3-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 32,
+            "costs": 0.348362254,
+            "days": 389,
+            "decisions": 388,
+            "entry_allowed_decisions": 17,
+            "episode_pnl": [
+              1.0419385836726178,
+              9.981928022851918
+            ],
+            "episodes": 2,
+            "funding": 0.4933186365245096,
+            "max_drawdown": 0.02737069156816658,
+            "mean_abs_net_beta": 5.593687910851046,
+            "mean_abs_net_dollar": 10.413890163447265,
+            "min_notional_skips": 9,
+            "net": 10.956446382524547,
+            "net_minus_best_episode": 0.9745183596726292,
+            "price": 10.811490000000036,
+            "sharpe": 1.1745806937558745,
+            "stop_events": 0,
+            "trades": 59
+          },
+          "V3-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 4,
+            "costs": 0.8556528960660937,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              -1.686257727193123,
+              -4.43270658995317,
+              -0.3424436511386659
+            ],
+            "episodes": 3,
+            "funding": 0.5065908260792035,
+            "max_drawdown": 0.0764083066410302,
+            "mean_abs_net_beta": 6.433644842139325,
+            "mean_abs_net_dollar": 18.893590608280313,
+            "min_notional_skips": 0,
+            "net": -6.641407968284881,
+            "net_minus_best_episode": -6.298964317146215,
+            "price": -6.29234589829799,
+            "sharpe": -0.5407577097414181,
+            "stop_events": 2,
+            "trades": 47
+          }
+        }
+      },
+      "stress": {
+        "effects": {
+          "constrained": {
+            "net": {
+              "balance_V1_minus_V0": 4.392854371234932,
+              "beta_V2_minus_V0": 1.6694528209253292,
+              "combined_V3_minus_V0": 21.450996683362803,
+              "interaction": 15.388689491202541
+            },
+            "price": {
+              "balance_V1_minus_V0": 3.8973499999995598,
+              "beta_V2_minus_V0": 1.6435099999996439,
+              "combined_V3_minus_V0": 20.550939999999894,
+              "interaction": 15.010080000000691
+            }
+          },
+          "ideal": {
+            "net": {
+              "balance_V1_minus_V0": 0.7014594375987713,
+              "beta_V2_minus_V0": 0.7632414026714969,
+              "combined_V3_minus_V0": 1.9379097199038142,
+              "interaction": 0.4732088796335461
+            },
+            "price": {
+              "balance_V1_minus_V0": 0.7500511963647787,
+              "beta_V2_minus_V0": 0.24023778100950377,
+              "combined_V3_minus_V0": 1.6459851561901857,
+              "interaction": 0.6556961788159033
+            }
+          }
+        },
+        "rows": {
+          "V0-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.343959288,
+            "days": 389,
+            "decisions": 384,
+            "entry_allowed_decisions": 14,
+            "episode_pnl": [
+              7.093280389370676,
+              -6.998605819421954,
+              -5.305885467154468,
+              -6.599676505550434
+            ],
+            "episodes": 4,
+            "funding": 0.4668462552436839,
+            "max_drawdown": 0.11284235590969899,
+            "mean_abs_net_beta": 54.02414621871537,
+            "mean_abs_net_dollar": 29.60757663888891,
+            "min_notional_skips": 7,
+            "net": -12.00445303275606,
+            "net_minus_best_episode": -19.097733422126737,
+            "price": -11.127339999999744,
+            "sharpe": -0.7577461983649669,
+            "stop_events": 4,
+            "trades": 44
+          },
+          "V0-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.2720505355885638,
+            "days": 389,
+            "decisions": 385,
+            "entry_allowed_decisions": 14,
+            "episode_pnl": [
+              5.891569120673154,
+              -7.698043177598123,
+              -4.610163455022558,
+              -1.9621778233980933
+            ],
+            "episodes": 4,
+            "funding": 0.6015662547313044,
+            "max_drawdown": 0.09189420066703555,
+            "mean_abs_net_beta": 43.28978865438955,
+            "mean_abs_net_dollar": 18.295976989134836,
+            "min_notional_skips": 0,
+            "net": -8.60881533534544,
+            "net_minus_best_episode": -14.500384456018594,
+            "price": -7.938331054488181,
+            "sharpe": -0.5868641688181447,
+            "stop_events": 3,
+            "trades": 48
+          },
+          "V1-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 20,
+            "costs": 0.7523271659999998,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              2.243906211247719,
+              -4.194052380106939,
+              -5.553949862661909
+            ],
+            "episodes": 3,
+            "funding": 0.37071850447905563,
+            "max_drawdown": 0.05689125738514694,
+            "mean_abs_net_beta": 16.218451130910122,
+            "mean_abs_net_dollar": 5.823492306273072,
+            "min_notional_skips": 8,
+            "net": -7.611598661521128,
+            "net_minus_best_episode": -9.855504872768847,
+            "price": -7.229990000000185,
+            "sharpe": -0.757121431535595,
+            "stop_events": 2,
+            "trades": 53
+          },
+          "V1-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 2,
+            "costs": 1.2722005458278367,
+            "days": 389,
+            "decisions": 385,
+            "entry_allowed_decisions": 14,
+            "episode_pnl": [
+              5.891569120673154,
+              -7.698043177598123,
+              -4.610163455022558,
+              -1.260718385799322
+            ],
+            "episodes": 4,
+            "funding": 0.5531245062045708,
+            "max_drawdown": 0.09189420066703555,
+            "mean_abs_net_beta": 24.854628236101323,
+            "mean_abs_net_dollar": 2.7396338739413553,
+            "min_notional_skips": 0,
+            "net": -7.907355897746669,
+            "net_minus_best_episode": -13.798925018419823,
+            "price": -7.188279858123402,
+            "sharpe": -0.5641000730413419,
+            "stop_events": 3,
+            "trades": 51
+          },
+          "V2-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.276880094,
+            "days": 389,
+            "decisions": 384,
+            "entry_allowed_decisions": 14,
+            "episode_pnl": [
+              6.743094456146281,
+              -6.840701956459981,
+              -4.736377356589571,
+              -5.317626130927408
+            ],
+            "episodes": 4,
+            "funding": 0.42570988216937045,
+            "max_drawdown": 0.10266450413052547,
+            "mean_abs_net_beta": 40.995743554579576,
+            "mean_abs_net_dollar": 27.273139331476333,
+            "min_notional_skips": 7,
+            "net": -10.335000211830732,
+            "net_minus_best_episode": -17.078094667977012,
+            "price": -9.4838300000001,
+            "sharpe": -0.6911610669401815,
+            "stop_events": 4,
+            "trades": 44
+          },
+          "V2-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 0.8045751180093015,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              -2.2963072371181,
+              -4.43270658995317,
+              -0.9365601056027515
+            ],
+            "episodes": 3,
+            "funding": 0.6570944588140352,
+            "max_drawdown": 0.08216009491404849,
+            "mean_abs_net_beta": 27.297861767374172,
+            "mean_abs_net_dollar": 24.185993097831254,
+            "min_notional_skips": 0,
+            "net": -7.845573932673943,
+            "net_minus_best_episode": -6.909013827071192,
+            "price": -7.698093273478677,
+            "sharpe": -0.5517209444430343,
+            "stop_events": 2,
+            "trades": 41
+          },
+          "V3-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 30,
+            "costs": 0.4747102959999999,
+            "days": 389,
+            "decisions": 388,
+            "entry_allowed_decisions": 17,
+            "episode_pnl": [
+              0.7629472784651341,
+              8.751016596141568
+            ],
+            "episodes": 2,
+            "funding": 0.49765394660659157,
+            "max_drawdown": 0.027858866132886496,
+            "mean_abs_net_beta": 4.974773476444968,
+            "mean_abs_net_dollar": 9.989567830609216,
+            "min_notional_skips": 9,
+            "net": 9.446543650606742,
+            "net_minus_best_episode": 0.6955270544651739,
+            "price": 9.42360000000015,
+            "sharpe": 1.0359175526479245,
+            "stop_events": 0,
+            "trades": 57
+          },
+          "V3-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 4,
+            "costs": 0.8851505432228337,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              -1.6973398837421598,
+              -4.43270658995317,
+              -0.36085914174637423
+            ],
+            "episodes": 3,
+            "funding": 0.5065908260792035,
+            "max_drawdown": 0.07654920434617697,
+            "mean_abs_net_beta": 6.433644842139325,
+            "mean_abs_net_dollar": 18.893590608280313,
+            "min_notional_skips": 0,
+            "net": -6.670905615441626,
+            "net_minus_best_episode": -6.310046473695252,
+            "price": -6.292345898297995,
+            "sharpe": -0.5432706981523899,
+            "stop_events": 2,
+            "trades": 47
+          }
+        }
+      }
+    },
+    "H3 W=336h k=2": {
+      "normal": {
+        "effects": {
+          "constrained": {
+            "net": {
+              "balance_V1_minus_V0": 20.82622405327868,
+              "beta_V2_minus_V0": 1.1700565081962395,
+              "combined_V3_minus_V0": 23.259450587591573,
+              "interaction": 1.2631700261166543
+            },
+            "price": {
+              "balance_V1_minus_V0": 19.867049999999857,
+              "beta_V2_minus_V0": 1.0697099999998407,
+              "combined_V3_minus_V0": 22.34000999999985,
+              "interaction": 1.4032500000001562
+            }
+          },
+          "ideal": {
+            "net": {
+              "balance_V1_minus_V0": 3.6468570730210956,
+              "beta_V2_minus_V0": 5.713503060581218,
+              "combined_V3_minus_V0": 12.830257765608906,
+              "interaction": 3.4698976320065924
+            },
+            "price": {
+              "balance_V1_minus_V0": 3.3982393085354374,
+              "beta_V2_minus_V0": 5.200049835553177,
+              "combined_V3_minus_V0": 12.078110560182916,
+              "interaction": 3.4798214160942997
+            }
+          }
+        },
+        "rows": {
+          "V0-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.981023086,
+            "days": 389,
+            "decisions": 381,
+            "entry_allowed_decisions": 25,
+            "episode_pnl": [
+              -4.768525679999954,
+              -4.465616858521798,
+              -9.00303841110562,
+              -6.4732742128133225,
+              2.324842759960802,
+              -7.7226569499610775,
+              -3.0023425796908043
+            ],
+            "episodes": 7,
+            "funding": 0.9134036298681497,
+            "max_drawdown": 0.17354258459005634,
+            "mean_abs_net_beta": 37.162460725541465,
+            "mean_abs_net_dollar": 20.852255333333332,
+            "min_notional_skips": 4,
+            "net": -33.46434945613183,
+            "net_minus_best_episode": -35.78919221609263,
+            "price": -32.39672999999998,
+            "sharpe": -1.8695321064683876,
+            "stop_events": 7,
+            "trades": 54
+          },
+          "V0-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 2.3190087100862504,
+            "days": 389,
+            "decisions": 381,
+            "entry_allowed_decisions": 25,
+            "episode_pnl": [
+              -5.231183534939191,
+              -4.528433958801401,
+              -6.979001200654949,
+              -6.072294390873765,
+              2.932134871995032,
+              -5.939407676749369,
+              -2.45615176386886
+            ],
+            "episodes": 7,
+            "funding": 0.9561063079978334,
+            "max_drawdown": 0.15174274584468328,
+            "mean_abs_net_beta": 24.925789128097094,
+            "mean_abs_net_dollar": 12.160235792142622,
+            "min_notional_skips": 0,
+            "net": -28.679337653892134,
+            "net_minus_best_episode": -31.611472525887166,
+            "price": -27.316435251803714,
+            "sharpe": -1.6493740511286359,
+            "stop_events": 7,
+            "trades": 58
+          },
+          "V1-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 12,
+            "costs": 0.8751227180000001,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 28,
+            "episode_pnl": [
+              -4.229006499999997,
+              -6.2843836668741915,
+              3.0704145087560732,
+              -5.0425991247350055
+            ],
+            "episodes": 4,
+            "funding": 0.7666773151469731,
+            "max_drawdown": 0.06319062701426592,
+            "mean_abs_net_beta": 12.355242564461486,
+            "mean_abs_net_dollar": 5.414834800936766,
+            "min_notional_skips": 14,
+            "net": -12.638125402853149,
+            "net_minus_best_episode": -15.708539911609222,
+            "price": -12.529680000000122,
+            "sharpe": -1.0861124571477876,
+            "stop_events": 2,
+            "trades": 44
+          },
+          "V1-ideal": {
+            "balance_full_exits": 1,
+            "balance_orders": 2,
+            "costs": 2.133998297248017,
+            "days": 389,
+            "decisions": 383,
+            "entry_allowed_decisions": 25,
+            "episode_pnl": [
+              -5.231183534939191,
+              -4.528433958801401,
+              -6.979001200654949,
+              -6.072294390873765,
+              2.932134871995032,
+              -0.6231666474810993,
+              -4.1255357201160905
+            ],
+            "episodes": 7,
+            "funding": 1.0197136596452558,
+            "max_drawdown": 0.12516240290435532,
+            "mean_abs_net_beta": 17.900478933325484,
+            "mean_abs_net_dollar": 2.989124416466132,
+            "min_notional_skips": 0,
+            "net": -25.032480580871038,
+            "net_minus_best_episode": -27.96461545286607,
+            "price": -23.918195943268277,
+            "sharpe": -1.5503072963161384,
+            "stop_events": 5,
+            "trades": 62
+          },
+          "V2-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.8466864719999996,
+            "days": 389,
+            "decisions": 382,
+            "entry_allowed_decisions": 26,
+            "episode_pnl": [
+              -4.854187979999949,
+              -4.199290036264074,
+              -12.55014312385984,
+              2.221548059387686,
+              -7.914527587522059,
+              -4.7166002536773135
+            ],
+            "episodes": 6,
+            "funding": 0.8794135240645454,
+            "max_drawdown": 0.16147146473967888,
+            "mean_abs_net_beta": 26.602441050617724,
+            "mean_abs_net_dollar": 13.932666609271529,
+            "min_notional_skips": 4,
+            "net": -32.29429294793559,
+            "net_minus_best_episode": -34.515841007323274,
+            "price": -31.327020000000136,
+            "sharpe": -1.9792369590729701,
+            "stop_events": 6,
+            "trades": 48
+          },
+          "V2-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.810311774069107,
+            "days": 389,
+            "decisions": 383,
+            "entry_allowed_decisions": 27,
+            "episode_pnl": [
+              -5.313893790804968,
+              -9.172760940149459,
+              3.12225176469218,
+              -6.571823958676873,
+              -4.7459026404396525
+            ],
+            "episodes": 5,
+            "funding": 0.9608625970087263,
+            "max_drawdown": 0.11482917296655437,
+            "mean_abs_net_beta": 6.33942784645128,
+            "mean_abs_net_dollar": 18.223852560060642,
+            "min_notional_skips": 0,
+            "net": -22.965834593310916,
+            "net_minus_best_episode": -26.088086358003096,
+            "price": -22.116385416250537,
+            "sharpe": -1.5033385339175522,
+            "stop_events": 5,
+            "trades": 44
+          },
+          "V3-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 17,
+            "costs": 0.8951288440000001,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 28,
+            "episode_pnl": [
+              -4.338908800000041,
+              -5.0462766463131175,
+              4.28982170836403,
+              -4.963312632591169
+            ],
+            "episodes": 4,
+            "funding": 0.7469499754598713,
+            "max_drawdown": 0.051024494342701066,
+            "mean_abs_net_beta": 6.589398159522517,
+            "mean_abs_net_dollar": 9.64565536299766,
+            "min_notional_skips": 14,
+            "net": -10.204898868540255,
+            "net_minus_best_episode": -14.494720576904285,
+            "price": -10.056720000000126,
+            "sharpe": -0.8854181886061991,
+            "stop_events": 2,
+            "trades": 48
+          },
+          "V3-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 2,
+            "costs": 1.6394289670903373,
+            "days": 389,
+            "decisions": 384,
+            "entry_allowed_decisions": 27,
+            "episode_pnl": [
+              -5.313893790804968,
+              -9.172760940149459,
+              3.12225176469218,
+              0.5449307463508148,
+              -4.7459026404396525
+            ],
+            "episodes": 5,
+            "funding": 1.0286737704279076,
+            "max_drawdown": 0.07924539944141651,
+            "mean_abs_net_beta": 5.594708393778608,
+            "mean_abs_net_dollar": 15.515351685890009,
+            "min_notional_skips": 0,
+            "net": -15.849079888283228,
+            "net_minus_best_episode": -18.971331652975408,
+            "price": -15.238324691620798,
+            "sharpe": -1.0467942196887916,
+            "stop_events": 4,
+            "trades": 48
+          }
+        }
+      },
+      "stress": {
+        "effects": {
+          "constrained": {
+            "net": {
+              "balance_V1_minus_V0": 20.9032742032787,
+              "beta_V2_minus_V0": 1.1666987881962996,
+              "combined_V3_minus_V0": 23.187713252195522,
+              "interaction": 1.1177402607205238
+            },
+            "price": {
+              "balance_V1_minus_V0": 19.948349999999877,
+              "beta_V2_minus_V0": 1.0697099999999047,
+              "combined_V3_minus_V0": 22.284809999999922,
+              "interaction": 1.2667500000001368
+            }
+          },
+          "ideal": {
+            "net": {
+              "balance_V1_minus_V0": 3.6239192616316416,
+              "beta_V2_minus_V0": 5.522782051837453,
+              "combined_V3_minus_V0": 12.63953675686514,
+              "interaction": 3.4928354433960465
+            },
+            "price": {
+              "balance_V1_minus_V0": 3.3982393085353344,
+              "beta_V2_minus_V0": 5.031979980585259,
+              "combined_V3_minus_V0": 11.910040705214996,
+              "interaction": 3.4798214160944028
+            }
+          }
+        },
+        "rows": {
+          "V0-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 2.049106526,
+            "days": 389,
+            "decisions": 381,
+            "entry_allowed_decisions": 25,
+            "episode_pnl": [
+              -4.768525679999954,
+              -4.465616858521798,
+              -9.00303841110562,
+              -6.4732742128133225,
+              1.773046159960785,
+              -7.7394455499610615,
+              -3.0023425796908043
+            ],
+            "episodes": 7,
+            "funding": 0.9134036298681497,
+            "max_drawdown": 0.17632200179005675,
+            "mean_abs_net_beta": 37.271004889791385,
+            "mean_abs_net_dollar": 20.929235696969695,
+            "min_notional_skips": 4,
+            "net": -34.02023289613183,
+            "net_minus_best_episode": -35.793279056092615,
+            "price": -32.884529999999984,
+            "sharpe": -1.901548757484717,
+            "stop_events": 7,
+            "trades": 54
+          },
+          "V0-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 2.4610710798087965,
+            "days": 389,
+            "decisions": 381,
+            "entry_allowed_decisions": 25,
+            "episode_pnl": [
+              -5.231183534939191,
+              -4.528433958801401,
+              -7.216063829824606,
+              -6.072294390873765,
+              2.257767300245092,
+              -5.961907676749348,
+              -2.45615176386886
+            ],
+            "episodes": 7,
+            "funding": 0.9556547340454413,
+            "max_drawdown": 0.15626239684928123,
+            "mean_abs_net_beta": 25.186522258929628,
+            "mean_abs_net_dollar": 12.316980544811818,
+            "min_notional_skips": 0,
+            "net": -29.583267854811737,
+            "net_minus_best_episode": -31.84103515505683,
+            "price": -28.077851509048386,
+            "sharpe": -1.700823245378832,
+            "stop_events": 7,
+            "trades": 58
+          },
+          "V1-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 12,
+            "costs": 0.9474560080000001,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 28,
+            "episode_pnl": [
+              -4.229006499999997,
+              -6.294161536874185,
+              2.6105840087561205,
+              -5.062408844735046
+            ],
+            "episodes": 4,
+            "funding": 0.7666773151469731,
+            "max_drawdown": 0.06558479346426593,
+            "mean_abs_net_beta": 12.442624429709522,
+            "mean_abs_net_dollar": 5.47680669789227,
+            "min_notional_skips": 14,
+            "net": -13.116958692853132,
+            "net_minus_best_episode": -15.727542701609252,
+            "price": -12.936180000000105,
+            "sharpe": -1.1288066309163063,
+            "stop_events": 2,
+            "trades": 44
+          },
+          "V1-ideal": {
+            "balance_full_exits": 1,
+            "balance_orders": 2,
+            "costs": 2.2989984783599073,
+            "days": 389,
+            "decisions": 383,
+            "entry_allowed_decisions": 25,
+            "episode_pnl": [
+              -5.231183534939191,
+              -4.528433958801401,
+              -7.216063829824606,
+              -6.072294390873765,
+              2.257767300245092,
+              -0.6456666474810788,
+              -4.148473531505431
+            ],
+            "episodes": 7,
+            "funding": 1.0192620856928638,
+            "max_drawdown": 0.1297967429659006,
+            "mean_abs_net_beta": 18.15258259883496,
+            "mean_abs_net_dollar": 3.1406813995434417,
+            "min_notional_skips": 0,
+            "net": -25.959348593180096,
+            "net_minus_best_episode": -28.217115893425188,
+            "price": -24.679612200513052,
+            "sharpe": -1.6078216424316285,
+            "stop_events": 5,
+            "trades": 62
+          },
+          "V2-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.9181276319999996,
+            "days": 389,
+            "decisions": 382,
+            "entry_allowed_decisions": 26,
+            "episode_pnl": [
+              -4.854187979999949,
+              -4.199290036264074,
+              -12.55014312385984,
+              1.6697514593876974,
+              -7.93467390752204,
+              -4.7166002536773135
+            ],
+            "episodes": 6,
+            "funding": 0.8794135240645454,
+            "max_drawdown": 0.16426767053967806,
+            "mean_abs_net_beta": 26.72104891221532,
+            "mean_abs_net_dollar": 14.016784225165567,
+            "min_notional_skips": 4,
+            "net": -32.85353410793553,
+            "net_minus_best_episode": -34.52328556732323,
+            "price": -31.81482000000008,
+            "sharpe": -2.0146474689417966,
+            "stop_events": 6,
+            "trades": 48
+          },
+          "V2-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.9749924135096357,
+            "days": 389,
+            "decisions": 383,
+            "entry_allowed_decisions": 27,
+            "episode_pnl": [
+              -5.313893790804968,
+              -9.523240110151477,
+              2.3861490034588257,
+              -6.596266416778718,
+              -4.7459026404396525
+            ],
+            "episodes": 5,
+            "funding": 0.9603781389984778,
+            "max_drawdown": 0.12030242901487109,
+            "mean_abs_net_beta": 6.5479954199889425,
+            "mean_abs_net_dollar": 18.379203535647076,
+            "min_notional_skips": 0,
+            "net": -24.060485802974284,
+            "net_minus_best_episode": -26.44663480643311,
+            "price": -23.045871528463127,
+            "sharpe": -1.5791839291491814,
+            "stop_events": 5,
+            "trades": 44
+          },
+          "V3-constrained": {
+            "balance_full_exits": 1,
+            "balance_orders": 17,
+            "costs": 0.9795030640000001,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 28,
+            "episode_pnl": [
+              -4.338908800000041,
+              -5.069816956313048,
+              3.8299912083640777,
+              -5.118147397987343
+            ],
+            "episodes": 4,
+            "funding": 0.7467034200637552,
+            "max_drawdown": 0.054162598219681835,
+            "mean_abs_net_beta": 6.625074593878832,
+            "mean_abs_net_dollar": 9.667220608899301,
+            "min_notional_skips": 14,
+            "net": -10.832519643936308,
+            "net_minus_best_episode": -14.662510852300386,
+            "price": -10.599720000000062,
+            "sharpe": -0.9429481562840704,
+            "stop_events": 2,
+            "trades": 48
+          },
+          "V3-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 2,
+            "costs": 1.8041096065308655,
+            "days": 389,
+            "decisions": 384,
+            "entry_allowed_decisions": 27,
+            "episode_pnl": [
+              -5.313893790804968,
+              -9.523240110151477,
+              2.3861490034588257,
+              0.5204882882489699,
+              -4.7459026404396525
+            ],
+            "episodes": 5,
+            "funding": 1.028189312417659,
+            "max_drawdown": 0.08471865548973301,
+            "mean_abs_net_beta": 5.772604265325439,
+            "mean_abs_net_dollar": 15.647856929772557,
+            "min_notional_skips": 0,
+            "net": -16.943731097946596,
+            "net_minus_best_episode": -19.329880101405422,
+            "price": -16.16781080383339,
+            "sharpe": -1.1235288845680524,
+            "stop_events": 4,
+            "trades": 48
+          }
+        }
+      }
+    },
+    "H3 W=336h k=3": {
+      "normal": {
+        "effects": {
+          "constrained": {
+            "net": {
+              "balance_V1_minus_V0": 8.175558213444873,
+              "beta_V2_minus_V0": 5.602149686872082,
+              "combined_V3_minus_V0": 8.846504927720844,
+              "interaction": -4.931202972596111
+            },
+            "price": {
+              "balance_V1_minus_V0": 7.751880000000032,
+              "beta_V2_minus_V0": 5.238290000000164,
+              "combined_V3_minus_V0": 8.404190000000103,
+              "interaction": -4.585980000000094
+            }
+          },
+          "ideal": {
+            "net": {
+              "balance_V1_minus_V0": 6.398018430341381,
+              "beta_V2_minus_V0": 2.9630329487852123,
+              "combined_V3_minus_V0": 9.361435194474609,
+              "interaction": 0.00038381534801601447
+            },
+            "price": {
+              "balance_V1_minus_V0": 6.284113066963476,
+              "beta_V2_minus_V0": 2.6533456308804313,
+              "combined_V3_minus_V0": 8.93493655734274,
+              "interaction": -0.0025221405011679465
+            }
+          }
+        },
+        "rows": {
+          "V0-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 0.9876058759999999,
+            "days": 389,
+            "decisions": 385,
+            "entry_allowed_decisions": 15,
+            "episode_pnl": [
+              5.368000663661888,
+              -6.66328787281239,
+              -4.048368973453478,
+              -0.5049821330549094
+            ],
+            "episodes": 4,
+            "funding": 0.5899424023411689,
+            "max_drawdown": 0.08729752551734808,
+            "mean_abs_net_beta": 78.01906436900664,
+            "mean_abs_net_dollar": 53.95056956168831,
+            "min_notional_skips": 14,
+            "net": -6.036363473658753,
+            "net_minus_best_episode": -11.404364137320641,
+            "price": -5.638699999999922,
+            "sharpe": -0.306751615824277,
+            "stop_events": 3,
+            "trades": 41
+          },
+          "V0-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.1564595725345106,
+            "days": 389,
+            "decisions": 385,
+            "entry_allowed_decisions": 15,
+            "episode_pnl": [
+              4.30973361559046,
+              -5.252123417698954,
+              -1.7831337630057362,
+              3.4459531750108
+            ],
+            "episodes": 4,
+            "funding": 0.7537412357139928,
+            "max_drawdown": 0.062190589993369974,
+            "mean_abs_net_beta": 29.03110473761446,
+            "mean_abs_net_dollar": 5.431339233947053,
+            "min_notional_skips": 0,
+            "net": 0.49042960989675066,
+            "net_minus_best_episode": -3.8193040056937093,
+            "price": 0.8931479467172685,
+            "sharpe": 0.06816866381899356,
+            "stop_events": 3,
+            "trades": 50
+          },
+          "V1-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 29,
+            "costs": 0.5133524639999999,
+            "days": 389,
+            "decisions": 387,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              -1.7197581045106745,
+              2.262176653039802,
+              1.6966983672568574
+            ],
+            "episodes": 3,
+            "funding": 0.5393672037860096,
+            "max_drawdown": 0.027883617087463203,
+            "mean_abs_net_beta": 13.047937374913573,
+            "mean_abs_net_dollar": 3.8360189293849674,
+            "min_notional_skips": 14,
+            "net": 2.13919473978612,
+            "net_minus_best_episode": -0.1229819132536818,
+            "price": 2.1131800000001104,
+            "sharpe": 0.2653139962041717,
+            "stop_events": 1,
+            "trades": 58
+          },
+          "V1-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 5,
+            "costs": 1.0466493552000165,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 15,
+            "episode_pnl": [
+              4.30973361559046,
+              -5.252123417698954,
+              4.614884667335616,
+              3.4459531750108
+            ],
+            "episodes": 4,
+            "funding": 0.7578363817574035,
+            "max_drawdown": 0.0478202919144983,
+            "mean_abs_net_beta": 29.015949170746982,
+            "mean_abs_net_dollar": 4.716651050304287,
+            "min_notional_skips": 0,
+            "net": 6.888448040238131,
+            "net_minus_best_episode": 2.2735633729025153,
+            "price": 7.177261013680745,
+            "sharpe": 0.46575455760774803,
+            "stop_events": 2,
+            "trades": 56
+          },
+          "V2-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 0.725297162,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 15,
+            "episode_pnl": [
+              6.212911052976921,
+              -6.539480248244075,
+              -0.5141555340103139,
+              0.5808255304907277
+            ],
+            "episodes": 4,
+            "funding": 0.6914933752130866,
+            "max_drawdown": 0.06855937214553134,
+            "mean_abs_net_beta": 63.67392986899582,
+            "mean_abs_net_dollar": 39.69214831339713,
+            "min_notional_skips": 14,
+            "net": -0.4342137867866711,
+            "net_minus_best_episode": -6.647124839763592,
+            "price": -0.4004099999997578,
+            "sharpe": 0.015503247147442481,
+            "stop_events": 2,
+            "trades": 41
+          },
+          "V2-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 0.7914943447062261,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              0.40201423591679486,
+              -1.5860639931418063,
+              4.803024030033612
+            ],
+            "episodes": 3,
+            "funding": 0.6984633257904891,
+            "max_drawdown": 0.050291056447503445,
+            "mean_abs_net_beta": 8.898860700297881,
+            "mean_abs_net_dollar": 24.74242151809098,
+            "min_notional_skips": 0,
+            "net": 3.453462558681963,
+            "net_minus_best_episode": -1.3495614713516488,
+            "price": 3.5464935775977,
+            "sharpe": 0.26446996609063034,
+            "stop_events": 2,
+            "trades": 41
+          },
+          "V3-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 42,
+            "costs": 0.49911832999999994,
+            "days": 389,
+            "decisions": 387,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              -0.8181583742597525,
+              2.072109293853515,
+              1.649676822468308
+            ],
+            "episodes": 3,
+            "funding": 0.5437697840619106,
+            "max_drawdown": 0.027578068364421927,
+            "mean_abs_net_beta": 6.279627752617376,
+            "mean_abs_net_dollar": 7.620822789115656,
+            "min_notional_skips": 14,
+            "net": 2.810141454062091,
+            "net_minus_best_episode": 0.7380321602085758,
+            "price": 2.76549000000018,
+            "sharpe": 0.3471461285384858,
+            "stop_events": 1,
+            "trades": 66
+          },
+          "V3-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 3,
+            "costs": 0.6829057730543047,
+            "days": 389,
+            "decisions": 387,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              0.40201423591679486,
+              4.81233825254759,
+              4.803024030033612
+            ],
+            "episodes": 3,
+            "funding": 0.7066860733656557,
+            "max_drawdown": 0.04058984643390882,
+            "mean_abs_net_beta": 8.12284991483441,
+            "mean_abs_net_dollar": 22.916277213489334,
+            "min_notional_skips": 0,
+            "net": 9.85186480437136,
+            "net_minus_best_episode": 5.039526551823769,
+            "price": 9.828084504060008,
+            "sharpe": 0.7226205951934984,
+            "stop_events": 1,
+            "trades": 47
+          }
+        }
+      },
+      "stress": {
+        "effects": {
+          "constrained": {
+            "net": {
+              "balance_V1_minus_V0": 8.032676713444829,
+              "beta_V2_minus_V0": 5.602149686872082,
+              "combined_V3_minus_V0": 8.931429987720833,
+              "interaction": -4.703396412596078
+            },
+            "price": {
+              "balance_V1_minus_V0": 7.613779999999989,
+              "beta_V2_minus_V0": 5.238290000000164,
+              "combined_V3_minus_V0": 8.485490000000091,
+              "interaction": -4.366580000000061
+            }
+          },
+          "ideal": {
+            "net": {
+              "balance_V1_minus_V0": 6.361346423660507,
+              "beta_V2_minus_V0": 3.096704955147345,
+              "combined_V3_minus_V0": 9.457425963014373,
+              "interaction": -0.0006254157934790783
+            },
+            "price": {
+              "balance_V1_minus_V0": 6.247578000412075,
+              "beta_V2_minus_V0": 2.75482419950507,
+              "combined_V3_minus_V0": 8.998874596932259,
+              "interaction": -0.0035276029848846924
+            }
+          }
+        },
+        "rows": {
+          "V0-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.013253296,
+            "days": 389,
+            "decisions": 385,
+            "entry_allowed_decisions": 15,
+            "episode_pnl": [
+              5.368000663661888,
+              -6.66328787281239,
+              -4.324267273453444,
+              -0.5049821330549094
+            ],
+            "episodes": 4,
+            "funding": 0.5899424023411689,
+            "max_drawdown": 0.08858099534075498,
+            "mean_abs_net_beta": 78.09175019328113,
+            "mean_abs_net_dollar": 54.00211891233768,
+            "min_notional_skips": 14,
+            "net": -6.305910893658734,
+            "net_minus_best_episode": -11.673911557320622,
+            "price": -5.882599999999903,
+            "sharpe": -0.3226771899130246,
+            "stop_events": 3,
+            "trades": 41
+          },
+          "V0-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 1.2511290146186123,
+            "days": 389,
+            "decisions": 385,
+            "entry_allowed_decisions": 15,
+            "episode_pnl": [
+              4.30973361559046,
+              -5.413354374350604,
+              -2.2015325114843165,
+              3.4459531750108
+            ],
+            "episodes": 4,
+            "funding": 0.752764090070166,
+            "max_drawdown": 0.06486915865988269,
+            "mean_abs_net_beta": 29.318854013015496,
+            "mean_abs_net_dollar": 5.426886281971945,
+            "min_notional_skips": 0,
+            "net": -0.06920009523344106,
+            "net_minus_best_episode": -4.378933710823901,
+            "price": 0.42916482931500527,
+            "sharpe": 0.03498646309576849,
+            "stop_events": 3,
+            "trades": 50
+          },
+          "V1-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 29,
+            "costs": 0.5437813839999999,
+            "days": 389,
+            "decisions": 387,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              -1.7197581045106745,
+              2.0782444530397868,
+              1.4639677272568576
+            ],
+            "episodes": 3,
+            "funding": 0.5393672037860096,
+            "max_drawdown": 0.028218410191407608,
+            "mean_abs_net_beta": 13.094176590231951,
+            "mean_abs_net_dollar": 3.8558426879271095,
+            "min_notional_skips": 14,
+            "net": 1.7267658197860953,
+            "net_minus_best_episode": -0.35147863325369144,
+            "price": 1.7311800000000857,
+            "sharpe": 0.21809237326399397,
+            "stop_events": 1,
+            "trades": 58
+          },
+          "V1-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 5,
+            "costs": 1.1415937266303937,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 15,
+            "episode_pnl": [
+              4.30973361559046,
+              -5.413354374350604,
+              4.15981391217619,
+              3.4459531750108
+            ],
+            "episodes": 4,
+            "funding": 0.7569972253303796,
+            "max_drawdown": 0.049414471221658034,
+            "mean_abs_net_beta": 29.286216150308107,
+            "mean_abs_net_dollar": 4.752722361017034,
+            "min_notional_skips": 0,
+            "net": 6.292146328427066,
+            "net_minus_best_episode": 1.9824127128366058,
+            "price": 6.67674282972708,
+            "sharpe": 0.4290706437766701,
+            "stop_events": 2,
+            "trades": 56
+          },
+          "V2-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 0.750944582,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 15,
+            "episode_pnl": [
+              6.212911052976921,
+              -6.539480248244075,
+              -0.7900538340103083,
+              0.5808255304907277
+            ],
+            "episodes": 4,
+            "funding": 0.6914933752130866,
+            "max_drawdown": 0.06983868489478642,
+            "mean_abs_net_beta": 63.72748784477703,
+            "mean_abs_net_dollar": 39.73013204545454,
+            "min_notional_skips": 14,
+            "net": -0.7037612067866519,
+            "net_minus_best_episode": -6.916672259763573,
+            "price": -0.6443099999997386,
+            "sharpe": 2.8459057032068595e-05,
+            "stop_events": 2,
+            "trades": 41
+          },
+          "V2-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 0,
+            "costs": 0.853965088074995,
+            "days": 389,
+            "decisions": 386,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              0.40201423591679486,
+              -2.022296896686697,
+              4.803024030033612
+            ],
+            "episodes": 3,
+            "funding": 0.6974809191688239,
+            "max_drawdown": 0.0523309088606204,
+            "mean_abs_net_beta": 8.796434790892983,
+            "mean_abs_net_dollar": 24.65724997428938,
+            "min_notional_skips": 0,
+            "net": 3.027504859913904,
+            "net_minus_best_episode": -1.7755191701197077,
+            "price": 3.183989028820075,
+            "sharpe": 0.2364855843932289,
+            "stop_events": 2,
+            "trades": 41
+          },
+          "V3-constrained": {
+            "balance_full_exits": 0,
+            "balance_orders": 42,
+            "costs": 0.52114069,
+            "days": 389,
+            "decisions": 387,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              -0.8181583742597525,
+              1.8881770938534999,
+              1.6447527424683415
+            ],
+            "episodes": 3,
+            "funding": 0.5437697840619106,
+            "max_drawdown": 0.028456471942681853,
+            "mean_abs_net_beta": 6.313470887729312,
+            "mean_abs_net_dollar": 7.644824603174611,
+            "min_notional_skips": 14,
+            "net": 2.625519094062099,
+            "net_minus_best_episode": 0.7373420002085993,
+            "price": 2.6028900000001887,
+            "sharpe": 0.32565082484437663,
+            "stop_events": 1,
+            "trades": 66
+          },
+          "V3-ideal": {
+            "balance_full_exits": 0,
+            "balance_orders": 3,
+            "costs": 0.7456590119562886,
+            "days": 389,
+            "decisions": 387,
+            "entry_allowed_decisions": 16,
+            "episode_pnl": [
+              0.40201423591679486,
+              4.338424111180359,
+              4.803024030033612
+            ],
+            "episodes": 3,
+            "funding": 0.7058454534899554,
+            "max_drawdown": 0.04058984643390882,
+            "mean_abs_net_beta": 8.072872073673823,
+            "mean_abs_net_dollar": 22.87387869036285,
+            "min_notional_skips": 0,
+            "net": 9.388225867780932,
+            "net_minus_best_episode": 4.58520183774732,
+            "price": 9.428039426247265,
+            "sharpe": 0.6910860369035552,
+            "stop_events": 1,
+            "trades": 47
+          }
+        }
+      }
+    }
+  },
+  "stage_two_window": [
+    "2025-07-07T00:00:00+00:00",
+    "2026-07-30T00:00:00+00:00"
+  ],
+  "venue_filters": {
+    "ADA": [
+      5.0,
+      1.0
+    ],
+    "BNB": [
+      5.0,
+      0.01
+    ],
+    "BTC": [
+      50.0,
+      0.001
+    ],
+    "DOGE": [
+      5.0,
+      1.0
+    ],
+    "ETH": [
+      20.0,
+      0.001
+    ],
+    "LINK": [
+      20.0,
+      0.01
+    ],
+    "SOL": [
+      5.0,
+      0.01
+    ],
+    "XRP": [
+      5.0,
+      0.1
+    ]
+  },
+  "verdict": {
+    "checks": {
+      "economics": true,
+      "not_few_trades": true,
+      "opportunity": false
+    },
+    "decision": "SHELVE_FAMILY",
+    "grid_points_economic": [
+      "H3 W=168h k=2",
+      "H3 W=168h k=3",
+      "H3 W=336h k=3"
+    ],
+    "grid_points_robust_to_best_episode": [
+      "H3 W=168h k=2",
+      "H3 W=168h k=3",
+      "H3 W=336h k=3"
+    ],
+    "grid_points_with_enough_episodes": [],
+    "variant": "V3-constrained"
+  }
+}
