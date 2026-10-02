@@ -12,6 +12,8 @@ cd "$PROJECT_ROOT"
 DAYS="${V3_PHASE2_DATA_DAYS:-450}"
 # An explicit timerange (YYYYMMDD-YYYYMMDD) pins the span exactly; it overrides DAYS.
 TIMERANGE="${V3_PHASE2_TIMERANGE:-}"
+# futures (default) or spot; spot downloads candles only.
+TRADING_MODE="${V3_PHASE2_TRADING_MODE:-futures}"
 DATADIR="${V3_PHASE2_DATADIR:-user_data/data-phase2}"
 PAIRS=(BTC/USDT:USDT ETH/USDT:USDT SOL/USDT:USDT BNB/USDT:USDT XRP/USDT:USDT DOGE/USDT:USDT ADA/USDT:USDT LINK/USDT:USDT)
 # Optional space-separated override, e.g. Phase 2c: "BTC/USDT:USDT ETH/USDT:USDT".
@@ -41,4 +43,4 @@ docker compose run --rm --no-deps freqtrade_v3_shadow download-data \
   --pairs "${PAIRS[@]}" \
   --timeframes 1h \
   "${SPAN[@]}" \
-  --trading-mode futures
+  --trading-mode "$TRADING_MODE"
