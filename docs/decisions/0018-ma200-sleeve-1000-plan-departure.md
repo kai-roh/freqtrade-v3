@@ -35,3 +35,28 @@ On 2026-10-02 the user decided to use a 1,000 USDT sleeve.
 5. A pass makes MA200 eligible for an order-free forward observation only. It
    authorizes no orders, no real capital, and no leverage above 1x. Whether to
    register that observation is a further user decision.
+
+## Result (2026-10-02)
+
+The rerun is in `research_results/phase2c/ma200-comparison-sleeve1000/`. The
+default 500 USDT run still reproduces the recorded Decision 0017 result exactly.
+
+| 2022-08-01 to 2026-10-01, constrained, normal cost | Net USDT | Annual return | Sharpe | MDD | Worst year | Skipped/attempts |
+|---|---:|---:|---:|---:|---:|---:|
+| MA200 (perpetual, long/short) | 675.15 | 13.16% | 0.80 | 13.25% | −21.41 | 3/99 |
+| BH-VT spot | 847.12 | 15.84% | 0.93 | 22.62% | −92.28 | 0/35 |
+
+All five criteria pass under both costs:
+
+- C1: 80% of the hold's net.
+- C2: MDD 13.3% against a limit of 15.1%.
+- C3: return/MDD 0.99 against 0.70.
+- C4: worst year −21 against −92.
+- C5: 3% of orders skipped.
+
+The verdict is `OBSERVE_ELIGIBLE` under this departure. The finding is the same
+as at 500 USDT: MA200 is a drawdown overlay. It earned less than the spot hold
+(Sharpe 0.80 against 0.93). At 1,000 USDT the BTC lot no longer stops it from
+following its rule.
+
+Registering an order-free forward observation is a separate user decision.

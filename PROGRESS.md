@@ -13,7 +13,9 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 감수하기로 하고 **Phase 2c(BTC·ETH 저빈도 추세)**를 사전등록·실행했으나 `STOP_NO_EDGE`였다([Decision 0016](docs/decisions/0016-phase2c-result-stop-no-edge.md)):
 연 8.4% 수익은 났지만 위험을 맞춘 보유보다 Sharpe가 낮았고(0.54 vs 0.78) PBO 0.34였다. 후속으로 고정 MA200을 현물 보유·실제 주문 제약과
 비교한 사전 고정 진단은 **`PAUSE_RESEARCH`**였다([Decision 0017](docs/decisions/0017-ma200-comparison-pause-research.md)): 수익 75% 유지·낙폭 63%로
-위험 축소는 됐지만, 슬리브 500 USDT에서는 BTC 선물 최소 수량(0.001 BTC ≈ 64 USDT)이 거칠어 주문의 73%를 낼 수 없었다. Phase 3 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
+위험 축소는 됐지만, 슬리브 500 USDT에서는 BTC 선물 최소 수량(0.001 BTC ≈ 64 USDT)이 거칠어 주문의 73%를 낼 수 없었다. 사용자가 슬리브를
+**1,000 USDT(계좌 전체)**로 바꾸기로 결정해(계획 이탈, [Decision 0018](docs/decisions/0018-ma200-sleeve-1000-plan-departure.md)) 다시 돌린 결과
+5개 기준을 모두 통과했다(`OBSERVE_ELIGIBLE`). 주문 없는 전진 관측 등록 여부는 사용자 결정이다. Phase 3 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 현재 상태
 
@@ -32,6 +34,7 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 | Phase 2b maker 캐리 연구 | **게이트 불통과 `STOP_NO_EDGE`.** 단계 A는 fold 0에서만 거래(에피소드 2개), 단계 B는 거래 0건(스프레드 최대 0.69 bp). 손실 −6.68 USDT 중 가격 −6.62, 비용 0.48. 원인은 베타 불일치(롱이 베타 순노출 +31~35 USDT)와 진입 차단 중 레그 수 불균형 | [Decision 0013](docs/decisions/0013-phase2b-result-stop-no-edge.md), `research_results/phase2b/EPISODE_TRACE.md` |
 | Phase 2c BTC·ETH 추세 연구 | **게이트 불통과 `STOP_NO_EDGE`.** walk-forward 연속 계좌(2022-08~2026-10) 순수익 200.6 USDT(연 8.4%, 슬리브 500), Sharpe 0.54 < BH-VT 0.78, PBO 0.34, 부트스트랩 구간 0 포함. 수익은 주로 롱(+340), 숏은 −80 | [Decision 0016](docs/decisions/0016-phase2c-result-stop-no-edge.md), `research_results/phase2c/REPORT.md` |
 | MA200 후속 비교 | **`PAUSE_RESEARCH`.** C1~C4(수익 유지·낙폭·효율·최악 연도) 통과, C5 구현 실패(BTC 주문 234/322 건너뜀). 현물 보유가 Sharpe 0.93으로 가장 높음 | [Decision 0017](docs/decisions/0017-ma200-comparison-pause-research.md), `research_results/phase2c/ma200-comparison/REPORT.md` |
+| MA200 슬리브 1,000 | **`OBSERVE_ELIGIBLE`(계획 이탈).** 순손익 675 vs 현물 보유 847, MDD 13.3% vs 22.6%, 최악 연도 −21 vs −92, 주문 건너뜀 3/99 | [Decision 0018](docs/decisions/0018-ma200-sleeve-1000-plan-departure.md), `research_results/phase2c/ma200-comparison-sleeve1000/REPORT.md` |
 | Phase 3 | 착수 불가(후보 없음). 실자본 전 게이트 5번 재결정 필요 | Decision 0006 §Constraints, Decision 0011 |
 
 서버(`ft-tokyo`, `/home/kai/freqtrade-v3`) 컨테이너: `phase1-postgres` 실행, `phase1-telegram-bot` 실행,
@@ -42,9 +45,8 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 
 ## 열린 문제
 
-1. **연구 일시 중단 상태다**(Decision 0017, 사전 고정 기준). 다음 전략군을 바로 추가하지 않는다. 계획을 벗어나 MA200을
-   관측하려면(예: 슬리브 확대, BTC 상품 변경) 사용자가 명시적으로 결정하고 계획 이탈로 기록해야 한다. 슬리브 1,000 USDT는
-   계좌 전체를 방향성 노출에 쓰는 자본 결정이다.
+1. **MA200 전진 관측 등록 여부가 미결이다.** 슬리브 1,000 USDT(계좌 전체) 결정 뒤 관측 자격을 얻었지만(Decision 0018),
+   계획 이탈로 얻은 자격이라 근거가 약하다. 관측 기간·평가 기준·실행 방식·알림은 등록 시 고정한다. 새 전략군은 추가하지 않는다.
 2. **다중 레그·방향성 공통 교훈:** 위험 축소와 신규 진입 승인 분리, 베타·달러 명목 기준 노출 한도(Decision 0014),
    그리고 주문 단위·계획 슬리브 기준의 구현 가능성 점검을 규칙 조정보다 먼저 한다(Decision 0017).
 3. **확인 검증용 미사용 데이터는 새 등록 이후 데이터뿐이다.**
@@ -54,7 +56,7 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 
 ## 다음 할 일 (순서대로)
 
-1. 연구 일시 중단(Decision 0017). 재개 여부와, 계획을 벗어난 MA200 관측(슬리브 확대 등)을 할지는 사용자 결정이다.
+1. MA200 주문 없는 전진 관측 등록 여부 결정(사용자). 등록하면 규칙·대조군·평가 기준을 먼저 커밋하고 서버 일일 작업으로 기록한다.
    ML은 Decision 0002에 따라 결정론적 전략이 두 비용 regime을 통과한 뒤에만.
 2. 저장소: 로컬 커밋 push, `codex/v2-to-v3-infrastructure` → `main` PR·머지.
 3. (선택) 진입 위험 결정에 레버리지 기록, 서버 격리 스키마 테스트 재확인.

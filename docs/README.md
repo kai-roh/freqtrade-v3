@@ -25,6 +25,7 @@ file are historical records and are not rewritten.
 | 0015 | Register the Phase 2c BTC/ETH low-frequency trend study | 2026-10-02 |
 | 0016 | Phase 2c trend result: STOP_NO_EDGE | 2026-10-02 |
 | 0017 | Fixed MA200 comparison: PAUSE_RESEARCH (implementability at a 500 USDT sleeve) | 2026-10-02 |
+| 0018 | User decision: MA200 at a 1,000 USDT sleeve (plan departure) — OBSERVE_ELIGIBLE | 2026-10-02 |
 
 ## Phase 1 (Binance Demo two-leg carry execution)
 

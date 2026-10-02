@@ -1,0 +1,1718 @@
+{
+  "costs": {
+    "normal": {
+      "criteria_vs_perp_reference": {
+        "C1_retention": true,
+        "C2_drawdown": true,
+        "C3_efficiency": true,
+        "C4_worst_year": true,
+        "C5_implementable": true
+      },
+      "criteria_vs_spot": {
+        "C1_retention": true,
+        "C2_drawdown": true,
+        "C3_efficiency": true,
+        "C4_worst_year": true,
+        "C5_implementable": true
+      },
+      "h4_walk_forward_constrained_corrected": {
+        "annual_turnover_x_sleeve": 13.257357558470126,
+        "annualized_return": 0.0905924694983895,
+        "best_episode_pnl": 141.78586811646895,
+        "cost": "normal",
+        "decomposition": {
+          "fees": 27.658843235000003,
+          "funding_pnl": -68.59643339117528,
+          "price_pnl": 543.3062099999977,
+          "slippage": 11.063537294000005,
+          "total_pnl": 435.9873960798225
+        },
+        "episodes": 121,
+        "episodes_by_symbol": {
+          "BTC": 59,
+          "ETH": 62
+        },
+        "label": "H4 L=120d linear | H4 L=60d binary | H4 L=60d linear",
+        "long_short": {
+          "long_price_pnl": 678.287260000001,
+          "short_price_pnl": -134.9810499999994
+        },
+        "metrics": {
+          "days": 1523,
+          "expectancy": 0.0002733746836274901,
+          "max_drawdown": 0.1757882975602756,
+          "profit_factor": 1.1168416361143574,
+          "sharpe": 0.6161243377452867,
+          "total_return": 0.4359873960798224
+        },
+        "per_symbol": {
+          "BTC": {
+            "funding_pnl": -37.79667730873217,
+            "price_pnl": 287.8887000000015
+          },
+          "ETH": {
+            "funding_pnl": -30.79975608244348,
+            "price_pnl": 255.41751000000087
+          }
+        },
+        "pnl_by_year": {
+          "2022": -80.30787419782928,
+          "2023": 233.55519965171106,
+          "2024": -27.908602862196858,
+          "2025": 161.5863759972035,
+          "2026": 149.06229749093404
+        },
+        "rounding_skips": 7,
+        "time_in_market": {
+          "BTC": 0.6926570365506676,
+          "ETH": 0.777358284088422
+        },
+        "traded_notional": 55317.686470000015,
+        "trades": 260
+      },
+      "primary": {
+        "ma200_flips": {
+          "BTC": 33,
+          "ETH": 25
+        },
+        "runs": {
+          "BHVT-perp/constrained": {
+            "annual_turnover_x_sleeve": 1.198342497931714,
+            "annualized_return": 0.13973954467735328,
+            "best_episode_pnl": 460.5228330894855,
+            "constrained": true,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 2.500103595,
+              "funding_pnl": -142.74217050919424,
+              "price_pnl": 872.188590000005,
+              "slippage": 1.000041438,
+              "total_pnl": 725.9462744578107
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 872.188590000001,
+              "short_price_pnl": 0.0
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.0004002273213186222,
+              "max_drawdown": 0.2330162836778469,
+              "profit_factor": 1.1405491518427904,
+              "sharpe": 0.834198139947018,
+              "total_return": 0.7259462744578085
+            },
+            "order_attempts": 40,
+            "orders_per_year": 9.346684175968482,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -77.13124202051256,
+                "price_pnl": 539.9016999999981
+              },
+              "ETH": {
+                "funding_pnl": -65.61092848868162,
+                "price_pnl": 332.2868899999985
+              }
+            },
+            "pnl_by_year": {
+              "2022": -98.61292052310012,
+              "2023": 503.4772896401752,
+              "2024": 325.89052913746787,
+              "2025": -15.697449611335514,
+              "2026": 10.888825814603251
+            },
+            "return_over_mdd": 0.5996986239405828,
+            "rounding_skips": 3,
+            "skip_share": 0.075,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 5000.207190000001,
+            "trades": 39,
+            "worst_year_pnl": -98.61292052310012
+          },
+          "BHVT-perp/ideal": {
+            "annual_turnover_x_sleeve": 0.9994700693157124,
+            "annualized_return": 0.13226370677596044,
+            "best_episode_pnl": 432.8134167819103,
+            "constrained": false,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 2.0851957747504515,
+              "funding_pnl": -150.58490377000462,
+              "price_pnl": 832.7019465191823,
+              "slippage": 0.8340783099001807,
+              "total_pnl": 679.1977686645271
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 832.7019465191835,
+              "short_price_pnl": 0.0
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.00038449604963897936,
+              "max_drawdown": 0.24807650079327406,
+              "profit_factor": 1.1297560789288863,
+              "sharpe": 0.7806249502029993,
+              "total_return": 0.679197768664521
+            },
+            "order_attempts": 32,
+            "orders_per_year": 8.148391332895601,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -84.32147411126766,
+                "price_pnl": 518.947953381366
+              },
+              "ETH": {
+                "funding_pnl": -66.26342965873584,
+                "price_pnl": 313.753993137822
+              }
+            },
+            "pnl_by_year": {
+              "2022": -93.2376024997443,
+              "2023": 464.2140293109485,
+              "2024": 331.39116784460066,
+              "2025": -18.09949293804675,
+              "2026": -5.070333053231025
+            },
+            "return_over_mdd": 0.5331569348689653,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 4170.391549500904,
+            "trades": 34,
+            "worst_year_pnl": -93.2376024997443
+          },
+          "BHVT-spot/constrained": {
+            "annual_turnover_x_sleeve": 1.0903250196060408,
+            "annualized_return": 0.15842510869363857,
+            "best_episode_pnl": 537.1099578723995,
+            "constrained": true,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 4.549493164,
+              "funding_pnl": 0.0,
+              "price_pnl": 852.5816179999999,
+              "slippage": 0.9098986328000002,
+              "total_pnl": 847.1222262032
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 852.5816180000104,
+              "short_price_pnl": 0.0
+            },
+            "market": "spot",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.0004446431265081482,
+              "max_drawdown": 0.22622749965336464,
+              "profit_factor": 1.1572763504998358,
+              "sharpe": 0.9289834641850598,
+              "total_return": 0.8471222262031999
+            },
+            "order_attempts": 35,
+            "orders_per_year": 8.86736703873933,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": 0.0,
+                "price_pnl": 540.6806649999995
+              },
+              "ETH": {
+                "funding_pnl": 0.0,
+                "price_pnl": 311.9009529999962
+              }
+            },
+            "pnl_by_year": {
+              "2022": -92.27834428160008,
+              "2023": 510.7162469876,
+              "2024": 425.9239654927999,
+              "2025": -2.984936084799756,
+              "2026": 5.745294089199888
+            },
+            "return_over_mdd": 0.7002911181725663,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 4549.493164,
+            "trades": 37,
+            "worst_year_pnl": -92.27834428160008
+          },
+          "BHVT-spot/ideal": {
+            "annual_turnover_x_sleeve": 0.9994700693157124,
+            "annualized_return": 0.15549378150032567,
+            "best_episode_pnl": 515.8398462587579,
+            "constrained": false,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 4.170391549500903,
+              "funding_pnl": 0.0,
+              "price_pnl": 832.7019465191827,
+              "slippage": 0.8340783099001807,
+              "total_pnl": 827.6974766597816
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 832.7019465191835,
+              "short_price_pnl": 0.0
+            },
+            "market": "spot",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.000436990073322205,
+              "max_drawdown": 0.2267936858438197,
+              "profit_factor": 1.155997644913129,
+              "sharpe": 0.9208775058005862,
+              "total_return": 0.827697476659772
+            },
+            "order_attempts": 32,
+            "orders_per_year": 8.148391332895601,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": 0.0,
+                "price_pnl": 518.947953381366
+              },
+              "ETH": {
+                "funding_pnl": 0.0,
+                "price_pnl": 313.753993137822
+              }
+            },
+            "pnl_by_year": {
+              "2022": -92.34389967203401,
+              "2023": 512.7590726964443,
+              "2024": 393.9627557868348,
+              "2025": 7.289747807216145,
+              "2026": 6.029800041320414
+            },
+            "return_over_mdd": 0.6856177715961883,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 4170.391549500904,
+            "trades": 34,
+            "worst_year_pnl": -92.34389967203401
+          },
+          "MA200-perp/constrained": {
+            "annual_turnover_x_sleeve": 7.827526164674984,
+            "annualized_return": 0.13160840614964675,
+            "best_episode_pnl": 223.3346072740108,
+            "constrained": true,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 16.330578560000003,
+              "funding_pnl": -94.74534296042155,
+              "price_pnl": 792.7545399999951,
+              "slippage": 6.532231424,
+              "total_pnl": 675.1463870555735
+            },
+            "episodes": 60,
+            "episodes_by_symbol": {
+              "BTC": 34,
+              "ETH": 26
+            },
+            "label": "MA200",
+            "long_short": {
+              "long_price_pnl": 817.4498500000058,
+              "short_price_pnl": -24.695309999999523
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.0003795631132625496,
+              "max_drawdown": 0.13250103913458836,
+              "profit_factor": 1.1364632524384866,
+              "sharpe": 0.8015942655015866,
+              "total_return": 0.6751463870555774
+            },
+            "order_attempts": 99,
+            "orders_per_year": 23.486539724228496,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -50.91618506055696,
+                "price_pnl": 445.55789999999985
+              },
+              "ETH": {
+                "funding_pnl": -43.82915789986446,
+                "price_pnl": 347.1966399999991
+              }
+            },
+            "pnl_by_year": {
+              "2022": 98.1370940110994,
+              "2023": 137.86680512182988,
+              "2024": 244.79623352338763,
+              "2025": -21.414199181073627,
+              "2026": 215.76045358033025
+            },
+            "return_over_mdd": 0.9932632001169824,
+            "rounding_skips": 3,
+            "skip_share": 0.030303030303030304,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 32661.157119999996,
+            "trades": 98,
+            "worst_year_pnl": -21.414199181073627
+          },
+          "MA200-perp/ideal": {
+            "annual_turnover_x_sleeve": 8.083526870627633,
+            "annualized_return": 0.13256798262208958,
+            "best_episode_pnl": 235.09439926481988,
+            "constrained": false,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 16.864673183514913,
+              "funding_pnl": -101.24515664996606,
+              "price_pnl": 805.937177199668,
+              "slippage": 6.745869273405966,
+              "total_pnl": 681.081478092781
+            },
+            "episodes": 60,
+            "episodes_by_symbol": {
+              "BTC": 34,
+              "ETH": 26
+            },
+            "label": "MA200",
+            "long_short": {
+              "long_price_pnl": 838.2821268263525,
+              "short_price_pnl": -32.34494962670144
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.00038304164186576793,
+              "max_drawdown": 0.13414666181950097,
+              "profit_factor": 1.1351160274163725,
+              "sharpe": 0.7977638051070889,
+              "total_return": 0.6810814780927832
+            },
+            "order_attempts": 87,
+            "orders_per_year": 21.329612606697307,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -57.16910296633681,
+                "price_pnl": 456.58907280897705
+              },
+              "ETH": {
+                "funding_pnl": -44.07605368362885,
+                "price_pnl": 349.34810439068207
+              }
+            },
+            "pnl_by_year": {
+              "2022": 92.71473702393541,
+              "2023": 153.5062293594783,
+              "2024": 259.52857807767214,
+              "2025": -33.20854060329498,
+              "2026": 208.54047423499014
+            },
+            "return_over_mdd": 0.9882316922687532,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 33729.34636702983,
+            "trades": 89,
+            "worst_year_pnl": -33.20854060329498
+          }
+        },
+        "window": [
+          "2022-08-01T00:00:00+00:00",
+          "2026-10-01T23:00:00+00:00"
+        ]
+      },
+      "reference": {
+        "ma200_flips": {
+          "BTC": 52,
+          "ETH": 34
+        },
+        "runs": {
+          "BHVT-perp/constrained": {
+            "annual_turnover_x_sleeve": 1.072459335086551,
+            "annualized_return": 0.13548504818406037,
+            "best_episode_pnl": 672.5211260043005,
+            "constrained": true,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 3.3099327150000004,
+              "funding_pnl": -294.9133103747014,
+              "price_pnl": 1490.3989300000014,
+              "slippage": 1.323973086,
+              "total_pnl": 1190.8517138243
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 1490.3989300000023,
+              "short_price_pnl": 0.0
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.0003774308155713378,
+              "max_drawdown": 0.24559033655701284,
+              "profit_factor": 1.1589090674580333,
+              "sharpe": 0.9417905283415583,
+              "total_return": 1.190851713824299
+            },
+            "order_attempts": 51,
+            "orders_per_year": 8.100310696848647,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -151.40541870769982,
+                "price_pnl": 826.7619800000003
+              },
+              "ETH": {
+                "funding_pnl": -143.50789166699914,
+                "price_pnl": 663.636950000004
+              }
+            },
+            "pnl_by_year": {
+              "2020": 392.9533795280363,
+              "2021": 278.0962152990701,
+              "2022": -304.3753193551238,
+              "2023": 503.09553301158235,
+              "2024": 325.8905291374697,
+              "2025": -15.697449611335742,
+              "2026": 10.888825814601205
+            },
+            "return_over_mdd": 0.5516709251815698,
+            "rounding_skips": 3,
+            "skip_share": 0.058823529411764705,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 6619.865429999999,
+            "trades": 50,
+            "worst_year_pnl": -304.3753193551238
+          },
+          "BHVT-perp/ideal": {
+            "annual_turnover_x_sleeve": 0.932241717666511,
+            "annualized_return": 0.1296800056562175,
+            "best_episode_pnl": 623.5594073681968,
+            "constrained": false,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 2.8771788902776017,
+              "funding_pnl": -307.34853084902045,
+              "price_pnl": 1433.999785494827,
+              "slippage": 1.150871556111041,
+              "total_pnl": 1122.623204199418
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 1433.9997854948117,
+              "short_price_pnl": 0.0
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.00036558519464352046,
+              "max_drawdown": 0.2480624790596519,
+              "profit_factor": 1.1457694555507343,
+              "sharpe": 0.8799729289204611,
+              "total_return": 1.1226232041994222
+            },
+            "order_attempts": 44,
+            "orders_per_year": 7.452285841100754,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -162.5748740925997,
+                "price_pnl": 788.5116921314991
+              },
+              "ETH": {
+                "funding_pnl": -144.77365675642162,
+                "price_pnl": 645.488093363336
+              }
+            },
+            "pnl_by_year": {
+              "2020": 395.89647992356277,
+              "2021": 282.86577279521157,
+              "2022": -328.3371841593105,
+              "2023": 463.97679378663315,
+              "2024": 331.391167844602,
+              "2025": -18.09949293804675,
+              "2026": -5.070333053234208
+            },
+            "return_over_mdd": 0.5227715458936182,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 5754.357780555203,
+            "trades": 46,
+            "worst_year_pnl": -328.3371841593105
+          },
+          "BHVT-spot/constrained": {
+            "annual_turnover_x_sleeve": 0.9936432361387041,
+            "annualized_return": 0.1559645145010038,
+            "best_episode_pnl": 805.5947555231523,
+            "constrained": true,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 6.133364961700001,
+              "funding_pnl": 0.0,
+              "price_pnl": 1453.7822327,
+              "slippage": 1.2266729923400006,
+              "total_pnl": 1446.42219474596
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 1453.7822327000072,
+              "short_price_pnl": 0.0
+            },
+            "market": "spot",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.00042437774688072895,
+              "max_drawdown": 0.2228888783352704,
+              "profit_factor": 1.1872628173464566,
+              "sharpe": 1.098198168582679,
+              "total_return": 1.4464221947459608
+            },
+            "order_attempts": 47,
+            "orders_per_year": 7.938304482911673,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": 0.0,
+                "price_pnl": 810.1325536999924
+              },
+              "ETH": {
+                "funding_pnl": 0.0,
+                "price_pnl": 643.6496790000045
+              }
+            },
+            "pnl_by_year": {
+              "2020": 444.0365596956401,
+              "2021": 382.9530191795202,
+              "2022": -319.6957189135999,
+              "2023": 510.4440112871998,
+              "2024": 425.9239654928001,
+              "2025": -2.9849360848002107,
+              "2026": 5.745294089199888
+            },
+            "return_over_mdd": 0.6997411251107886,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 6133.364961700001,
+            "trades": 49,
+            "worst_year_pnl": -319.6957189135999
+          },
+          "BHVT-spot/ideal": {
+            "annual_turnover_x_sleeve": 0.932241717666511,
+            "annualized_return": 0.15448006380350066,
+            "best_episode_pnl": 784.4361309817231,
+            "constrained": false,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 5.754357780555203,
+              "funding_pnl": 0.0,
+              "price_pnl": 1433.999785494836,
+              "slippage": 1.150871556111041,
+              "total_pnl": 1427.0945561581698
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 1433.9997854948117,
+              "short_price_pnl": 0.0
+            },
+            "market": "spot",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.00042056981742837605,
+              "max_drawdown": 0.22301164959535505,
+              "profit_factor": 1.186791864868697,
+              "sharpe": 1.0941230372934538,
+              "total_return": 1.4270945561581718
+            },
+            "order_attempts": 44,
+            "orders_per_year": 7.452285841100754,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": 0.0,
+                "price_pnl": 788.5116921314991
+              },
+              "ETH": {
+                "funding_pnl": 0.0,
+                "price_pnl": 645.488093363336
+              }
+            },
+            "pnl_by_year": {
+              "2020": 444.15479552740044,
+              "2021": 383.096503832541,
+              "2022": -319.9260515037281,
+              "2023": 512.4870046665847,
+              "2024": 393.96275578683503,
+              "2025": 7.289747807216372,
+              "2026": 6.029800041320414
+            },
+            "return_over_mdd": 0.6926995252660478,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 5754.357780555203,
+            "trades": 46,
+            "worst_year_pnl": -319.9260515037281
+          },
+          "MA200-perp/constrained": {
+            "annual_turnover_x_sleeve": 6.790040394185531,
+            "annualized_return": 0.14650589021372196,
+            "best_episode_pnl": 320.99970283102925,
+            "constrained": true,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 20.956110969999997,
+              "funding_pnl": -233.05664231464553,
+              "price_pnl": 1587.8411600000022,
+              "slippage": 8.382444388000005,
+              "total_pnl": 1325.4459623273565
+            },
+            "episodes": 88,
+            "episodes_by_symbol": {
+              "BTC": 53,
+              "ETH": 35
+            },
+            "label": "MA200",
+            "long_short": {
+              "long_price_pnl": 1573.392599999994,
+              "short_price_pnl": 14.448560000000775
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.00040064667784007487,
+              "max_drawdown": 0.1431340195989781,
+              "profit_factor": 1.186539775866407,
+              "sharpe": 1.0608394195937307,
+              "total_return": 1.3254459623273513
+            },
+            "order_attempts": 137,
+            "orders_per_year": 22.032845095428318,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -111.705828287435,
+                "price_pnl": 711.2392800000043
+              },
+              "ETH": {
+                "funding_pnl": -121.35081402721094,
+                "price_pnl": 876.6018800000038
+              }
+            },
+            "pnl_by_year": {
+              "2020": 392.9533795280363,
+              "2021": 104.3907346407691,
+              "2022": 254.28222907928262,
+              "2023": 134.67713115661354,
+              "2024": 244.79623352339263,
+              "2025": -21.41419918107522,
+              "2026": 215.76045358033753
+            },
+            "return_over_mdd": 1.0235574367588567,
+            "rounding_skips": 3,
+            "skip_share": 0.021897810218978103,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 41912.22194,
+            "trades": 136,
+            "worst_year_pnl": -21.41419918107522
+          },
+          "MA200-perp/ideal": {
+            "annual_turnover_x_sleeve": 7.096558149070487,
+            "annualized_return": 0.14530164964565828,
+            "best_episode_pnl": 321.1311283059538,
+            "constrained": false,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 21.90211713678877,
+              "funding_pnl": -247.72745012753865,
+              "price_pnl": 1588.800391382321,
+              "slippage": 8.760846854715512,
+              "total_pnl": 1310.409977263278
+            },
+            "episodes": 88,
+            "episodes_by_symbol": {
+              "BTC": 53,
+              "ETH": 35
+            },
+            "label": "MA200",
+            "long_short": {
+              "long_price_pnl": 1582.5017170658575,
+              "short_price_pnl": 6.298674316449004
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.00039942555809652794,
+              "max_drawdown": 0.1697320091675573,
+              "profit_factor": 1.1776994339117746,
+              "sharpe": 1.025460770074209,
+              "total_return": 1.3104099772632791
+            },
+            "order_attempts": 126,
+            "orders_per_year": 20.736795383932535,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -125.67448426519705,
+                "price_pnl": 707.5750634762032
+              },
+              "ETH": {
+                "funding_pnl": -122.05296586234198,
+                "price_pnl": 881.2253279060856
+              }
+            },
+            "pnl_by_year": {
+              "2020": 395.89647992356277,
+              "2021": 63.28898389126175,
+              "2022": 265.33554686577554,
+              "2023": 151.02845487331,
+              "2024": 259.5285780776726,
+              "2025": -33.20854060329202,
+              "2026": 208.5404742349874
+            },
+            "return_over_mdd": 0.8560651014401081,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 43804.23427357755,
+            "trades": 128,
+            "worst_year_pnl": -33.20854060329202
+          }
+        },
+        "window": [
+          "2020-08-01T00:00:00+00:00",
+          "2026-10-01T23:00:00+00:00"
+        ]
+      }
+    },
+    "stress": {
+      "criteria_vs_perp_reference": {
+        "C1_retention": true,
+        "C2_drawdown": true,
+        "C3_efficiency": true,
+        "C4_worst_year": true,
+        "C5_implementable": true
+      },
+      "criteria_vs_spot": {
+        "C1_retention": true,
+        "C2_drawdown": true,
+        "C3_efficiency": true,
+        "C4_worst_year": true,
+        "C5_implementable": true
+      },
+      "h4_walk_forward_constrained_corrected": {
+        "annual_turnover_x_sleeve": 13.257357558470126,
+        "annualized_return": 0.08755852953856458,
+        "best_episode_pnl": 141.51957737646896,
+        "cost": "stress",
+        "decomposition": {
+          "fees": 27.658843235000003,
+          "funding_pnl": -68.59643339117528,
+          "price_pnl": 543.3062100000005,
+          "slippage": 27.658843235000003,
+          "total_pnl": 419.3920901388253
+        },
+        "episodes": 121,
+        "episodes_by_symbol": {
+          "BTC": 59,
+          "ETH": 62
+        },
+        "label": "H4 L=120d linear | H4 L=60d binary | H4 L=60d linear",
+        "long_short": {
+          "long_price_pnl": 678.287260000001,
+          "short_price_pnl": -134.9810499999994
+        },
+        "metrics": {
+          "days": 1523,
+          "expectancy": 0.00026620292597225357,
+          "max_drawdown": 0.1783903381938788,
+          "profit_factor": 1.1127949715108896,
+          "sharpe": 0.5961132707016371,
+          "total_return": 0.4193920901388253
+        },
+        "per_symbol": {
+          "BTC": {
+            "funding_pnl": -37.79667730873217,
+            "price_pnl": 287.8887000000015
+          },
+          "ETH": {
+            "funding_pnl": -30.79975608244348,
+            "price_pnl": 255.41751000000087
+          }
+        },
+        "pnl_by_year": {
+          "2022": -82.31092908382857,
+          "2023": 230.07040909871193,
+          "2024": -31.491155312196497,
+          "2025": 157.3457779422049,
+          "2026": 145.77798749393355
+        },
+        "rounding_skips": 7,
+        "time_in_market": {
+          "BTC": 0.6926570365506676,
+          "ETH": 0.777358284088422
+        },
+        "traded_notional": 55317.686470000015,
+        "trades": 260
+      },
+      "primary": {
+        "ma200_flips": {
+          "BTC": 33,
+          "ETH": 25
+        },
+        "runs": {
+          "BHVT-perp/constrained": {
+            "annual_turnover_x_sleeve": 1.198342497931714,
+            "annualized_return": 0.1395020662810711,
+            "best_episode_pnl": 459.5595652794855,
+            "constrained": true,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 2.500103595,
+              "funding_pnl": -142.74217050919424,
+              "price_pnl": 872.1885900000054,
+              "slippage": 2.500103595,
+              "total_pnl": 724.4462123008111
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 872.188590000001,
+              "short_price_pnl": 0.0
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.00039969040884664227,
+              "max_drawdown": 0.23326944204528968,
+              "profit_factor": 1.1402825620541392,
+              "sharpe": 0.8327377325044343,
+              "total_return": 0.724446212300808
+            },
+            "order_attempts": 40,
+            "orders_per_year": 9.346684175968482,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -77.13124202051256,
+                "price_pnl": 539.9016999999981
+              },
+              "ETH": {
+                "funding_pnl": -65.61092848868162,
+                "price_pnl": 332.2868899999985
+              }
+            },
+            "pnl_by_year": {
+              "2022": -98.7148833471,
+              "2023": 502.99987778217485,
+              "2024": 325.6288525144678,
+              "2025": -15.83624320133572,
+              "2026": 10.3686085526042
+            },
+            "return_over_mdd": 0.5980297507377178,
+            "rounding_skips": 3,
+            "skip_share": 0.075,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 5000.207190000001,
+            "trades": 39,
+            "worst_year_pnl": -98.7148833471
+          },
+          "BHVT-perp/ideal": {
+            "annual_turnover_x_sleeve": 0.9994700693157124,
+            "annualized_return": 0.13206147013756642,
+            "best_episode_pnl": 432.0363900012582,
+            "constrained": false,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 2.0851957747504515,
+              "funding_pnl": -150.58490377000462,
+              "price_pnl": 832.7019465191828,
+              "slippage": 2.0851957747504515,
+              "total_pnl": 677.9466511996773
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 832.7019465191835,
+              "short_price_pnl": 0.0
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.0003840378839102219,
+              "max_drawdown": 0.24830989530554204,
+              "profit_factor": 1.1295412965906322,
+              "sharpe": 0.779417197356066,
+              "total_return": 0.6779466511996834
+            },
+            "order_attempts": 32,
+            "orders_per_year": 8.148391332895601,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -84.32147411126766,
+                "price_pnl": 518.947953381366
+              },
+              "ETH": {
+                "funding_pnl": -66.26342965873584,
+                "price_pnl": 313.753993137822
+              }
+            },
+            "pnl_by_year": {
+              "2022": -93.34964510170425,
+              "2023": 463.83233738815056,
+              "2024": 331.16664690440507,
+              "2025": -18.199999560072456,
+              "2026": -5.50268843110166
+            },
+            "return_over_mdd": 0.5318413508050758,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 4170.391549500904,
+            "trades": 34,
+            "worst_year_pnl": -93.34964510170425
+          },
+          "BHVT-spot/constrained": {
+            "annual_turnover_x_sleeve": 1.0903250196060408,
+            "annualized_return": 0.15821991141623637,
+            "best_episode_pnl": 536.2172810904996,
+            "constrained": true,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 4.549493164,
+              "funding_pnl": 0.0,
+              "price_pnl": 852.581618,
+              "slippage": 2.274746582,
+              "total_pnl": 845.7573782540001
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 852.5816180000104,
+              "short_price_pnl": 0.0
+            },
+            "market": "spot",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.0004441863534373047,
+              "max_drawdown": 0.2264373322425616,
+              "profit_factor": 1.1570399801373543,
+              "sharpe": 0.9277085760144753,
+              "total_return": 0.8457573782540062
+            },
+            "order_attempts": 35,
+            "orders_per_year": 8.86736703873933,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": 0.0,
+                "price_pnl": 540.6806649999995
+              },
+              "ETH": {
+                "funding_pnl": 0.0,
+                "price_pnl": 311.9009529999962
+              }
+            },
+            "pnl_by_year": {
+              "2022": -92.39032110200014,
+              "2023": 510.33638348449995,
+              "2024": 425.5771441160002,
+              "2025": -3.0787463560000106,
+              "2026": 5.312918111500039
+            },
+            "return_over_mdd": 0.698735980720484,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 4549.493164,
+            "trades": 37,
+            "worst_year_pnl": -92.39032110200014
+          },
+          "BHVT-spot/ideal": {
+            "annual_turnover_x_sleeve": 0.9994700693157124,
+            "annualized_return": 0.15530416881048414,
+            "best_episode_pnl": 515.0628194781059,
+            "constrained": false,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 4.170391549500903,
+              "funding_pnl": 0.0,
+              "price_pnl": 832.7019465191838,
+              "slippage": 2.0851957747504515,
+              "total_pnl": 826.4463591949325
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 832.7019465191835,
+              "short_price_pnl": 0.0
+            },
+            "market": "spot",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.00043656736007911183,
+              "max_drawdown": 0.22699244042455902,
+              "profit_factor": 1.1557779010517686,
+              "sharpe": 0.919682345825157,
+              "total_return": 0.8264463591949336
+            },
+            "order_attempts": 32,
+            "orders_per_year": 8.148391332895601,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": 0.0,
+                "price_pnl": 518.947953381366
+              },
+              "ETH": {
+                "funding_pnl": 0.0,
+                "price_pnl": 313.753993137822
+              }
+            },
+            "pnl_by_year": {
+              "2022": -92.45594227399386,
+              "2023": 512.3773807736465,
+              "2024": 393.73823484663944,
+              "2025": 7.18924118519044,
+              "2026": 5.5974446634500055
+            },
+            "return_over_mdd": 0.6841821186644298,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 4170.391549500904,
+            "trades": 34,
+            "worst_year_pnl": -92.45594227399386
+          },
+          "MA200-perp/constrained": {
+            "annual_turnover_x_sleeve": 7.827526164674984,
+            "annualized_return": 0.13001855239289917,
+            "best_episode_pnl": 223.0258477240108,
+            "constrained": true,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 16.330578560000003,
+              "funding_pnl": -94.74534296042155,
+              "price_pnl": 792.7545399999956,
+              "slippage": 16.330578560000003,
+              "total_pnl": 665.3480399195739
+            },
+            "episodes": 60,
+            "episodes_by_symbol": {
+              "BTC": 34,
+              "ETH": 26
+            },
+            "label": "MA200",
+            "long_short": {
+              "long_price_pnl": 817.4498500000058,
+              "short_price_pnl": -24.695309999999523
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.00037589446347644504,
+              "max_drawdown": 0.1333791218712375,
+              "profit_factor": 1.1347097657510272,
+              "sharpe": 0.7920586982374184,
+              "total_return": 0.6653480399195726
+            },
+            "order_attempts": 99,
+            "orders_per_year": 23.486539724228496,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -50.91618506055696,
+                "price_pnl": 445.55789999999985
+              },
+              "ETH": {
+                "funding_pnl": -43.82915789986446,
+                "price_pnl": 347.1966399999991
+              }
+            },
+            "pnl_by_year": {
+              "2022": 98.0351311870993,
+              "2023": 135.25670229083016,
+              "2024": 242.3843074013878,
+              "2025": -25.271894756073834,
+              "2026": 214.9437937963305
+            },
+            "return_over_mdd": 0.974804381441478,
+            "rounding_skips": 3,
+            "skip_share": 0.030303030303030304,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 32661.157119999996,
+            "trades": 98,
+            "worst_year_pnl": -25.271894756073834
+          },
+          "MA200-perp/ideal": {
+            "annual_turnover_x_sleeve": 8.083526870627633,
+            "annualized_return": 0.1309304353371279,
+            "best_episode_pnl": 234.81131502755045,
+            "constrained": false,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 16.864673183514913,
+              "funding_pnl": -101.24515664996606,
+              "price_pnl": 805.9371771996687,
+              "slippage": 16.864673183514913,
+              "total_pnl": 670.9626741826728
+            },
+            "episodes": 60,
+            "episodes_by_symbol": {
+              "BTC": 34,
+              "ETH": 26
+            },
+            "label": "MA200",
+            "long_short": {
+              "long_price_pnl": 838.2821268263525,
+              "short_price_pnl": -32.34494962670144
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.00037926531577424464,
+              "max_drawdown": 0.13503044888729707,
+              "profit_factor": 1.133348143476922,
+              "sharpe": 0.788126188378412,
+              "total_return": 0.6709626741826791
+            },
+            "order_attempts": 87,
+            "orders_per_year": 21.329612606697307,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -57.16910296633681,
+                "price_pnl": 456.58907280897705
+              },
+              "ETH": {
+                "funding_pnl": -44.07605368362885,
+                "price_pnl": 349.34810439068207
+              }
+            },
+            "pnl_by_year": {
+              "2022": 92.60269442197523,
+              "2023": 150.92103370928498,
+              "2024": 257.0275663616376,
+              "2025": -37.37938913761832,
+              "2026": 207.79076882739332
+            },
+            "return_over_mdd": 0.9696363776914402,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 33729.34636702983,
+            "trades": 89,
+            "worst_year_pnl": -37.37938913761832
+          }
+        },
+        "window": [
+          "2022-08-01T00:00:00+00:00",
+          "2026-10-01T23:00:00+00:00"
+        ]
+      },
+      "reference": {
+        "ma200_flips": {
+          "BTC": 52,
+          "ETH": 34
+        },
+        "runs": {
+          "BHVT-perp/constrained": {
+            "annual_turnover_x_sleeve": 1.072459335086551,
+            "annualized_return": 0.13531823301682278,
+            "best_episode_pnl": 671.3059394523005,
+            "constrained": true,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 3.3099327150000004,
+              "funding_pnl": -294.9133103747014,
+              "price_pnl": 1490.3989300000017,
+              "slippage": 3.3099327150000004,
+              "total_pnl": 1188.8657541953003
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 1490.3989300000023,
+              "short_price_pnl": 0.0
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.00037705010454653964,
+              "max_drawdown": 0.24569619903509698,
+              "profit_factor": 1.1586592659159354,
+              "sharpe": 0.9404888632302325,
+              "total_return": 1.1888657541952958
+            },
+            "order_attempts": 51,
+            "orders_per_year": 8.100310696848647,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -151.40541870769982,
+                "price_pnl": 826.7619800000003
+              },
+              "ETH": {
+                "funding_pnl": -143.50789166699914,
+                "price_pnl": 663.636950000004
+              }
+            },
+            "pnl_by_year": {
+              "2020": 392.6203984820363,
+              "2021": 277.91136467706974,
+              "2022": -304.4381477551235,
+              "2023": 502.6109209255824,
+              "2024": 325.6288525144689,
+              "2025": -15.836243201335492,
+              "2026": 10.368608552601927
+            },
+            "return_over_mdd": 0.5507542792613286,
+            "rounding_skips": 3,
+            "skip_share": 0.058823529411764705,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 6619.865429999999,
+            "trades": 50,
+            "worst_year_pnl": -304.4381477551235
+          },
+          "BHVT-perp/ideal": {
+            "annual_turnover_x_sleeve": 0.932241717666511,
+            "annualized_return": 0.12953111057044797,
+            "best_episode_pnl": 622.5405170807528,
+            "constrained": false,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 2.8771788902776017,
+              "funding_pnl": -307.34853084902045,
+              "price_pnl": 1433.999785494827,
+              "slippage": 2.8771788902776017,
+              "total_pnl": 1120.8968968652516
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 1433.9997854948117,
+              "short_price_pnl": 0.0
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.000365246178741882,
+              "max_drawdown": 0.24818549277194793,
+              "profit_factor": 1.1455608966257167,
+              "sharpe": 0.878848048171074,
+              "total_return": 1.1208968968652466
+            },
+            "order_attempts": 44,
+            "orders_per_year": 7.452285841100754,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -162.5748740925997,
+                "price_pnl": 788.5116921314991
+              },
+              "ETH": {
+                "funding_pnl": -144.77365675642162,
+                "price_pnl": 645.488093363336
+              }
+            },
+            "pnl_by_year": {
+              "2020": 395.5805994494867,
+              "2021": 282.69938664574124,
+              "2022": -328.43609479295856,
+              "2023": 463.5890466497535,
+              "2024": 331.16664690440643,
+              "2025": -18.199999560072683,
+              "2026": -5.502688431105071
+            },
+            "return_over_mdd": 0.5219124982839799,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 5754.357780555203,
+            "trades": 46,
+            "worst_year_pnl": -328.43609479295856
+          },
+          "BHVT-spot/constrained": {
+            "annual_turnover_x_sleeve": 0.9936432361387041,
+            "annualized_return": 0.15582361750514373,
+            "best_episode_pnl": 804.4603059789424,
+            "constrained": true,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 6.133364961700001,
+              "funding_pnl": 0.0,
+              "price_pnl": 1453.7822327000008,
+              "slippage": 3.0666824808500004,
+              "total_pnl": 1444.5821852574509
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 1453.7822327000072,
+              "short_price_pnl": 0.0
+            },
+            "market": "spot",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.00042405998557894134,
+              "max_drawdown": 0.22299638427326104,
+              "profit_factor": 1.1870336383518654,
+              "sharpe": 1.097049346073044,
+              "total_return": 1.4445821852574574
+            },
+            "order_attempts": 47,
+            "orders_per_year": 7.938304482911673,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": 0.0,
+                "price_pnl": 810.1325536999924
+              },
+              "ETH": {
+                "funding_pnl": 0.0,
+                "price_pnl": 643.6496790000045
+              }
+            },
+            "pnl_by_year": {
+              "2020": 443.7206851445501,
+              "2021": 382.78667297439983,
+              "2022": -319.79457084199976,
+              "2023": 510.0580821090002,
+              "2024": 425.57714411600045,
+              "2025": -3.0787463560004653,
+              "2026": 5.312918111500494
+            },
+            "return_over_mdd": 0.6987719465181848,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 6133.364961700001,
+            "trades": 49,
+            "worst_year_pnl": -319.79457084199976
+          },
+          "BHVT-spot/ideal": {
+            "annual_turnover_x_sleeve": 0.932241717666511,
+            "annualized_return": 0.15434699415965714,
+            "best_episode_pnl": 783.4172406942791,
+            "constrained": false,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 5.754357780555203,
+              "funding_pnl": 0.0,
+              "price_pnl": 1433.9997854948356,
+              "slippage": 2.8771788902776017,
+              "total_pnl": 1425.3682488240029
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 1433.9997854948117,
+              "short_price_pnl": 0.0
+            },
+            "market": "spot",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.00042026964178057993,
+              "max_drawdown": 0.22311920383818298,
+              "profit_factor": 1.1865731910947614,
+              "sharpe": 1.093024944826848,
+              "total_return": 1.4253682488239976
+            },
+            "order_attempts": 44,
+            "orders_per_year": 7.452285841100754,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": 0.0,
+                "price_pnl": 788.5116921314991
+              },
+              "ETH": {
+                "funding_pnl": 0.0,
+                "price_pnl": 645.488093363336
+              }
+            },
+            "pnl_by_year": {
+              "2020": 443.8389150533244,
+              "2021": 382.9301176830704,
+              "2022": -320.02496213737663,
+              "2023": 512.099257529705,
+              "2024": 393.7382348466392,
+              "2025": 7.18924118519044,
+              "2026": 5.5974446634500055
+            },
+            "return_over_mdd": 0.6917692045530834,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 5754.357780555203,
+            "trades": 46,
+            "worst_year_pnl": -320.02496213737663
+          },
+          "MA200-perp/constrained": {
+            "annual_turnover_x_sleeve": 6.790040394185531,
+            "annualized_return": 0.14549930695697078,
+            "best_episode_pnl": 320.72241631702923,
+            "constrained": true,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 20.956110969999997,
+              "funding_pnl": -233.05664231464553,
+              "price_pnl": 1587.8411600000018,
+              "slippage": 20.956110969999997,
+              "total_pnl": 1312.872295745356
+            },
+            "episodes": 88,
+            "episodes_by_symbol": {
+              "BTC": 53,
+              "ETH": 35
+            },
+            "label": "MA200",
+            "long_short": {
+              "long_price_pnl": 1573.392599999994,
+              "short_price_pnl": 14.448560000000775
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.0003983262721430346,
+              "max_drawdown": 0.14443710360895315,
+              "profit_factor": 1.1849555969075733,
+              "sharpe": 1.0529382292344847,
+              "total_return": 1.3128722957453713
+            },
+            "order_attempts": 137,
+            "orders_per_year": 22.032845095428318,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -111.705828287435,
+                "price_pnl": 711.2392800000043
+              },
+              "ETH": {
+                "funding_pnl": -121.35081402721094,
+                "price_pnl": 876.6018800000038
+              }
+            },
+            "pnl_by_year": {
+              "2020": 392.6203984820363,
+              "2021": 102.15251799876819,
+              "2022": 253.9438691352825,
+              "2023": 132.09930368761434,
+              "2024": 242.38430740139188,
+              "2025": -25.2718947560752,
+              "2026": 214.943793796338
+            },
+            "return_over_mdd": 1.007354089229686,
+            "rounding_skips": 3,
+            "skip_share": 0.021897810218978103,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 41912.22194,
+            "trades": 136,
+            "worst_year_pnl": -25.2718947560752
+          },
+          "MA200-perp/ideal": {
+            "annual_turnover_x_sleeve": 7.096558149070487,
+            "annualized_return": 0.14424376760570268,
+            "best_episode_pnl": 320.8536253386631,
+            "constrained": false,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 21.90211713678877,
+              "funding_pnl": -247.72745012753865,
+              "price_pnl": 1588.8003913823218,
+              "slippage": 21.90211713678877,
+              "total_pnl": 1297.2687069812055
+            },
+            "episodes": 88,
+            "episodes_by_symbol": {
+              "BTC": 53,
+              "ETH": 35
+            },
+            "label": "MA200",
+            "long_short": {
+              "long_price_pnl": 1582.5017170658575,
+              "short_price_pnl": 6.298674316449004
+            },
+            "market": "perp",
+            "metrics": {
+              "days": 2253,
+              "expectancy": 0.00039699046941737336,
+              "max_drawdown": 0.17117669944638256,
+              "profit_factor": 1.176113440913138,
+              "sharpe": 1.0174166204051192,
+              "total_return": 1.2972687069812094
+            },
+            "order_attempts": 126,
+            "orders_per_year": 20.736795383932535,
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -125.67448426519705,
+                "price_pnl": 707.5750634762032
+              },
+              "ETH": {
+                "funding_pnl": -122.05296586234198,
+                "price_pnl": 881.2253279060856
+              }
+            },
+            "pnl_by_year": {
+              "2020": 395.5805994494867,
+              "2021": 60.792557298693055,
+              "2022": 264.98837678363157,
+              "2023": 148.46822739797994,
+              "2024": 257.02756636163826,
+              "2025": -37.37938913761536,
+              "2026": 207.79076882739128
+            },
+            "return_over_mdd": 0.8426600587125116,
+            "rounding_skips": 0,
+            "skip_share": 0.0,
+            "time_in_market": {
+              "BTC": 0.999963012279923,
+              "ETH": 0.999963012279923
+            },
+            "traded_notional": 43804.23427357755,
+            "trades": 128,
+            "worst_year_pnl": -37.37938913761536
+          }
+        },
+        "window": [
+          "2020-08-01T00:00:00+00:00",
+          "2026-10-01T23:00:00+00:00"
+        ]
+      }
+    }
+  },
+  "criteria": {
+    "drawdown_ratio": 0.6666666666666666,
+    "max_skip_share": 0.1,
+    "retention": 0.7
+  },
+  "decision": "OBSERVE_ELIGIBLE",
+  "generated_at": "2026-10-02T09:55:36Z",
+  "plan": "docs/PHASE2C_MA200_COMPARISON.md",
+  "plan_departure": "Decision 0018: sleeve chosen by the user after the 500 USDT result",
+  "schema_version": 1,
+  "sleeve": 1000.0,
+  "spot_fee_bps": 10.0
+}
