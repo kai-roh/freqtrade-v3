@@ -10,8 +10,11 @@ at walk-forward window boundaries, so validation windows never overlap.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -98,16 +101,43 @@ def target_weights(panel: Phase2Panel, rule: TrendRule) -> pd.DataFrame:
 
 @dataclass(frozen=True)
 class VenueFilters:
-    """Lot step and minimum notional per asset (constrained mode)."""
+    """Lot step and minimum notional per asset (constrained mode).
+
+    The exchange applies the minimum notional to each order, not to the holding.
+    A perpetual order that only reduces the position is sent reduce-only and is
+    exempt (Binance -4164); spot has no such exemption. ``legacy_holding_rule``
+    reproduces the recorded 2026-10-02 Phase 2c run, which checked the holding.
+    """
 
     step: dict[str, float]
     min_notional: dict[str, float]
+    reduce_only_exempt: bool = True
+    legacy_holding_rule: bool = False
+
+    def floor_to_step(self, symbol: str, qty: float) -> float:
+        if qty == 0.0:
+            return 0.0
+        step = self.step[symbol]
+        return math.copysign(math.floor(abs(qty) / step + 1e-9) * step, qty)
 
     def round_qty(self, symbol: str, qty: float, price: float) -> float:
-        step = self.step[symbol]
-        rounded = math.copysign(math.floor(abs(qty) / step + 1e-9) * step, qty)
+        """Legacy holding-based rule: floor, then zero a holding below the minimum."""
+        rounded = self.floor_to_step(symbol, qty)
         if abs(rounded) * price < self.min_notional[symbol]:
             return 0.0
+        return rounded
+
+    def executable(self, symbol: str, current: float, target: float, price: float) -> float:
+        """Position after one order toward ``target``; ``current`` when no order is allowed."""
+        rounded = self.floor_to_step(symbol, target)
+        delta = rounded - current
+        if abs(delta) < self.step[symbol] / 2:
+            return current
+        reducing = current != 0.0 and rounded * current >= 0.0 and abs(rounded) < abs(current)
+        if reducing and self.reduce_only_exempt:
+            return rounded
+        if abs(delta) * price < self.min_notional[symbol]:
+            return current
         return rounded
 
 
@@ -139,8 +169,12 @@ def simulate_trend(
     sleeve: float = 500.0,
     filters: VenueFilters | None = None,
     weights_cache: dict[TrendRule, pd.DataFrame] | None = None,
+    market: str = "perp",
 ) -> TrendResult:
     """One continuous account over [start, end]; flat at the end.
+
+    ``market="spot"`` refuses short targets and uses the panel without funding.
+    The end-of-window flattening is an accounting close and ignores the filters.
 
     ``schedule`` is a list of (effective_from, rule); the rule in force at a
     decision is the last entry whose effective_from is at or before it.
@@ -177,10 +211,14 @@ def simulate_trend(
         if t in frame.index:
             targets[row] = frame.loc[t].to_numpy(dtype=float)
 
+    if market not in {"perp", "spot"}:
+        raise ValueError("market must be perp or spot")
+    if market == "spot" and (np.nan_to_num(targets) < 0).any():
+        raise ValueError("spot cannot hold a short position")
     cash = sleeve
     qty = np.zeros(m)
     fees = slippage = funding_total = traded = 0.0
-    trades = skips = 0
+    trades = skips = attempts = 0
     long_pnl = short_pnl = 0.0
     sym_price = np.zeros(m)
     sym_funding = np.zeros(m)
@@ -258,11 +296,17 @@ def simulate_trend(
             for j, weight in pending.items():
                 price = float(price_row[j])
                 target_qty = weight * cap / price
-                if filters is not None:
+                attempts += 1
+                if filters is not None and filters.legacy_holding_rule:
                     rounded = filters.round_qty(symbols[j], target_qty, price)
                     if rounded == 0.0 and abs(target_qty) > EPSILON:
                         skips += 1
                     target_qty = rounded
+                elif filters is not None:
+                    executable = filters.executable(symbols[j], qty[j], target_qty, price)
+                    if abs(executable - qty[j]) < EPSILON:
+                        skips += 1
+                    target_qty = executable
                 trade(j, target_qty, price, t)
             pending = None
         if hour_of_day[row] == 0 and row + 1 < n:
@@ -310,6 +354,30 @@ def simulate_trend(
         traded_notional=traded,
         time_in_market={symbols[j]: int(in_market[j]) / n for j in range(m)},
         rounding_skips=skips,
+        extra={"order_attempts": attempts, "market": market},
+    )
+
+
+def load_spot_panel(
+    data_dir: Path, *, manifest_path: Path, symbols: tuple[str, ...] = SYMBOLS
+) -> Phase2Panel:
+    """Spot 1h candles as a panel without funding (mark = close), hash-checked."""
+    files = json.loads(Path(manifest_path).read_text())["files"]
+    opens, closes = {}, {}
+    for symbol in symbols:
+        path = Path(data_dir) / f"{symbol}_USDT-1h.feather"
+        recorded = files.get(f"{symbol}/spot", {}).get("sha256")
+        if recorded != hashlib.sha256(path.read_bytes()).hexdigest():
+            raise ValueError(f"{path.name} differs from the frozen spot manifest")
+        frame = pd.read_feather(path)
+        index = pd.to_datetime(frame["date"], utc=True)
+        opens[symbol] = pd.Series(frame["open"].astype(float).to_numpy(), index=index)
+        closes[symbol] = pd.Series(frame["close"].astype(float).to_numpy(), index=index)
+    open_frame = pd.DataFrame(opens).dropna(how="any")[list(symbols)]
+    close_frame = pd.DataFrame(closes).loc[open_frame.index, list(symbols)]
+    funding = pd.DataFrame(columns=list(symbols), index=pd.DatetimeIndex([], tz="UTC"), dtype=float)
+    return Phase2Panel(
+        open=open_frame, close=close_frame, mark=close_frame, funding=funding, symbols=symbols
     )
 
 

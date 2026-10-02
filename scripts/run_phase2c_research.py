@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from v3.phase2c.research import run_phase2c_research  # noqa: E402
+from v3.phase2c.research import Phase2cConfig, run_phase2c_research  # noqa: E402
 
 
 def main() -> int:
@@ -28,6 +28,11 @@ def main() -> int:
     )
     parser.add_argument("--output", type=Path, default=Path("research_results/phase2c"))
     parser.add_argument("--generated-at", default=os.environ.get("V3_GENERATED_AT"))
+    parser.add_argument(
+        "--legacy-holding-min-notional",
+        action="store_true",
+        help="Reproduce the recorded run, whose constrained mode checked the holding.",
+    )
     args = parser.parse_args()
     result = run_phase2c_research(
         args.data_dir,
@@ -35,6 +40,7 @@ def main() -> int:
         manifest_path=args.manifest,
         filters_path=args.filters,
         generated_at=args.generated_at,
+        config=Phase2cConfig(legacy_holding_min_notional=args.legacy_holding_min_notional),
     )
     print(f"decision={result['decision']}")
     print(f"report={args.output / 'REPORT.md'}")

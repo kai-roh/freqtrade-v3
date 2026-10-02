@@ -64,6 +64,9 @@ class Phase2cConfig:
     bootstrap_block: int = 20
     bootstrap_iterations: int = 10_000
     bootstrap_seed: int = 20261002
+    # True reproduces the recorded run, whose constrained mode checked the holding
+    # against the minimum notional; the exchange checks the order delta.
+    legacy_holding_min_notional: bool = False
 
 
 def windows() -> tuple[Window, ...]:
@@ -81,11 +84,24 @@ def windows() -> tuple[Window, ...]:
     return tuple(out)
 
 
-def load_venue_filters(path: Path) -> VenueFilters:
+def load_venue_filters(path: Path, *, legacy: bool = False) -> VenueFilters:
+    """USD-M perpetual filters from evidence/phase2b/implementability.json."""
     raw = json.loads(path.read_text())["raw_filters"]
     return VenueFilters(
         step={s: float(raw[f"{s}USDT"]["LOT_SIZE.stepSize"]) for s in SYMBOLS},
         min_notional={s: float(raw[f"{s}USDT"]["MIN_NOTIONAL"]) for s in SYMBOLS},
+        reduce_only_exempt=True,
+        legacy_holding_rule=legacy,
+    )
+
+
+def load_spot_filters(path: Path) -> VenueFilters:
+    """Spot filters from evidence/phase2c/spot-filters-20261002.json (no reduce-only)."""
+    raw = json.loads(path.read_text())["symbols"]
+    return VenueFilters(
+        step={s: float(raw[f"{s}USDT"]["LOT_SIZE.stepSize"]) for s in SYMBOLS},
+        min_notional={s: float(raw[f"{s}USDT"]["minNotional"]) for s in SYMBOLS},
+        reduce_only_exempt=False,
     )
 
 
@@ -319,7 +335,8 @@ def run_phase2c_research(
     panel = load_phase2_panel(data_dir, manifest_path=manifest_path, symbols=SYMBOLS)
     if panel.open.index[-1] != DATA_END:
         raise ValueError("panel must end at the registered cutoff")
-    evaluation = evaluate(panel, filters=load_venue_filters(filters_path), config=config)
+    filters = load_venue_filters(filters_path, legacy=config.legacy_holding_min_notional)
+    evaluation = evaluate(panel, filters=filters, config=config)
     result = {
         "schema_version": 1,
         "generated_at": generated_at

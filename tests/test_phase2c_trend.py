@@ -8,6 +8,7 @@ from v3.phase2.data import Phase2Panel
 from v3.phase2c.research import windows
 from v3.phase2c.trend import (
     NORMAL,
+    Cost,
     TrendRule,
     VenueFilters,
     daily_closes,
@@ -145,3 +146,90 @@ def test_venue_rounding_floors_toward_zero_and_drops_tiny_orders():
     assert filters.round_qty("BTC", -0.0029, 80_000) == pytest.approx(-0.002)
     assert filters.round_qty("BTC", 0.0006, 80_000) == 0.0
     assert filters.round_qty("ETH", 0.004, 4_000) == 0.0  # 16 USDT is below the 20 minimum
+
+
+PERP = VenueFilters(step={"BTC": 0.001, "ETH": 0.001}, min_notional={"BTC": 50, "ETH": 20})
+SPOT = VenueFilters(
+    step={"BTC": 0.00001, "ETH": 0.0001},
+    min_notional={"BTC": 5, "ETH": 5},
+    reduce_only_exempt=False,
+)
+
+
+def test_minimum_notional_applies_to_the_order_delta_not_the_holding():
+    # Increasing by 0.0005 BTC (40 USDT) is below the 50 USDT order minimum: no order.
+    assert PERP.executable("BTC", 0.002, 0.0025, 80_000) == pytest.approx(0.002)
+    # Increasing by 0.001 BTC (80 USDT) is allowed even though the step floors 0.0039 to 0.003.
+    assert PERP.executable("BTC", 0.002, 0.0039, 80_000) == pytest.approx(0.003)
+    # Opening from flat needs the order itself to reach the minimum.
+    assert PERP.executable("ETH", 0.0, 0.004, 4_000) == 0.0
+    assert PERP.executable("ETH", 0.0, 0.006, 4_000) == pytest.approx(0.006)
+
+
+def test_perpetual_reduce_only_is_exempt_but_spot_is_not():
+    # Reducing 0.003 -> 0.002 BTC is an 80 USDT order; reducing to a 16 USDT ETH holding is fine
+    # on perpetuals (reduce-only), although the remaining holding is below the minimum.
+    assert PERP.executable("ETH", 0.009, 0.004, 4_000) == pytest.approx(0.004)
+    assert PERP.executable("ETH", 0.001, 0.0, 4_000) == 0.0
+    # Spot has no reduce-only: selling 4 USDT of ETH is below the 5 USDT minimum.
+    assert SPOT.executable("ETH", 0.0020, 0.0010, 4_000) == pytest.approx(0.0020)
+    assert SPOT.executable("ETH", 0.0030, 0.0010, 4_000) == pytest.approx(0.0010)
+
+
+def test_flip_is_one_order_that_must_reach_the_minimum():
+    # Long 0.002 -> short 0.001 BTC is a 0.003 BTC sell (240 USDT): allowed.
+    assert PERP.executable("BTC", 0.002, -0.001, 80_000) == pytest.approx(-0.001)
+    # A flip is never reduce-only, so the whole order obeys the minimum:
+    # 0.006 ETH (24 USDT) is allowed, 0.004 ETH (16 USDT) is not.
+    assert PERP.executable("ETH", 0.003, -0.003, 4_000) == pytest.approx(-0.003)
+    assert PERP.executable("ETH", 0.002, -0.002, 4_000) == pytest.approx(0.002)
+
+
+def test_spot_market_has_no_funding_charges_spot_fees_and_refuses_shorts():
+    panel = make_panel(days=120, wiggle=0.0, drift=0.004)
+    spot_panel = Phase2Panel(
+        open=panel.open,
+        close=panel.close,
+        mark=panel.close,
+        funding=pd.DataFrame(
+            columns=list(SYMBOLS), index=pd.DatetimeIndex([], tz="UTC"), dtype=float
+        ),
+        symbols=SYMBOLS,
+    )
+    start, end = T0 + pd.Timedelta(days=80), T0 + pd.Timedelta(days=100)
+    cost = Cost("normal", 2.0, fee_bps=10.0)
+    result = simulate_trend(
+        spot_panel, [(start, TrendRule("bh_vt"))], cost=cost, start=start, end=end, market="spot"
+    )
+    assert result.decomposition["funding_pnl"] == 0.0
+    assert result.decomposition["fees"] == pytest.approx(result.traded_notional * 0.0010)
+    short_rule = TrendRule("trend", 20, "binary")
+    falling = make_panel(days=120, wiggle=0.0, drift=-0.004)
+    falling_spot = Phase2Panel(
+        open=falling.open,
+        close=falling.close,
+        mark=falling.close,
+        funding=spot_panel.funding,
+        symbols=SYMBOLS,
+    )
+    with pytest.raises(ValueError, match="short"):
+        simulate_trend(
+            falling_spot, [(start, short_rule)], cost=cost, start=start, end=end, market="spot"
+        )
+
+
+def test_constrained_run_counts_order_attempts_and_skips():
+    panel = make_panel(days=200, wiggle=0.02, drift=0.0)
+    start, end = T0 + pd.Timedelta(days=130), T0 + pd.Timedelta(days=199)
+    tiny = VenueFilters(step={"BTC": 0.001, "ETH": 0.001}, min_notional={"BTC": 1e9, "ETH": 1e9})
+    result = simulate_trend(
+        panel,
+        [(start, TrendRule("trend", 20, "linear"))],
+        cost=NORMAL,
+        start=start,
+        end=end,
+        filters=tiny,
+    )
+    # Every opening order is below an impossible minimum, so nothing ever trades.
+    assert result.trades == 0
+    assert result.rounding_skips == result.extra["order_attempts"] > 0
