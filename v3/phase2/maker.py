@@ -64,6 +64,39 @@ class DailyRule:
         return f"{self.hypothesis} W={self.window_hours}h k={self.k}"
 
 
+@dataclass(frozen=True)
+class RiskVariant:
+    """Diagnosis-only portfolio risk changes (docs/PHASE2B_RISK_DIAGNOSIS.md).
+
+    ``balance`` shrinks the larger side to match the other at each decision (dollar
+    exposure, or beta-weighted exposure when ``beta`` is set) and exits everything
+    when a side is empty. ``beta`` sizes legs by ``base / beta``. ``venue_filters``
+    maps symbol to (minimum notional, lot step) for the exchange-constrained mode.
+    """
+
+    name: str
+    balance: bool = False
+    beta: bool = False
+    venue_filters: dict[str, tuple[float, float]] | None = None
+    beta_lookback_days: int = 30
+    beta_bounds: tuple[float, float] = (0.25, 4.0)
+    balance_tolerance: float = 0.10
+
+
+def estimate_betas(
+    opens: pd.DataFrame, t: pd.Timestamp, lookback_days: int, bounds: tuple[float, float]
+) -> dict[str, float]:
+    """Beta to BTC from hourly open-to-open returns strictly before ``t``."""
+    window = opens.loc[(opens.index >= t - pd.Timedelta(days=lookback_days)) & (opens.index < t)]
+    returns = window.pct_change().dropna()
+    variance = float(returns["BTC"].var()) if len(returns) > 1 else 0.0
+    betas = {}
+    for symbol in opens.columns:
+        beta = float(returns[symbol].cov(returns["BTC"]) / variance) if variance > 0 else 1.0
+        betas[symbol] = min(max(beta, bounds[0]), bounds[1])
+    return betas
+
+
 def h3_grid(hypothesis: str = "H3") -> tuple[DailyRule, ...]:
     if hypothesis not in {"H3", "H3T"}:
         raise ValueError("hypothesis must be H3 or H3T")
@@ -111,6 +144,7 @@ def simulate_maker_basket(
     final_slippage_bps: float | None = None,
     contract: BasketContract = PHASE2B_CONTRACT,
     trace: list[dict[str, Any]] | None = None,
+    risk: RiskVariant | None = None,
 ) -> SimulationResult:
     """Run one rule over [start, end]; decisions stop after entry_end; flat at end.
 
@@ -118,6 +152,7 @@ def simulate_maker_basket(
     (Stage B uses the stress value); by default the regime's taker slippage.
     ``trace``, when given, receives hourly snapshots, decisions, trades, funding
     payments, and stop events for diagnosis. It never changes the simulation.
+    ``risk`` applies a diagnosis-only risk variant; None is the registered H3 path.
     """
     base = panel.base
     entry_end = entry_end or end
@@ -161,6 +196,16 @@ def simulate_maker_basket(
         "taker_notional": 0.0,
     }
     selection = Selection((), ())
+    current_betas: dict[str, float] = dict.fromkeys(symbols, 1.0)
+    diag = {
+        "entry_allowed_decisions": 0,
+        "min_notional_skips": 0,
+        "balance_full_exits": 0,
+        "balance_orders": 0,
+        "held_hours": 0,
+        "abs_net_dollar_sum": 0.0,
+        "abs_net_beta_sum": 0.0,
+    }
     halted_until: pd.Timestamp | None = None
     day_start_equity: float | None = None
     daily_equity: dict[pd.Timestamp, float] = {}
@@ -220,11 +265,20 @@ def simulate_maker_basket(
             }
         )
 
+    def to_qty(symbol: str, target_notional: float, price: float) -> float:
+        quantity = target_notional / price
+        if risk is None or risk.venue_filters is None or target_notional == 0.0:
+            return quantity
+        minimum, step = risk.venue_filters[symbol]
+        lots = int(abs(quantity) / step + 1e-9)
+        floored = lots * step * (1 if quantity > 0 else -1)
+        return floored if abs(floored) * price >= minimum else 0.0
+
     def taker(symbol, target_notional, prices, when, slip_bps, kind) -> None:
         price = float(prices[symbol])
         trade(
             symbol,
-            target_notional / price,
+            to_qty(symbol, target_notional, price),
             price,
             execution.taker_fee_bps,
             slip_bps,
@@ -284,7 +338,7 @@ def simulate_maker_basket(
         if maker_queue and t == maker_due:
             for symbol, target_notional, decided in maker_queue:
                 price = float(opens[symbol])
-                target_qty = target_notional / price
+                target_qty = to_qty(symbol, target_notional, price)
                 delta = target_qty - qty[symbol]
                 if abs(delta) < EPSILON:
                     continue
@@ -375,13 +429,21 @@ def simulate_maker_basket(
                 if spread is None or spread < rule.spread_min:
                     allow_entries = False
                     blocked += 1
+            if allow_entries:
+                diag["entry_allowed_decisions"] += 1
             if not allow_entries:
                 candidate = Selection(
                     tuple(s for s in candidate.shorts if qty[s] < 0),
                     tuple(s for s in candidate.longs if qty[s] > 0),
                 )
             leg = contract.leg_notional(rule.k)
-            targets = {s: -leg for s in candidate.shorts} | {s: leg for s in candidate.longs}
+            balance_legs: set[str] = set()
+            if risk is None:
+                targets = {s: -leg for s in candidate.shorts} | {s: leg for s in candidate.longs}
+            else:
+                targets, balance_legs = _risk_targets(
+                    risk, candidate, leg, opens, base.open, t, current_betas, diag
+                )
             orders: list[tuple[str, float, pd.Timestamp]] = []
             for symbol in held():
                 if symbol not in targets:
@@ -394,6 +456,11 @@ def simulate_maker_basket(
                     or abs(current / target_notional - 1) > contract.rebalance_band
                 ):
                     orders.append((symbol, target_notional, t))
+                elif symbol in balance_legs and abs(current / target_notional - 1) > (
+                    risk.balance_tolerance if risk else 0.0
+                ):
+                    orders.append((symbol, target_notional, t))
+                    diag["balance_orders"] += 1
             if orders:
                 maker_queue = orders
                 maker_due = t + one_hour
@@ -413,6 +480,12 @@ def simulate_maker_basket(
                 }
             )
             selection = candidate
+        if risk is not None and held():
+            diag["held_hours"] += 1
+            diag["abs_net_dollar_sum"] += abs(sum(qty[s] * float(opens[s]) for s in held()))
+            diag["abs_net_beta_sum"] += abs(
+                sum(qty[s] * float(opens[s]) * current_betas[s] for s in held())
+            )
         # Snapshot after this hour's trades: these positions earn the next hour's move.
         record(
             {
@@ -459,6 +532,18 @@ def simulate_maker_basket(
     extra["maker_notional_share"] = (
         fills["maker_notional"] / total_notional if total_notional else None
     )
+    extra["entry_allowed_decisions"] = diag["entry_allowed_decisions"]
+    if risk is not None:
+        held_hours = diag["held_hours"]
+        extra |= {
+            "risk_variant": risk.name,
+            "min_notional_skips": diag["min_notional_skips"],
+            "balance_full_exits": diag["balance_full_exits"],
+            "balance_orders": diag["balance_orders"],
+            "held_hours": held_hours,
+            "mean_abs_net_dollar": diag["abs_net_dollar_sum"] / held_hours if held_hours else 0.0,
+            "mean_abs_net_beta": diag["abs_net_beta_sum"] / held_hours if held_hours else 0.0,
+        }
     return SimulationResult(
         rule=rule,
         cost=execution,
@@ -481,3 +566,59 @@ def simulate_maker_basket(
         decisions=decisions,
         extra=extra,
     )
+
+
+def _risk_targets(risk, candidate, leg, opens, open_frame, t, current_betas, diag):
+    """Signed target notionals and the legs whose balance trades bypass the band."""
+    betas = estimate_betas(open_frame, t, risk.beta_lookback_days, risk.beta_bounds)
+    current_betas.clear()
+    current_betas.update(betas)
+    shorts, longs = list(candidate.shorts), list(candidate.longs)
+    size = dict.fromkeys(shorts + longs, leg)
+    if risk.beta and size:
+        raw = {s: leg / betas[s] for s in size}
+        scale = leg * len(size) / sum(raw.values())
+        size = {s: value * scale for s, value in raw.items()}
+
+    def implementable(symbol: str, notional: float) -> float:
+        if risk.venue_filters is None:
+            return notional
+        minimum, step = risk.venue_filters[symbol]
+        price = float(opens[symbol])
+        lots = int(notional / price / step + 1e-9)
+        value = lots * step * price
+        return value if value >= minimum else 0.0
+
+    forced: set[str] = set()
+    for _ in range(3):
+        if risk.venue_filters is not None:
+            for symbol in list(size):
+                value = implementable(symbol, size[symbol])
+                if value == 0.0:
+                    diag["min_notional_skips"] += 1
+                    size.pop(symbol)
+                else:
+                    size[symbol] = value
+            shorts = [s for s in shorts if s in size]
+            longs = [s for s in longs if s in size]
+        if not risk.balance:
+            break
+        if not shorts or not longs:
+            if size:
+                diag["balance_full_exits"] += 1
+            size, shorts, longs = {}, [], []
+            break
+        weight = betas if risk.beta else dict.fromkeys(size, 1.0)
+        short_exposure = sum(size[s] * weight[s] for s in shorts)
+        long_exposure = sum(size[s] * weight[s] for s in longs)
+        if abs(short_exposure - long_exposure) <= 1e-9 * max(short_exposure, long_exposure):
+            break
+        larger = shorts if short_exposure > long_exposure else longs
+        factor = min(short_exposure, long_exposure) / max(short_exposure, long_exposure)
+        for symbol in larger:
+            size[symbol] *= factor
+        forced.update(larger)
+        if risk.venue_filters is None:
+            break
+    targets = {s: -size[s] for s in shorts} | {s: size[s] for s in longs}
+    return targets, forced

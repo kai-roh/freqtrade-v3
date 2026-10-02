@@ -163,3 +163,109 @@ def test_phase2_pbo_window_stops_at_the_last_exit_observation():
     )
     # The recorded 2026-09-17 run read to the panel end; the flag reproduces it.
     assert pbo_window(folds, panel_end, Phase2Config(pbo_through_panel_end=True))[1] == panel_end
+
+
+def _beta_frame(betas, hours=24 * 40):
+    """Hourly opens whose returns are exact multiples of a BTC return series."""
+    import numpy as np
+
+    index = pd.date_range(T0, periods=hours, freq="1h")
+    rng = np.random.default_rng(7)
+    btc = rng.normal(0, 0.004, hours)
+    data = {"BTC": 100 * np.cumprod(1 + btc)}
+    for symbol, beta in betas.items():
+        data[symbol] = 100 * np.cumprod(1 + beta * btc)
+    return pd.DataFrame(data, index=index)
+
+
+def test_betas_use_only_data_before_the_decision():
+    from v3.phase2.maker import estimate_betas
+
+    frame = _beta_frame({"X": 2.0, "Y": 0.5})
+    t = frame.index[-1]
+    betas = estimate_betas(frame, t, 30, (0.25, 4.0))
+    assert betas["BTC"] == pytest.approx(1.0)
+    assert betas["X"] == pytest.approx(2.0, rel=1e-6) and betas["Y"] == pytest.approx(0.5, rel=1e-6)
+    # Changing the decision-hour price must not change the estimate.
+    shocked = frame.copy()
+    shocked.loc[t, "X"] *= 3
+    assert estimate_betas(shocked, t, 30, (0.25, 4.0))["X"] == pytest.approx(betas["X"])
+
+
+def test_beta_sizing_keeps_gross_and_equalises_beta_notional():
+    from v3.phase2.maker import RiskVariant, _risk_targets
+    from v3.phase2.signals import Selection
+
+    frame = _beta_frame({"X": 2.0, "Y": 0.5})
+    t = frame.index[-1]
+    diag = {"min_notional_skips": 0, "balance_full_exits": 0}
+    targets, legs = _risk_targets(
+        RiskVariant("V2", beta=True),
+        Selection(("X",), ("Y",)),
+        150.0,
+        frame.loc[t],
+        frame,
+        t,
+        {},
+        diag,
+    )
+    assert abs(targets["X"]) + targets["Y"] == pytest.approx(300.0)
+    assert abs(targets["X"]) * 2.0 == pytest.approx(targets["Y"] * 0.5, rel=1e-6)
+    assert legs == set()
+
+
+def test_balance_shrinks_the_larger_side_and_exits_when_a_side_is_empty():
+    from v3.phase2.maker import RiskVariant, _risk_targets
+    from v3.phase2.signals import Selection
+
+    frame = _beta_frame({"X": 1.0, "Y": 1.0, "Z": 1.0})
+    t = frame.index[-1]
+    diag = {"min_notional_skips": 0, "balance_full_exits": 0}
+    targets, legs = _risk_targets(
+        RiskVariant("V1", balance=True),
+        Selection(("X",), ("Y", "Z")),
+        50.0,
+        frame.loc[t],
+        frame,
+        t,
+        {},
+        diag,
+    )
+    assert targets["X"] == pytest.approx(-50.0)
+    assert targets["Y"] == pytest.approx(25.0) and targets["Z"] == pytest.approx(25.0)
+    assert legs == {"Y", "Z"}
+    empty, _ = _risk_targets(
+        RiskVariant("V1", balance=True),
+        Selection((), ("Y",)),
+        50.0,
+        frame.loc[t],
+        frame,
+        t,
+        {},
+        diag,
+    )
+    assert empty == {} and diag["balance_full_exits"] == 1
+
+
+def test_venue_filters_floor_to_lot_and_drop_legs_below_minimum():
+    from v3.phase2.maker import RiskVariant, _risk_targets
+    from v3.phase2.signals import Selection
+
+    frame = _beta_frame({"X": 1.0, "Y": 1.0})
+    t = frame.index[-1]
+    price = float(frame.loc[t, "X"])
+    filters = {"BTC": (50.0, 1.0), "X": (5.0, 0.01), "Y": (5.0, 10.0)}
+    diag = {"min_notional_skips": 0, "balance_full_exits": 0}
+    targets, _ = _risk_targets(
+        RiskVariant("V0c", venue_filters=filters),
+        Selection(("X",), ("Y",)),
+        50.0,
+        frame.loc[t],
+        frame,
+        t,
+        {},
+        diag,
+    )
+    # X floors to whole 0.01 lots; Y's 10-unit lot is worth far more than 50 USDT, so it is dropped.
+    assert targets["X"] == pytest.approx(-int(50 / price / 0.01) * 0.01 * price)
+    assert "Y" not in targets and diag["min_notional_skips"] == 1
