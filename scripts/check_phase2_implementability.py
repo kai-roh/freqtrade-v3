@@ -45,6 +45,8 @@ def main():
             "LOT_SIZE.stepSize": by_type["LOT_SIZE"]["stepSize"],
             "PRICE_FILTER.tickSize": by_type["PRICE_FILTER"]["tickSize"],
             "reference_price_demo_mid": str(price),
+            "timeInForce": row.get("timeInForce", []),
+            "orderTypes": row.get("orderTypes", []),
         }
         filters.append(
             SymbolFilters(
@@ -65,10 +67,14 @@ def main():
         "2x isolated distance ~49% exceeds the 20% floor by a wide margin",
     }
     result["raw_filters"] = raw
+    # Phase 2b executes with post-only maker orders: Binance USD-M time-in-force GTX.
+    result["post_only_gtx"] = {symbol: "GTX" in row["timeInForce"] for symbol, row in raw.items()}
+    result["post_only_gtx_supported"] = all(result["post_only_gtx"].values())
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     for k, block in result["by_legs_per_side"].items():
         print(f"k={k} feasible={block['basket_feasible']} admissible={block['admissible_symbols']}")
+    print(f"post_only_gtx_supported={result['post_only_gtx_supported']}")
     return 0
 
 

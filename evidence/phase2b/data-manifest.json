@@ -1,0 +1,535 @@
+{
+  "cutoff": "2026-10-01T23:00:00+00:00",
+  "files": {
+    "ADA/funding_rate": {
+      "appended_rows": 46,
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-10-01T16:00:00+00:00",
+      "frozen_rows": 1352,
+      "rows": 1398,
+      "settlement_interval_minutes": 480,
+      "sha256": "6c21de5ba0864cf727d9721ecaa831e593b0814bcb30897e78bfa23fa3c2ece4",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "ADA/futures": {
+      "appended_rows": 370,
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "71be527041554ef9c627964ccc647205f496c8e6c06305d37ff4e0e3bcdb42ed",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "ADA/mark": {
+      "appended_rows": 370,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "6768e9f8bb84eb1747937631c933ed6fa742047207a715155f3bf50eb66ac092",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BNB/funding_rate": {
+      "appended_rows": 46,
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-10-01T16:00:00+00:00",
+      "frozen_rows": 1352,
+      "rows": 1398,
+      "settlement_interval_minutes": 480,
+      "sha256": "507d45e7d22610bf045112323c2bfcd9250ce2437753acc9f85395152a114216",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BNB/futures": {
+      "appended_rows": 370,
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "206e98c311fd5293a021139a61f7b0a777f716401b3eab1f38d3a9cfbd232937",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BNB/mark": {
+      "appended_rows": 370,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "d1750440e118c4b3799becafff04d22b3cf807bb5370ae0645118eca03319277",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BTC/funding_rate": {
+      "appended_rows": 46,
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-10-01T16:00:00+00:00",
+      "frozen_rows": 1352,
+      "rows": 1398,
+      "settlement_interval_minutes": 480,
+      "sha256": "126214cc4719678326a059218338e0f534e0b37a15d07c38fd48f95500fbffd8",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BTC/futures": {
+      "appended_rows": 370,
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "011adc1962eef03792c44504b67c88ac0d3c05f078a31622bc696f6c769adde9",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BTC/mark": {
+      "appended_rows": 370,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "bbce1fbdaf1fd37acb038c872e7afe41761e74789ca9ee9bc621fa24254e034c",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "DOGE/funding_rate": {
+      "appended_rows": 46,
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-10-01T16:00:00+00:00",
+      "frozen_rows": 1352,
+      "rows": 1398,
+      "settlement_interval_minutes": 480,
+      "sha256": "2b91ad3dec389cf1b15bc333b09a8cd376ce4eba2b69bf0464e50020427d9774",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "DOGE/futures": {
+      "appended_rows": 370,
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "26b9efb6c0c2351bcaf64d5417121085ef830a1ca0e69634de834d0b9ba880ca",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "DOGE/mark": {
+      "appended_rows": 370,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "061240f429237627c542193823ed926563f812b1bb2394490ede09d8ea0f21ba",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "ETH/funding_rate": {
+      "appended_rows": 46,
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-10-01T16:00:00+00:00",
+      "frozen_rows": 1352,
+      "rows": 1398,
+      "settlement_interval_minutes": 480,
+      "sha256": "a166655cd4a45336fe0c6e0023cdec3f23a907bd4b515a892969f7d28da5956f",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "ETH/futures": {
+      "appended_rows": 370,
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "1ec89ac110b77bb9fe6a524787bf0c5a4431b69696c504e43392bc59c5e35bfc",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "ETH/mark": {
+      "appended_rows": 370,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "a166486f3d3effbd10983c847ab33a8365285257331a0f4075c561c56b142469",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "LINK/funding_rate": {
+      "appended_rows": 46,
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-10-01T16:00:00+00:00",
+      "frozen_rows": 1352,
+      "rows": 1398,
+      "settlement_interval_minutes": 480,
+      "sha256": "3921865b88bc034fb11a5522d29857c55798cae7776e7e49ed02efed2b83c852",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "LINK/futures": {
+      "appended_rows": 370,
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "04b7072fadadb7a3ab51a2e03686af35d7023f2bc4ddd0e0ddd265f1e0dbab6e",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "LINK/mark": {
+      "appended_rows": 370,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "14073cfa3f28f6e29113abe5687f2e9b7fe123cc9cb015d598d067aec6ca93a4",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "SOL/funding_rate": {
+      "appended_rows": 46,
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-10-01T16:00:00+00:00",
+      "frozen_rows": 1352,
+      "rows": 1398,
+      "settlement_interval_minutes": 480,
+      "sha256": "f73345228df09edcd1a1119733f29d8b860a275835b0109a6c0752809a9f3c91",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "SOL/futures": {
+      "appended_rows": 370,
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "85c6e5ff9c43df0c3056b3dbb0d2b3e0ceebeb258f1fd5435e39e98c84ea5b6b",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "SOL/mark": {
+      "appended_rows": 370,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "4e439755dff78e1c42f2dc0c82c17ad9a6b13fdf84710516720552e5c41980f6",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "XRP/funding_rate": {
+      "appended_rows": 46,
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-10-01T16:00:00+00:00",
+      "frozen_rows": 1352,
+      "rows": 1398,
+      "settlement_interval_minutes": 480,
+      "sha256": "61296aa6034f4130bf643acfcdc90144fd229bc3448ebce9df0e105163653d12",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "XRP/futures": {
+      "appended_rows": 370,
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "828e87195ce15114da52b4b27870c1a288f9ea84811bca6ecebb2ad440131ba1",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "XRP/mark": {
+      "appended_rows": 370,
+      "end": "2026-10-01T23:00:00+00:00",
+      "frozen_rows": 10814,
+      "rows": 11184,
+      "sha256": "a2a765df9b9a7a81011681f822302df9d1013a94c35472b92d1b72e85c285f42",
+      "start": "2025-06-23T00:00:00+00:00"
+    }
+  },
+  "frozen_files_verified": 24,
+  "frozen_manifest": "evidence/phase2/data-manifest.json",
+  "frozen_manifest_sha256": "be64933c662fd898735007786a48544f576385e5f78a90f697ddc08b15a6f452",
+  "generated_at": "2026-10-02T04:05:08.969749+00:00",
+  "missing": [],
+  "overlap_check": {
+    "ADA/funding_rate": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 1352,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "ADA/futures": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "ADA/mark": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "BNB/funding_rate": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 1352,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "BNB/futures": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "BNB/mark": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "BTC/funding_rate": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 1352,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "BTC/futures": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "BTC/mark": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "DOGE/funding_rate": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 1352,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "DOGE/futures": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "DOGE/mark": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "ETH/funding_rate": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 1352,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "ETH/futures": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "ETH/mark": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "LINK/funding_rate": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 1352,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "LINK/futures": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "LINK/mark": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "SOL/funding_rate": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 1352,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "SOL/futures": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "SOL/mark": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "XRP/funding_rate": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 1352,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "XRP/futures": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    },
+    "XRP/mark": {
+      "max_abs_diff": {
+        "close": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "open": 0.0,
+        "volume": 0.0
+      },
+      "rows_compared": 10814,
+      "rows_differing": 0,
+      "rows_missing_in_fresh": 0
+    }
+  },
+  "registration": "docs/PHASE2B_PREREGISTRATION.md",
+  "schema_version": 1,
+  "timeframe": "1h"
+}
