@@ -1,5 +1,16 @@
 # Server state
 
+## Latest verified state — 2026-10-02 19:10 KST
+
+- MA200 forward observation deployed (Decision 0019). Source `2648efb` synced; image
+  `freqtrade-v3-observe:current` = `sha256:cb90aea1…` (also tagged `:2648efb`).
+- Crontab reinstalled from `deploy/freqtrade-v3.cron` (previous crontab saved under `/tmp/crontab.before.*`):
+  the two existing entries plus `10 11 * * *` → `scripts/run_ma200_observation.sh`.
+- Manual run 19:09 KST: public BTC/ETH perpetual and spot candles from 2025-08-01 into
+  `user_data/data-ma200-observe*`; status `not_started` (starts 2026-10-03 09:00 KST); checks all pass;
+  Telegram preview delivered. Current MA200 signal: BTC and ETH long. Reports in `evidence/ma200-observation/`.
+- No week runner, no orders, no account access by the observation job.
+
 ## Latest verified state — 2026-10-02 12:45 KST
 
 - No week runner. `phase1-demo-week-run-20260928-restart1` stopped at 03:38 UTC

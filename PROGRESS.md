@@ -39,6 +39,7 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 | MA200 전진 관측 | **등록, 2026-10-03 시작.** 슬리브 1,000, 주문 없음, 매일 Telegram(월요일 주간표·1일 월간표). 10-03~10-09 운영 점검(수익성 검증 아님) | [MA200_FORWARD_OBSERVATION](docs/MA200_FORWARD_OBSERVATION.md), 서버 `evidence/ma200-observation/` |
 | Phase 3 | 실자본 미승인. 실거래 전: 실자본 ADR(손실 중단선), 게이트 5번 재결정, 단일 자산 주문 경로 Demo 검증 | [MA200_FORWARD_OBSERVATION](docs/MA200_FORWARD_OBSERVATION.md) §5, Decision 0011 |
 
+서버 cron: 매일 11:10 KST MA200 관측(`freqtrade-v3-observe:current`, `sha256:cb90aea1…`), 10-02 미리보기 Telegram 전달 확인.
 서버(`ft-tokyo`, `/home/kai/freqtrade-v3`) 컨테이너: `phase1-postgres` 실행, `phase1-telegram-bot` 실행,
 `freqtrade_kai`(zero-entry shadow) 실행. **주간 실행기는 없다**(마지막 `phase1-demo-week-run-20260928-restart1` exit 137,
 대기 중 사용자 지시로 정지). Demo 계정: 선물 0, 미체결 없음, 현물 BTC `0.00050308` = 정산 잔량 69건 합계.
