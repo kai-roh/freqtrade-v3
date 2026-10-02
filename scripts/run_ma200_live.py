@@ -220,7 +220,11 @@ def main() -> int:
             chat_id=telegram.get("TELEGRAM_CHAT_ID", ""),
         )
         report["telegram_delivered"] = delivery.delivered
-    print(json.dumps(report, indent=2, sort_keys=True, default=str))
+    if args.command == "guard" and report.get("status") == "ok":
+        equity = report.get("equity", {}).get("equity")
+        print(f"{report['now']} guard ok equity={equity} positions={report.get('positions')}")
+    else:
+        print(json.dumps(report, indent=2, sort_keys=True, default=str))
     if message:
         print(message)
     return 0 if report.get("status") not in {"error", "mismatch"} else 3

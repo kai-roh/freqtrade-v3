@@ -126,6 +126,39 @@ def _account(panel, rule, cost, filters, market, start, end) -> dict[str, Any]:
     }
 
 
+def reconcile_live(report: dict[str, Any], live_positions: dict[str, str] | None) -> None:
+    """Compare executor positions (BTCUSDT/ETHUSDT quantities) with the virtual MA200 account.
+
+    Differences are shown as weight units of the per-asset cap; the Demo lot (0.0001 BTC)
+    is finer than the Mainnet lot the observation uses (0.001 BTC), so small gaps are expected.
+    """
+    if not live_positions or report.get("status") != "running":
+        return
+    virtual = report["accounts"]["MA200"]["positions"]
+    cap = SLEEVE / len(SYMBOLS)
+    rows = {}
+    for asset in SYMBOLS:
+        live_qty = float(live_positions.get(f"{asset}USDT", "0"))
+        v = virtual[asset]
+        price = v["notional"] / v["qty"] if v["qty"] else None
+        if price is None:
+            rows[asset] = {"live_qty": live_qty, "virtual_qty": 0.0, "weight_gap": None}
+            continue
+        rows[asset] = {
+            "live_qty": live_qty,
+            "virtual_qty": v["qty"],
+            "weight_gap": (live_qty - v["qty"]) * price / cap,
+        }
+    report["live_reconciliation"] = rows
+    report["checks"]["live_matches_virtual"] = all(
+        r["weight_gap"] is None
+        and abs(r["live_qty"]) < 1e-12
+        or r["weight_gap"] is not None
+        and abs(r["weight_gap"]) <= 0.10
+        for r in rows.values()
+    )
+
+
 def observe(
     inputs: ObservationInputs,
     *,
@@ -234,6 +267,16 @@ def render_message(report: dict[str, Any], *, weekly: bool, monthly: bool) -> st
                 f"{t['symbol']} {'매수' if t['qty_after'] > t['qty_before'] else '매도'} "
                 f"{abs(t['qty_after'] - t['qty_before']):g} @ {t['price']:,.1f}"
                 for t in today
+            )
+        )
+    live = report.get("live_reconciliation")
+    if live:
+        lines.append(
+            "Demo 실행 대사: "
+            + " · ".join(
+                f"{a} 실행 {r['live_qty']:g} / 관측 {r['virtual_qty']:g}"
+                + (f" (비중 차 {r['weight_gap']:+.2f})" if r["weight_gap"] is not None else "")
+                for a, r in live.items()
             )
         )
     lines.append(check_line)

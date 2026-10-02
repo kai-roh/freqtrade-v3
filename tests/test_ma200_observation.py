@@ -11,6 +11,7 @@ from v3.phase2c.observation import (
     ObservationInputs,
     last_complete_hour,
     observe,
+    reconcile_live,
     render_message,
 )
 from v3.phase2c.trend import NORMAL, TrendRule, VenueFilters, simulate_trend
@@ -138,3 +139,16 @@ def test_plain_telegram_text_delivery_contract():
     assert len(sent) == 1
     missing = send_telegram_text("hello", token="", chat_id="c", opener=opener)
     assert not missing.delivered and missing.error_type == "missing_credentials"
+
+
+def test_live_reconciliation_flags_large_gaps_only():
+    inputs = panels()
+    report = observe(inputs, now=START + pd.Timedelta(days=5, hours=2), start=START)
+    virtual = report["accounts"]["MA200"]["positions"]
+    close = {f"{a}USDT": str(v["qty"]) for a, v in virtual.items()}
+    reconcile_live(report, close)
+    assert report["checks"]["live_matches_virtual"] is True
+    assert "Demo 실행 대사" in render_message(report, weekly=False, monthly=False)
+    far = {f"{a}USDT": str(v["qty"] * 3 + 1) for a, v in virtual.items()}
+    reconcile_live(report, far)
+    assert report["checks"]["live_matches_virtual"] is False

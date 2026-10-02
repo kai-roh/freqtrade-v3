@@ -11,3 +11,9 @@ TZ=Asia/Seoul
 # Order-free MA200 forward observation: daily at 11:10 KST (02:10 UTC), after the
 # 01:00 UTC execution candle closes. Public data only; Telegram report.
 10 11 * * * cd /home/kai/freqtrade-v3 && ./scripts/run_ma200_observation.sh >> /home/kai/freqtrade-v3/reports/logs/ma200-observation.log 2>&1
+
+# MA200 Demo executor (Decision 0020): daily at 10:05 KST (01:05 UTC), after the 01:00 UTC open.
+5 10 * * * cd /home/kai/freqtrade-v3 && ./scripts/run_ma200_live.sh execute >> /home/kai/freqtrade-v3/reports/logs/ma200-live-demo.log 2>&1
+
+# MA200 Demo guard: every 10 minutes; flattens and halts on loss stop, stale executor, or mismatch.
+*/10 * * * * cd /home/kai/freqtrade-v3 && ./scripts/run_ma200_live.sh guard >> /home/kai/freqtrade-v3/reports/logs/ma200-guard-demo.log 2>&1

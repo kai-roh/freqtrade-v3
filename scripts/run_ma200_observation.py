@@ -22,7 +22,12 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from v3.phase1.notifications import send_telegram_text  # noqa: E402
 from v3.phase2.data import load_phase2_panel  # noqa: E402
-from v3.phase2c.observation import ObservationInputs, observe, render_message  # noqa: E402
+from v3.phase2c.observation import (  # noqa: E402
+    ObservationInputs,
+    observe,
+    reconcile_live,
+    render_message,
+)
 from v3.phase2c.research import load_spot_filters, load_venue_filters  # noqa: E402
 from v3.phase2c.trend import SYMBOLS, load_spot_panel  # noqa: E402
 
@@ -48,6 +53,9 @@ def main() -> int:
     parser.add_argument("--credentials-env-file", type=Path)
     parser.add_argument("--send-telegram", action="store_true")
     parser.add_argument("--now", help="ISO time for replays and tests; default is the clock")
+    parser.add_argument(
+        "--live-state-dir", type=Path, help="executor state to reconcile (read-only)"
+    )
     args = parser.parse_args()
     now = pd.Timestamp(args.now) if args.now else pd.Timestamp.now(tz="UTC")
     inputs = ObservationInputs(
@@ -57,6 +65,9 @@ def main() -> int:
         spot_filters=load_spot_filters(args.spot_filters),
     )
     report = observe(inputs, now=now)
+    heartbeat = args.live_state_dir / "heartbeat.json" if args.live_state_dir else None
+    if heartbeat is not None and heartbeat.is_file():
+        reconcile_live(report, json.loads(heartbeat.read_text()).get("positions"))
     kst = now + pd.Timedelta(hours=9)
     message = render_message(report, weekly=kst.weekday() == 0, monthly=kst.day == 1)
     report["message"] = message
