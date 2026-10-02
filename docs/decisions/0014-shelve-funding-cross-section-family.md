@@ -58,7 +58,9 @@ depend on small sizing differences.
   results are driven by price P&L, which ranges from −16 to +12 USDT and changes
   sign across neighbouring grid points: W=336h k=2 is −15.8 while W=336h k=3 is
   +9.9 in ideal V3. Price P&L that flips sign between neighbouring grid points
-  is noise, not carry.
+  means no robust price edge was established. It is not carry. (Corrected
+  2026-10-02: an earlier wording called it proven noise, which the sign flips
+  alone do not show.)
 - **Opportunities are scarce.** Entries were allowed on 4–9% of daily decisions,
   giving 2–8 episodes in the year depending on the grid point and variant.
 - **Exchange limits at this capital matter.** In constrained mode, legs below
