@@ -9,7 +9,9 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 게이트 5번을 Demo 한정으로 개정해([Decision 0011](docs/decisions/0011-amend-phase1-gate-item5.md))
 **Phase 1은 Demo 기준 완료**다(09-17 정지의 186시간 대응은 기록된 예외). Phase 2(taker)와 Phase 2b(저회전 maker 펀딩 캐리)는 게이트를 통과하지 못했고, 위험 중립화 진단 뒤
 **펀딩 횡단면 전략군을 보류**했다([Decision 0014](docs/decisions/0014-shelve-funding-cross-section-family.md)). 균형 복원·베타 사이징은
-가격 손실과 낙폭을 일관되게 줄였지만, 위험을 중립화하면 펀딩이 비용과 거의 같아 캐리가 남지 않았다. Phase 3 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
+가격 손실과 낙폭을 일관되게 줄였지만, 위험을 중립화하면 펀딩이 비용과 거의 같아 캐리가 남지 않았다. 이어 사용자가 방향성 위험을
+감수하기로 하고 **Phase 2c(BTC·ETH 저빈도 추세)**를 사전등록·실행했으나 `STOP_NO_EDGE`였다([Decision 0016](docs/decisions/0016-phase2c-result-stop-no-edge.md)):
+연 8.4% 수익은 났지만 위험을 맞춘 보유보다 Sharpe가 낮았고(0.54 vs 0.78) PBO 0.34였다. Phase 3 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 현재 상태
 
@@ -26,6 +28,7 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 | Phase 2 바스켓 연구 | 완료·기각 `STOP_NO_EDGE`. 펀딩 +3.4 USDT vs 비용 13.8 USDT, PBO 0.77 | [Decision 0009](docs/decisions/0009-phase2-basket-result-stop-no-edge.md), `research_results/phase2/REPORT.md` |
 | Phase 2b 위험 중립화 진단 | **보류 `SHELVE_FAMILY`.** 균형 복원·베타 사이징이 8/8 셀에서 개선, 그러나 연간 펀딩−비용 ±0.8 USDT, 에피소드 2~8개/년 | [Decision 0014](docs/decisions/0014-shelve-funding-cross-section-family.md), `research_results/phase2b/risk-diagnosis/REPORT.md` |
 | Phase 2b maker 캐리 연구 | **게이트 불통과 `STOP_NO_EDGE`.** 단계 A는 fold 0에서만 거래(에피소드 2개), 단계 B는 거래 0건(스프레드 최대 0.69 bp). 손실 −6.68 USDT 중 가격 −6.62, 비용 0.48. 원인은 베타 불일치(롱이 베타 순노출 +31~35 USDT)와 진입 차단 중 레그 수 불균형 | [Decision 0013](docs/decisions/0013-phase2b-result-stop-no-edge.md), `research_results/phase2b/EPISODE_TRACE.md` |
+| Phase 2c BTC·ETH 추세 연구 | **게이트 불통과 `STOP_NO_EDGE`.** walk-forward 연속 계좌(2022-08~2026-10) 순수익 200.6 USDT(연 8.4%, 슬리브 500), Sharpe 0.54 < BH-VT 0.78, PBO 0.34, 부트스트랩 구간 0 포함. 수익은 주로 롱(+340), 숏은 −80 | [Decision 0016](docs/decisions/0016-phase2c-result-stop-no-edge.md), `research_results/phase2c/REPORT.md` |
 | Phase 3 | 착수 불가(후보 없음). 실자본 전 게이트 5번 재결정 필요 | Decision 0006 §Constraints, Decision 0011 |
 
 서버(`ft-tokyo`, `/home/kai/freqtrade-v3`) 컨테이너: `phase1-postgres` 실행, `phase1-telegram-bot` 실행,
@@ -36,8 +39,9 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 
 ## 열린 문제
 
-1. **다음 연구 후보가 없다.** 펀딩 횡단면 전략군은 보류됐다(Decision 0014). 임계값 완화·창 단축으로 기회를 사는 것은
-   하지 않는다. 다른 가설은 사용자가 방향을 정해야 하며, 사전등록부터 시작한다.
+1. **다음 연구 후보가 없다.** 사전등록 연구 세 건(Phase 2, 2b, 2c)이 게이트를 통과하지 못했고 펀딩 횡단면 전략군은 보류됐다.
+   Phase 2c의 MA200 대조군이 보유와 같은 Sharpe에 낙폭 절반이었지만 결과를 본 뒤 발견한 것이라 근거가 아니다(Decision 0016).
+   다음 방향(방향성 연구 중단, 새 가설을 전진 데이터로만 확인하는 등록, 연구 일시 중단)은 사용자 결정이다.
 2. **다중 레그 전략의 위험 계약 요구사항**(Decision 0014): 위험 축소 승인을 신규 진입과 분리(반대편 축소, 강제 편입 금지),
    노출 한도는 레그 수가 아니라 베타·달러 명목으로, 실제 수량 간격·최소 주문 기준으로 점검.
 3. **확인 검증용 미사용 데이터는 새 등록 이후 데이터뿐이다.** 2026-07-31~10-01은 Phase 2 PBO와 Phase 2b 단계 B에 쓰였다.

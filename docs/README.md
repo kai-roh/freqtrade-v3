@@ -22,6 +22,8 @@ file are historical records and are not rewritten.
 | 0012 | Register the Phase 2b low-turnover maker funding carry | 2026-10-02 |
 | 0013 | Phase 2b maker funding carry result: STOP_NO_EDGE | 2026-10-02 |
 | 0014 | Shelve the funding cross-section family after the risk-neutralization diagnosis | 2026-10-02 |
+| 0015 | Register the Phase 2c BTC/ETH low-frequency trend study | 2026-10-02 |
+| 0016 | Phase 2c trend result: STOP_NO_EDGE | 2026-10-02 |
 
 ## Phase 1 (Binance Demo two-leg carry execution)
 
@@ -38,6 +40,10 @@ file are historical records and are not rewritten.
 - `PHASE2B_PREREGISTRATION.md` — Phase 2b follow-up: low-turnover maker funding carry, two-stage validation. Result `STOP_NO_EDGE` (Decision 0013); outputs in `../research_results/phase2b/`, evidence in `../evidence/phase2b/`.
 - Results: `../research_results/phase2/REPORT.md`, evidence in `../evidence/phase2/`.
 - `PHASE2B_RISK_DIAGNOSIS.md` — pre-committed risk-neutralization diagnosis (balance restoration, beta sizing); result `SHELVE_FAMILY` (Decision 0014), outputs in `../research_results/phase2b/risk-diagnosis/`.
+
+## Phase 2c (BTC/ETH low-frequency trend)
+
+- `PHASE2C_PREREGISTRATION.md` — daily trend persistence with conviction sizing, controls, continuous walk-forward. Result `STOP_NO_EDGE` (Decision 0016); outputs in `../research_results/phase2c/`.
 
 ## Phase 0 and research foundations
 

@@ -282,6 +282,7 @@ def evaluate(panel: Phase2Panel, *, filters: VenueFilters, config: Phase2cConfig
             gates["without_best_year"] = total - float(by_year.max()) >= 0
             gates["without_best_episode"] = total - s["best_episode_pnl"] >= 0
             gates["pbo"] = pbo["pbo"] <= config.pbo_max
+        gates = {name: bool(value) for name, value in gates.items()}
         out["costs"][cost.name] = {
             "walk_forward": s,
             "selections": wf["selections"],
