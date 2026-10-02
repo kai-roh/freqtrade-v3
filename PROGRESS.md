@@ -11,7 +11,9 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 **펀딩 횡단면 전략군을 보류**했다([Decision 0014](docs/decisions/0014-shelve-funding-cross-section-family.md)). 균형 복원·베타 사이징은
 가격 손실과 낙폭을 일관되게 줄였지만, 위험을 중립화하면 펀딩이 비용과 거의 같아 캐리가 남지 않았다. 이어 사용자가 방향성 위험을
 감수하기로 하고 **Phase 2c(BTC·ETH 저빈도 추세)**를 사전등록·실행했으나 `STOP_NO_EDGE`였다([Decision 0016](docs/decisions/0016-phase2c-result-stop-no-edge.md)):
-연 8.4% 수익은 났지만 위험을 맞춘 보유보다 Sharpe가 낮았고(0.54 vs 0.78) PBO 0.34였다. Phase 3 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
+연 8.4% 수익은 났지만 위험을 맞춘 보유보다 Sharpe가 낮았고(0.54 vs 0.78) PBO 0.34였다. 후속으로 고정 MA200을 현물 보유·실제 주문 제약과
+비교한 사전 고정 진단은 **`PAUSE_RESEARCH`**였다([Decision 0017](docs/decisions/0017-ma200-comparison-pause-research.md)): 수익 75% 유지·낙폭 63%로
+위험 축소는 됐지만, 슬리브 500 USDT에서는 BTC 선물 최소 수량(0.001 BTC ≈ 64 USDT)이 거칠어 주문의 73%를 낼 수 없었다. Phase 3 후보 전략은 없다. 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 현재 상태
 
@@ -29,6 +31,7 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 | Phase 2b 위험 중립화 진단 | **보류 `SHELVE_FAMILY`.** 균형 복원·베타 사이징이 8/8 셀에서 개선, 그러나 연간 펀딩−비용 ±0.8 USDT, 에피소드 2~8개/년 | [Decision 0014](docs/decisions/0014-shelve-funding-cross-section-family.md), `research_results/phase2b/risk-diagnosis/REPORT.md` |
 | Phase 2b maker 캐리 연구 | **게이트 불통과 `STOP_NO_EDGE`.** 단계 A는 fold 0에서만 거래(에피소드 2개), 단계 B는 거래 0건(스프레드 최대 0.69 bp). 손실 −6.68 USDT 중 가격 −6.62, 비용 0.48. 원인은 베타 불일치(롱이 베타 순노출 +31~35 USDT)와 진입 차단 중 레그 수 불균형 | [Decision 0013](docs/decisions/0013-phase2b-result-stop-no-edge.md), `research_results/phase2b/EPISODE_TRACE.md` |
 | Phase 2c BTC·ETH 추세 연구 | **게이트 불통과 `STOP_NO_EDGE`.** walk-forward 연속 계좌(2022-08~2026-10) 순수익 200.6 USDT(연 8.4%, 슬리브 500), Sharpe 0.54 < BH-VT 0.78, PBO 0.34, 부트스트랩 구간 0 포함. 수익은 주로 롱(+340), 숏은 −80 | [Decision 0016](docs/decisions/0016-phase2c-result-stop-no-edge.md), `research_results/phase2c/REPORT.md` |
+| MA200 후속 비교 | **`PAUSE_RESEARCH`.** C1~C4(수익 유지·낙폭·효율·최악 연도) 통과, C5 구현 실패(BTC 주문 234/322 건너뜀). 현물 보유가 Sharpe 0.93으로 가장 높음 | [Decision 0017](docs/decisions/0017-ma200-comparison-pause-research.md), `research_results/phase2c/ma200-comparison/REPORT.md` |
 | Phase 3 | 착수 불가(후보 없음). 실자본 전 게이트 5번 재결정 필요 | Decision 0006 §Constraints, Decision 0011 |
 
 서버(`ft-tokyo`, `/home/kai/freqtrade-v3`) 컨테이너: `phase1-postgres` 실행, `phase1-telegram-bot` 실행,
@@ -39,20 +42,20 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 
 ## 열린 문제
 
-1. **다음 연구 후보가 없다.** 사전등록 연구 세 건(Phase 2, 2b, 2c)이 게이트를 통과하지 못했고 펀딩 횡단면 전략군은 보류됐다.
-   Phase 2c의 MA200 대조군이 보유와 같은 Sharpe에 낙폭 절반이었지만 결과를 본 뒤 발견한 것이라 근거가 아니다(Decision 0016).
-   다음 방향(방향성 연구 중단, 새 가설을 전진 데이터로만 확인하는 등록, 연구 일시 중단)은 사용자 결정이다.
-2. **다중 레그 전략의 위험 계약 요구사항**(Decision 0014): 위험 축소 승인을 신규 진입과 분리(반대편 축소, 강제 편입 금지),
-   노출 한도는 레그 수가 아니라 베타·달러 명목으로, 실제 수량 간격·최소 주문 기준으로 점검.
-3. **확인 검증용 미사용 데이터는 새 등록 이후 데이터뿐이다.** 2026-07-31~10-01은 Phase 2 PBO와 Phase 2b 단계 B에 쓰였다.
+1. **연구 일시 중단 상태다**(Decision 0017, 사전 고정 기준). 다음 전략군을 바로 추가하지 않는다. 계획을 벗어나 MA200을
+   관측하려면(예: 슬리브 확대, BTC 상품 변경) 사용자가 명시적으로 결정하고 계획 이탈로 기록해야 한다. 슬리브 1,000 USDT는
+   계좌 전체를 방향성 노출에 쓰는 자본 결정이다.
+2. **다중 레그·방향성 공통 교훈:** 위험 축소와 신규 진입 승인 분리, 베타·달러 명목 기준 노출 한도(Decision 0014),
+   그리고 주문 단위·계획 슬리브 기준의 구현 가능성 점검을 규칙 조정보다 먼저 한다(Decision 0017).
+3. **확인 검증용 미사용 데이터는 새 등록 이후 데이터뿐이다.**
 4. `1a124d1`의 일시 거부 재시도와 청산 단계 예산 규칙은 테스트만 있고 실제 Demo 거부로는 아직 작동한 적 없다.
 5. 진입 위험 결정 행에 관측 레버리지가 저장되지 않는다(디스패치 payload에는 있음).
-6. PostgreSQL 통합 테스트 72개는 DSN 없이 건너뛰어진다. 집행 경로를 바꾸거나 배포할 때는 실제 PostgreSQL로 통과시켜야 한다.
-   서버 격리 스키마 테스트는 `1a124d1` 이후 실행하지 않았다(권한 분류기 차단).
+6. PostgreSQL 통합 테스트 72개는 이번 연구 작업 동안 건너뛰었다. 집행 경로를 바꾸거나 배포할 때는 반드시 실제로 통과시킨다.
 
 ## 다음 할 일 (순서대로)
 
-1. 다음 연구 방향 결정(사용자). ML은 Decision 0002에 따라 결정론적 전략이 두 비용 regime을 통과한 뒤에만.
+1. 연구 일시 중단(Decision 0017). 재개 여부와, 계획을 벗어난 MA200 관측(슬리브 확대 등)을 할지는 사용자 결정이다.
+   ML은 Decision 0002에 따라 결정론적 전략이 두 비용 regime을 통과한 뒤에만.
 2. 저장소: 로컬 커밋 push, `codex/v2-to-v3-infrastructure` → `main` PR·머지.
 3. (선택) 진입 위험 결정에 레버리지 기록, 서버 격리 스키마 테스트 재확인.
 

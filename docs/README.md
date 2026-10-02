@@ -24,6 +24,7 @@ file are historical records and are not rewritten.
 | 0014 | Shelve the funding cross-section family after the risk-neutralization diagnosis | 2026-10-02 |
 | 0015 | Register the Phase 2c BTC/ETH low-frequency trend study | 2026-10-02 |
 | 0016 | Phase 2c trend result: STOP_NO_EDGE | 2026-10-02 |
+| 0017 | Fixed MA200 comparison: PAUSE_RESEARCH (implementability at a 500 USDT sleeve) | 2026-10-02 |
 
 ## Phase 1 (Binance Demo two-leg carry execution)
 
@@ -44,6 +45,7 @@ file are historical records and are not rewritten.
 ## Phase 2c (BTC/ETH low-frequency trend)
 
 - `PHASE2C_PREREGISTRATION.md` — daily trend persistence with conviction sizing, controls, continuous walk-forward. Result `STOP_NO_EDGE` (Decision 0016); outputs in `../research_results/phase2c/`.
+- `PHASE2C_MA200_COMPARISON.md` — pre-committed fixed-MA200 comparison against spot and perpetual holds with exchange-faithful orders. Result `PAUSE_RESEARCH` (Decision 0017); outputs in `../research_results/phase2c/ma200-comparison/`.
 
 ## Phase 0 and research foundations
 
