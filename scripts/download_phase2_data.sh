@@ -10,6 +10,8 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
 DAYS="${V3_PHASE2_DATA_DAYS:-450}"
+# An explicit timerange (YYYYMMDD-YYYYMMDD) pins the span exactly; it overrides DAYS.
+TIMERANGE="${V3_PHASE2_TIMERANGE:-}"
 DATADIR="${V3_PHASE2_DATADIR:-user_data/data-phase2}"
 PAIRS=(BTC/USDT:USDT ETH/USDT:USDT SOL/USDT:USDT BNB/USDT:USDT XRP/USDT:USDT DOGE/USDT:USDT ADA/USDT:USDT LINK/USDT:USDT)
 
@@ -23,10 +25,16 @@ mkdir -p "$DATADIR"
 chgrp 1000 "$DATADIR" 2>/dev/null || true
 chmod 2770 "$DATADIR" 2>/dev/null || true
 
+if [[ -n "$TIMERANGE" ]]; then
+  SPAN=(--timerange "$TIMERANGE")
+else
+  SPAN=(--days "$DAYS")
+fi
+
 docker compose run --rm --no-deps freqtrade_v3_shadow download-data \
   --config /freqtrade/configs/research.json \
   --datadir "/freqtrade/$DATADIR/binance" \
   --pairs "${PAIRS[@]}" \
   --timeframes 1h \
-  --days "$DAYS" \
+  "${SPAN[@]}" \
   --trading-mode futures
