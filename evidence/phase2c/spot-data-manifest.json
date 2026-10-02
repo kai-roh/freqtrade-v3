@@ -1,0 +1,27 @@
+{
+  "cutoff": "2026-10-01T23:00:00+00:00",
+  "development_only": true,
+  "files": {
+    "BTC/spot": {
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "rows": 59184,
+      "sha256": "c699ff849904fc2d757ccd810733aabed2d1735c1c7b6b7ffef1d6505eec6559",
+      "start": "2020-01-01T00:00:00+00:00"
+    },
+    "ETH/spot": {
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "rows": 59184,
+      "sha256": "7baec7466bd2b7e12c0bdb583cfa8125bf7383af4095e000e9abf999e3ed37a1",
+      "start": "2020-01-01T00:00:00+00:00"
+    }
+  },
+  "generated_at": "2026-10-02T09:33:15.235885+00:00",
+  "market": "spot",
+  "missing": [],
+  "registration": "docs/PHASE2C_PREREGISTRATION.md",
+  "schema_version": 1,
+  "start": "2020-01-01T00:00:00+00:00",
+  "timeframe": "1h"
+}
