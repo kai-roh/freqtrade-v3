@@ -60,22 +60,38 @@ def _signal(panel: Phase2Panel, cutoff: pd.Timestamp) -> dict[str, Any]:
     }
 
 
-def _period_pnl(equity: pd.Series, current: float, start: pd.Timestamp, freq: str) -> list[dict]:
-    """P&L per calendar period (week starting Monday, or month) from daily 00:00 equity."""
-    points = equity[equity.index >= start]
-    if freq == "W":
-        period_start = points.index.normalize() - pd.to_timedelta(points.index.weekday, unit="D")
-    else:
-        period_start = points.index.normalize() - pd.to_timedelta(points.index.day - 1, unit="D")
-    rows = []
-    starts = sorted(set(period_start))
-    for i, ps in enumerate(starts):
-        opening = points[period_start == ps].iloc[0] if i else float(points.iloc[0])
-        closing = (
-            float(points[period_start == starts[i + 1]].iloc[0]) if i + 1 < len(starts) else current
-        )
-        rows.append({"period_start": ps.isoformat(), "pnl": closing - float(opening)})
-    return rows
+def _report_days(end: pd.Timestamp, start: pd.Timestamp) -> list[pd.Timestamp]:
+    """Daily report valuation times (same hour as ``end``) from the first one after ``start``."""
+    days = []
+    t = end
+    while t > start:
+        days.append(t)
+        t -= pd.Timedelta(days=1)
+    return days[::-1]
+
+
+def _period_key(t: pd.Timestamp, freq: str) -> str:
+    local = (t + KST).normalize()
+    label = local - pd.Timedelta(days=local.weekday()) if freq == "W" else local.replace(day=1)
+    return label.strftime("%Y-%m-%d")
+
+
+def _period_pnl(
+    value_at, days: list[pd.Timestamp], freq: str, current_end: pd.Timestamp
+) -> list[dict]:
+    """P&L per calendar period (KST week from Monday, or month) of the daily reports.
+
+    Each daily report covers the 24 hours before its valuation time, so a period is the
+    sum of its reports and the periods add up to the total.
+    """
+    rows: dict[str, float] = {}
+    for t in days:
+        key = _period_key(t, freq)
+        rows[key] = rows.get(key, 0.0) + value_at(t) - value_at(t - pd.Timedelta(days=1))
+    current = _period_key(current_end, freq)
+    return [
+        {"period_start": key, "pnl": pnl, "complete": key != current} for key, pnl in rows.items()
+    ]
 
 
 def _account(panel, rule, cost, filters, market, start, end) -> dict[str, Any]:
@@ -91,14 +107,20 @@ def _account(panel, rule, cost, filters, market, start, end) -> dict[str, Any]:
         flatten_at_end=False,
     )
     current = SLEEVE + result.decomposition["total_pnl"]
-    daily = result.equity.iloc[:-1]  # 00:00 points; the last entry is the live valuation
-    day_start = daily.iloc[-1] if len(daily) else SLEEVE
-    week_start = end.normalize() - pd.Timedelta(days=end.weekday())
-    month_start = end.normalize().replace(day=1)
+    marks = pd.Series(result.extra["hourly_equity"], dtype=float)
+    marks.index = pd.to_datetime(marks.index)
 
-    def since(ts: pd.Timestamp) -> float:
-        points = daily[daily.index >= ts]
-        return current - (float(points.iloc[0]) if len(points) else SLEEVE)
+    def value_at(ts: pd.Timestamp) -> float:
+        """Account value after the trades of hour ``ts``; the sleeve before the start."""
+        points = marks[marks.index <= ts]
+        return float(points.iloc[-1]) if len(points) else SLEEVE
+
+    # Periods follow the daily reports: a report covers the 24 hours before ``end``; the
+    # week starts with Monday's report and the month with the report on the 1st (KST).
+    local = (end + KST).normalize()
+    week_first = end - pd.Timedelta(days=local.weekday())
+    month_first = end - pd.Timedelta(days=local.day - 1)
+    days = _report_days(end, start)
 
     cap = SLEEVE / len(SYMBOLS)
     positions = {
@@ -112,16 +134,16 @@ def _account(panel, rule, cost, filters, market, start, end) -> dict[str, Any]:
     return {
         "equity": current,
         "pnl_total": current - SLEEVE,
-        "pnl_day": current - float(day_start),
-        "pnl_week": since(week_start),
-        "pnl_month": since(month_start),
+        "pnl_day": current - value_at(end - pd.Timedelta(days=1)),
+        "pnl_week": current - value_at(week_first - pd.Timedelta(days=1)),
+        "pnl_month": current - value_at(month_first - pd.Timedelta(days=1)),
         "decomposition": result.decomposition,
         "positions": positions,
         "trades": result.extra["trade_log"],
         "skipped_orders": result.rounding_skips,
         "order_attempts": result.extra["order_attempts"],
-        "weekly": _period_pnl(daily, current, start, "W"),
-        "monthly": _period_pnl(daily, current, start, "M"),
+        "weekly": _period_pnl(value_at, days, "W", end),
+        "monthly": _period_pnl(value_at, days, "M", end),
         "last_hour": result.extra["last_hour"],
     }
 
@@ -245,9 +267,9 @@ def render_message(report: dict[str, Any], *, weekly: bool, monthly: bool) -> st
             for s, p in ma["positions"].items()
         ),
         f"가상 자산: {ma['equity']:,.2f} USDT (시작 대비 {_signed(ma['pnl_total'])})",
-        f"손익: 오늘 {_signed(ma['pnl_day'])} · 이번 주 {_signed(ma['pnl_week'])} · "
+        f"손익: 24시간 {_signed(ma['pnl_day'])} · 이번 주 {_signed(ma['pnl_week'])} · "
         f"이번 달 {_signed(ma['pnl_month'])}",
-        "비교(오늘): "
+        "비교(24시간): "
         + " · ".join(
             f"{name} {_signed(acc['pnl_day'])}"
             for name, acc in report["accounts"].items()
@@ -287,6 +309,6 @@ def render_message(report: dict[str, Any], *, weekly: bool, monthly: bool) -> st
         names = list(report["accounts"])
         for i, row in enumerate(report["accounts"]["MA200"][key]):
             values = [report["accounts"][n][key][i]["pnl"] for n in names]
-            label = _kst(row["period_start"])[:5]
+            label = row["period_start"][5:] + ("" if row["complete"] else " (진행 중)")
             lines.append(f"{label} | " + " | ".join(_signed(v) for v in values))
     return "\n".join(lines)

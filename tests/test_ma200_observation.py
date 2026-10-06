@@ -152,3 +152,28 @@ def test_live_reconciliation_flags_large_gaps_only():
     far = {f"{a}USDT": str(v["qty"] * 3 + 1) for a, v in virtual.items()}
     reconcile_live(report, far)
     assert report["checks"]["live_matches_virtual"] is False
+
+
+def test_period_pnl_follows_the_daily_reports():
+    """24h P&L is the change since yesterday's report, not since 00:00 UTC (one hour)."""
+    inputs = panels()
+    now = START + pd.Timedelta(days=12, hours=2, minutes=10)
+    today = observe(inputs, now=now, start=START)
+    yesterday = observe(inputs, now=now - pd.Timedelta(days=1), start=START)
+    for name, account in today["accounts"].items():
+        before = yesterday["accounts"][name]
+        assert account["pnl_day"] == pytest.approx(account["equity"] - before["equity"])
+        # The current week and month are the sums of their daily reports so far.
+        assert account["weekly"][-1]["pnl"] == pytest.approx(account["pnl_week"])
+        assert account["monthly"][-1]["pnl"] == pytest.approx(account["pnl_month"])
+        assert account["weekly"][-1]["complete"] is False
+        assert all(row["complete"] for row in account["weekly"][:-1])
+    end = pd.Timestamp(today["evaluated_to"])
+    monday = end - pd.Timedelta(days=(end + pd.Timedelta(hours=9)).weekday())
+    if monday - pd.Timedelta(days=1) > START:
+        sunday_run = monday - pd.Timedelta(days=1) + pd.Timedelta(hours=1, minutes=10)
+        week_open = observe(inputs, now=sunday_run, start=START)
+        ma = today["accounts"]["MA200"]
+        assert ma["pnl_week"] == pytest.approx(
+            ma["equity"] - week_open["accounts"]["MA200"]["equity"]
+        )

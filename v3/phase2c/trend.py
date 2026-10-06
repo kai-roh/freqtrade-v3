@@ -190,7 +190,8 @@ def simulate_trend(
     """One continuous account over [start, end]; flat at the end unless told otherwise.
 
     ``flatten_at_end=False`` (forward observation) keeps the positions open and
-    values them at the last hour's open; the open positions are in ``extra``.
+    values them at the last hour's open; the open positions and the valuation after
+    every hour (``hourly_equity``) are in ``extra``.
 
     ``market="spot"`` refuses short targets and uses the panel without funding.
     The end-of-window flattening is an accounting close and ignores the filters.
@@ -249,6 +250,7 @@ def simulate_trend(
     sym_funding = np.zeros(m)
     in_market = np.zeros(m, dtype=int)
     daily_equity: dict[pd.Timestamp, float] = {}
+    hourly_equity: dict[str, float] = {}
     pending: dict[int, float] | None = None
     pending_row = -1
     spells: dict[int, dict[str, Any]] = {}
@@ -345,6 +347,8 @@ def simulate_trend(
                     target_qty = executable
                 trade(j, target_qty, price, t)
             pending = None
+        if not flatten_at_end:
+            hourly_equity[t.isoformat()] = cash + float(qty @ price_row)
         if hour_of_day[row] == 0 and row + 1 < n:
             orders: dict[int, float] = {}
             for j in range(m):
@@ -398,6 +402,7 @@ def simulate_trend(
             "last_hour": times[-1].isoformat(),
             "pending_orders": {symbols[j]: w for j, w in (pending or {}).items()},
             "trade_log": trade_log,
+            "hourly_equity": hourly_equity,
         },
     )
 
