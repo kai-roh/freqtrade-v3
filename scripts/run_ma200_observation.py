@@ -27,6 +27,7 @@ from v3.phase2c.observation import (  # noqa: E402
     observe,
     reconcile_live,
     render_message,
+    summarize_live,
 )
 from v3.phase2c.research import load_spot_filters, load_venue_filters  # noqa: E402
 from v3.phase2c.trend import SYMBOLS, load_spot_panel  # noqa: E402
@@ -68,6 +69,12 @@ def main() -> int:
     heartbeat = args.live_state_dir / "heartbeat.json" if args.live_state_dir else None
     if heartbeat is not None and heartbeat.is_file():
         reconcile_live(report, json.loads(heartbeat.read_text()).get("positions"))
+        config = json.loads((args.live_state_dir / "config.json").read_text())
+        runs = [
+            json.loads(path.read_text())
+            for path in sorted(args.live_state_dir.glob("executor-2*.json"))
+        ]
+        summarize_live(report, runs, float(config["starting_capital"]))
     kst = now + pd.Timedelta(hours=9)
     message = render_message(report, weekly=kst.weekday() == 0, monthly=kst.day == 1)
     report["message"] = message

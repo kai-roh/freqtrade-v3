@@ -24,6 +24,11 @@ from urllib.parse import urlencode
 DEMO_BASE = "https://demo-fapi.binance.com"
 MAINNET_BASE = "https://fapi.binance.com"
 SYMBOLS = ("BTCUSDT", "ETHUSDT")
+# Reads are retried on transient failures (timeouts, rate limits, 5xx, network).
+# Orders (POST) are never resent here; the engine resolves unknown outcomes by query.
+TRANSIENT_STATUS = {408, 429, 500, 502, 503, 504}
+READ_RETRIES = 2
+RETRY_PAUSE_S = 1.0
 
 PUBLIC = {
     ("GET", "/fapi/v1/time"),
@@ -117,6 +122,31 @@ class FuturesClient:
         signed: bool,
         base: str | None = None,
         transport: Transport | None = None,
+    ) -> Any:
+        attempts = 1 + (READ_RETRIES if method == "GET" else 0)
+        for attempt in range(attempts):
+            try:
+                return self._call_once(
+                    method, path, params, signed=signed, base=base, transport=transport
+                )
+            except (ExchangeError, urllib.error.URLError, TimeoutError, ConnectionError) as exc:
+                transient = not isinstance(exc, ExchangeError) or (
+                    exc.status is None or exc.status in TRANSIENT_STATUS
+                )
+                if not transient or attempt + 1 == attempts:
+                    raise
+                time.sleep(RETRY_PAUSE_S * (attempt + 1))
+        raise AssertionError("unreachable")
+
+    def _call_once(
+        self,
+        method: str,
+        path: str,
+        params: Mapping[str, Any] | None,
+        *,
+        signed: bool,
+        base: str | None,
+        transport: Transport | None,
     ) -> Any:
         key = (method, path)
         if key not in (SIGNED if signed else PUBLIC):

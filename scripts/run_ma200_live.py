@@ -29,8 +29,10 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from v3.ma200live.client import SYMBOLS, Credentials, FuturesClient  # noqa: E402
 from v3.ma200live.engine import (  # noqa: E402
+    GUARD_ALERT_AFTER,
     LiveConfig,
     StateStore,
+    guard_alert_due,
     run_executor,
     run_guard,
     strategy_equity,
@@ -193,8 +195,33 @@ def main() -> int:
         message = executor_message(report, config.environment)
     elif args.command == "guard":
         stop = Decimal(args.test_stop_equity) if args.test_stop_equity else None
-        report = run_guard(client, store, now=now, test_stop_equity=stop)
-        message = guard_message(report, config.environment)
+        try:
+            report = run_guard(client, store, now=now, test_stop_equity=stop)
+        except Exception as exc:  # noqa: BLE001 - every failure must be counted and reported
+            error = f"{type(exc).__name__}: {exc}"
+            failures = store.guard_failed(error)
+            report = {
+                "kind": "guard",
+                "now": now.isoformat(),
+                "status": "error",
+                "error": error,
+                "consecutive_failures": failures,
+            }
+            if guard_alert_due(failures):
+                message = (
+                    f"[{config.environment.upper()}][MA200 보호] {_kst(report['now'])} KST · "
+                    f"점검 실패 {failures}회 연속 (10분 간격) · 손실 중단 감시가 멈춘 상태\n"
+                    f"오류: {error[:200]}"
+                )
+        else:
+            previous = store.guard_succeeded()
+            message = guard_message(report, config.environment)
+            if previous >= GUARD_ALERT_AFTER:
+                recovered = (
+                    f"[{config.environment.upper()}][MA200 보호] {_kst(report['now'])} KST · "
+                    f"점검 복구 ({previous}회 연속 실패 후 정상)"
+                )
+                message = recovered + (f"\n{message}" if message else "")
     elif args.command == "set-stop":
         before, after = store.update_stop(Decimal(args.stop_equity), args.note)
         report = {"kind": "set-stop", "from": str(before), "to": str(after), "note": args.note}
@@ -230,6 +257,11 @@ def main() -> int:
             chat_id=telegram.get("TELEGRAM_CHAT_ID", ""),
         )
         report["telegram_delivered"] = delivery.delivered
+        if args.command == "execute":
+            # The engine saved the report before delivery; record the delivery too.
+            store.save_report(f"executor-{now:%Y%m%d}.json", report)
+            if report.get("status") != "halted":
+                store.save_report("executor-latest.json", report)
     if args.command == "guard" and report.get("status") == "ok":
         equity = report.get("equity", {}).get("equity")
         print(f"{report['now']} guard ok equity={equity} positions={report.get('positions')}")

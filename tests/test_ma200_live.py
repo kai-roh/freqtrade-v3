@@ -9,6 +9,7 @@ from v3.ma200live.client import Credentials, ExchangeError, FuturesClient
 from v3.ma200live.engine import (
     LiveConfig,
     StateStore,
+    guard_alert_due,
     plan_symbol,
     run_executor,
     run_guard,
@@ -354,3 +355,72 @@ def test_stop_change_is_audited_and_used_by_the_guard(tmp_path):
     assert '"event": "stop_changed"' in journal and '"to": "800"' in journal
     report = run_guard(client, store, now=NOW)
     assert report["status"] == "ok" and report["stop_used"] == "800"
+
+
+class Flaky:
+    """Wraps a transport and answers the first ``failures`` calls with ``status``."""
+
+    def __init__(self, inner, failures, status=408, path=None):
+        self.inner, self.failures, self.status, self.path = inner, failures, status, path
+        self.calls = []
+
+    def __call__(self, method, url, headers, body):
+        self.calls.append((method, urlsplit(url).path))
+        if self.failures and (self.path is None or urlsplit(url).path == self.path):
+            self.failures -= 1
+            return self.status, {"code": -1007, "msg": "Timeout waiting for response"}
+        return self.inner(method, url, headers, body)
+
+
+def test_reads_are_retried_on_transient_errors_but_orders_are_not(monkeypatch):
+    monkeypatch.setattr("v3.ma200live.client.time.sleep", lambda _: None)
+    flaky = Flaky(FakeExchange(), failures=2, path="/fapi/v3/positionRisk")
+    client = FuturesClient("demo", Credentials("k", "s"), transport=flaky)
+    assert client.positions()["BTCUSDT"]["qty"] == 0
+    assert sum(p == "/fapi/v3/positionRisk" for _, p in flaky.calls) == 3
+    # Three failures in a row exhaust the read retries.
+    flaky.failures = 3
+    with pytest.raises(ExchangeError):
+        client.positions()
+    # Network failures are retried like timeouts; a refused endpoint is not retried.
+    flaky.failures = 0
+    calls = []
+
+    def drops_once(method, url, headers, body):
+        calls.append(url)
+        if len(calls) == 1:
+            raise TimeoutError("read timed out")
+        return FakeExchange()(method, url, headers, body)
+
+    dropping = FuturesClient("demo", Credentials("k", "s"), transport=drops_once)
+    dropping.book("BTCUSDT")
+    assert len(calls) == 2
+    with pytest.raises(PermissionError):
+        dropping._call("POST", "/fapi/v1/transfer", {}, signed=True)
+    assert len(calls) == 2
+    # A client error is not retried.
+    flaky.failures, flaky.status = 1, 400
+    with pytest.raises(ExchangeError):
+        client.positions()
+    # An order whose reply timed out is never resent by the client.
+    flaky.failures, flaky.status, flaky.path = 1, 503, "/fapi/v1/order"
+    flaky.calls.clear()
+    with pytest.raises(ExchangeError):
+        client.place_ioc(
+            "BTCUSDT", "BUY", Decimal("0.001"), Decimal(100_000), reduce_only=False, client_id="y"
+        )
+    assert [c for c in flaky.calls if c == ("POST", "/fapi/v1/order")] == [
+        ("POST", "/fapi/v1/order")
+    ]
+
+
+def test_guard_failures_are_counted_and_alerts_are_spaced(tmp_path):
+    store = StateStore(tmp_path)
+    counts = [store.guard_failed("ExchangeError: 408") for _ in range(13)]
+    assert counts == list(range(1, 14))
+    assert [n for n in counts if guard_alert_due(n)] == [2, 6, 12]
+    assert store.guard_succeeded() == 13
+    assert store.guard_succeeded() == 0
+    assert store.guard_failed("again") == 1
+    events = [json.loads(line)["event"] for line in (tmp_path / "journal.jsonl").open()]
+    assert events.count("guard_error") == 14 and events.count("guard_recovered") == 1

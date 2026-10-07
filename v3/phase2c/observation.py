@@ -181,6 +181,61 @@ def reconcile_live(report: dict[str, Any], live_positions: dict[str, str] | None
     )
 
 
+def summarize_live(
+    report: dict[str, Any], executor_reports: list[dict[str, Any]], starting_capital: float
+) -> None:
+    """Add the Demo executor's actual account (equity at each daily run) to the report.
+
+    Daily P&L is the change between consecutive executor runs; the first run is measured
+    from the starting capital. Weeks and months use the same KST periods as the virtual
+    accounts. Halted or failed runs carry no equity and are skipped.
+    """
+    if report.get("status") != "running":
+        return
+    now = pd.Timestamp(report["now"])
+    runs = sorted(
+        (
+            (pd.Timestamp(r["now"]), r)
+            for r in executor_reports
+            if isinstance(r.get("equity"), dict) and "equity" in r["equity"]
+        ),
+        key=lambda item: item[0],
+    )
+    runs = [(t, r) for t, r in runs if t <= now]
+    if not runs:
+        return
+    series = pd.Series({t: float(r["equity"]["equity"]) for t, r in runs})
+    latest = runs[-1][1]["equity"]
+    changes = series.diff()
+    changes.iloc[0] = series.iloc[0] - starting_capital
+    end = pd.Timestamp(report["evaluated_to"])
+
+    def periods(freq: str) -> dict[str, float]:
+        rows: dict[str, float] = {}
+        for t, change in changes.items():
+            key = _period_key(t, freq)
+            rows[key] = rows.get(key, 0.0) + float(change)
+        return rows
+
+    weekly, monthly = periods("W"), periods("M")
+    last = series.index[-1]
+    report["live"] = {
+        "last_run": last.isoformat(),
+        "equity": float(series.iloc[-1]),
+        "pnl_total": float(series.iloc[-1] - starting_capital),
+        "pnl_day": float(changes.iloc[-1]),
+        "pnl_week": weekly.get(_period_key(end, "W"), 0.0),
+        "pnl_month": monthly.get(_period_key(end, "M"), 0.0),
+        "distance_to_stop": float(latest["distance_to_stop"])
+        if "distance_to_stop" in latest
+        else None,
+        "weekly": weekly,
+        "monthly": monthly,
+        "fresh": end - last < pd.Timedelta(hours=26),
+    }
+    report["checks"]["live_executor_fresh"] = report["live"]["fresh"]
+
+
 def observe(
     inputs: ObservationInputs,
     *,
@@ -301,14 +356,31 @@ def render_message(report: dict[str, Any], *, weekly: bool, monthly: bool) -> st
                 for a, r in live.items()
             )
         )
+    actual = report.get("live")
+    if actual:
+        lines.append(
+            f"Demo 실제: 자산 {actual['equity']:,.2f} USDT (시작 대비 {_signed(actual['pnl_total'])})"
+            f" · 24시간 {_signed(actual['pnl_day'])} · 이번 주 {_signed(actual['pnl_week'])}"
+            f" · 이번 달 {_signed(actual['pnl_month'])}"
+            + (
+                f" · 중단선까지 {actual['distance_to_stop']:,.2f}"
+                if actual.get("distance_to_stop") is not None
+                else ""
+            )
+            + ("" if actual["fresh"] else f" (마지막 실행 {_kst(actual['last_run'])} KST)")
+        )
     lines.append(check_line)
     for flag, key, title in ((weekly, "weekly", "주간"), (monthly, "monthly", "월간")):
         if not flag:
             continue
-        lines.append(f"{title} 손익표 (USDT): 기간 | MA200 | 현물 보유 | 선물 보유")
+        header = f"{title} 손익표 (USDT): 기간 | MA200 | 현물 보유 | 선물 보유"
+        lines.append(header + (" | Demo 실제" if actual else ""))
         names = list(report["accounts"])
         for i, row in enumerate(report["accounts"]["MA200"][key]):
-            values = [report["accounts"][n][key][i]["pnl"] for n in names]
+            values = [_signed(report["accounts"][n][key][i]["pnl"]) for n in names]
+            if actual:
+                demo = actual[key].get(row["period_start"])
+                values.append(_signed(demo) if demo is not None else "-")
             label = row["period_start"][5:] + ("" if row["complete"] else " (진행 중)")
-            lines.append(f"{label} | " + " | ".join(_signed(v) for v in values))
+            lines.append(f"{label} | " + " | ".join(values))
     return "\n".join(lines)

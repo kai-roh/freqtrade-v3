@@ -13,6 +13,7 @@ from v3.phase2c.observation import (
     observe,
     reconcile_live,
     render_message,
+    summarize_live,
 )
 from v3.phase2c.trend import NORMAL, TrendRule, VenueFilters, simulate_trend
 
@@ -177,3 +178,35 @@ def test_period_pnl_follows_the_daily_reports():
         assert ma["pnl_week"] == pytest.approx(
             ma["equity"] - week_open["accounts"]["MA200"]["equity"]
         )
+
+
+def test_demo_summary_uses_executor_runs_up_to_the_report():
+    inputs = panels()
+    now = START + pd.Timedelta(days=8, hours=2, minutes=10)
+    report = observe(inputs, now=now, start=START)
+
+    def run(days, equity):
+        t = START + pd.Timedelta(days=days, hours=1, minutes=5)
+        return {"now": t.isoformat(), "equity": {"equity": str(equity), "distance_to_stop": "1"}}
+
+    runs = [
+        run(0, 990.0),
+        {"now": (START + pd.Timedelta(days=1)).isoformat(), "status": "halted"},
+        run(7, 1004.0),
+        run(8, 1001.0),
+        run(9, 1500.0),  # after the report time: ignored in a replay
+    ]
+    summarize_live(report, runs, 1000.0)
+    live = report["live"]
+    assert live["equity"] == 1001.0 and live["pnl_total"] == pytest.approx(1.0)
+    assert live["pnl_day"] == pytest.approx(-3.0)
+    assert sum(live["weekly"].values()) == pytest.approx(1.0)
+    assert sum(live["monthly"].values()) == pytest.approx(1.0)
+    assert report["checks"]["live_executor_fresh"] is True
+    message = render_message(report, weekly=True, monthly=False)
+    assert "Demo 실제: 자산 1,001.00 USDT" in message and "| Demo 실제" in message
+    # A stale executor is shown and fails the check.
+    later = observe(inputs, now=now + pd.Timedelta(days=2), start=START)
+    summarize_live(later, runs[:4], 1000.0)
+    assert later["checks"]["live_executor_fresh"] is False
+    assert "마지막 실행" in render_message(later, weekly=False, monthly=False)

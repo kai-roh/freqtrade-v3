@@ -29,6 +29,7 @@ file are historical records and are not rewritten.
 | 0019 | Register the order-free MA200 forward observation with a 7-day operational dry run | 2026-10-02 |
 | 0020 | MA200 live risk contract: −10% stop (incompatible at 1,000 USDT), automatic guard, Demo first, Mainnet locked | 2026-10-02 |
 | 0021 | User decision: MA200 loss stop at −20% (800 USDT), Demo included; risk level stays at 25% | 2026-10-03 |
+| 0022 | MA200 report period fix, Demo actual in the report, shadow reports retired, guard failure alerts | 2026-10-07 |
 
 ## Phase 1 (Binance Demo two-leg carry execution)
 

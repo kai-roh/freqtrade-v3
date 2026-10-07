@@ -31,6 +31,10 @@ GUARD_PRICE_CAP_BPS = Decimal(50)
 GUARD_IOC_ATTEMPTS = 5
 UNKNOWN_QUERIES = 3
 SETTLE_QUERIES = 3
+# A guard run that fails (e.g. the venue times out) is retried by the next cron run.
+# Alert when failures repeat: at the second in a row, then every hour (six runs).
+GUARD_ALERT_AFTER = 2
+GUARD_ALERT_EVERY = 6
 
 
 @dataclass(frozen=True)
@@ -159,6 +163,35 @@ class StateStore:
 
     def save_report(self, name: str, data: dict[str, Any]) -> None:
         self._write(name, data)
+
+    def guard_failed(self, error: str) -> int:
+        """Count a guard run that ended in an exception; returns the consecutive count."""
+        health = self._read("guard-health.json") or {}
+        count = int(health.get("consecutive_failures", 0)) + 1
+        self._write(
+            "guard-health.json",
+            {
+                "consecutive_failures": count,
+                "first_failure": health.get("first_failure") or _now_iso(),
+                "last_error": error,
+            },
+        )
+        self.journal({"event": "guard_error", "error": error, "consecutive_failures": count})
+        return count
+
+    def guard_succeeded(self) -> int:
+        """Reset the failure count after a completed guard run; returns the previous count."""
+        health = self._read("guard-health.json") or {}
+        previous = int(health.get("consecutive_failures", 0))
+        if previous:
+            self._write("guard-health.json", {"consecutive_failures": 0})
+            self.journal({"event": "guard_recovered", "after_failures": previous})
+        return previous
+
+
+def guard_alert_due(consecutive_failures: int) -> bool:
+    n = consecutive_failures
+    return n == GUARD_ALERT_AFTER or (n > GUARD_ALERT_AFTER and n % GUARD_ALERT_EVERY == 0)
 
 
 def _now_iso() -> str:
