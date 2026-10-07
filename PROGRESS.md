@@ -1,6 +1,6 @@
 # PROGRESS
 
-기준일: 2026-10-02 KST. 새 세션은 이 파일부터 읽는다. 상세 근거는 각 링크 문서에 있고,
+기준일: 2026-10-07 KST. 새 세션은 이 파일부터 읽는다. 상세 근거는 각 링크 문서에 있고,
 이 파일은 **현재 상태·열린 문제·다음 할 일**만 최신으로 유지한다. 과거 이력은 여기 쓰지 않는다.
 
 ## 한 줄 요약
@@ -19,6 +19,8 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 2026-10-03 시작, 서버가 매일 11:10 KST에 가상 계좌를 계산해 Telegram으로 보내고, 첫 7일은 운영 점검이다. 이어 **Demo 실행기와 자동 보호 장치**를
 개발·Demo 검증하고 cron으로 가동했다([Decision 0020](docs/decisions/0020-ma200-live-risk-contract.md)). −10% 중단선이 1,000 USDT에서
 양립하지 않는 것으로 나와, 사용자가 **−20%(800 USDT)로 완화**했고 Demo에도 적용했다([Decision 0021](docs/decisions/0021-ma200-stop-20-percent.md), 위험 수준 25% 유지).
+10-07에 관측 보고의 기간 손익 버그(24시간·주 손익이 최근 1시간만 계산)를 고치고, 보고에 Demo 실제 계좌를 넣었으며,
+거래하지 않는 섀도 봇의 23시·일요일 리포트를 끄고, 보호 장치 실패 알림을 추가했다([Decision 0022](docs/decisions/0022-ma200-reports-and-guard-health.md)).
 실거래는 아직 승인되지 않았다(Mainnet 잠금). 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 현재 상태
@@ -39,13 +41,14 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 | Phase 2c BTC·ETH 추세 연구 | **게이트 불통과 `STOP_NO_EDGE`.** walk-forward 연속 계좌(2022-08~2026-10) 순수익 200.6 USDT(연 8.4%, 슬리브 500), Sharpe 0.54 < BH-VT 0.78, PBO 0.34, 부트스트랩 구간 0 포함. 수익은 주로 롱(+340), 숏은 −80 | [Decision 0016](docs/decisions/0016-phase2c-result-stop-no-edge.md), `research_results/phase2c/REPORT.md` |
 | MA200 후속 비교 | **`PAUSE_RESEARCH`.** C1~C4(수익 유지·낙폭·효율·최악 연도) 통과, C5 구현 실패(BTC 주문 234/322 건너뜀). 현물 보유가 Sharpe 0.93으로 가장 높음 | [Decision 0017](docs/decisions/0017-ma200-comparison-pause-research.md), `research_results/phase2c/ma200-comparison/REPORT.md` |
 | MA200 슬리브 1,000 | **`OBSERVE_ELIGIBLE`(계획 이탈).** 순손익 675 vs 현물 보유 847, MDD 13.3% vs 22.6%, 최악 연도 −21 vs −92, 주문 건너뜀 3/99 | [Decision 0018](docs/decisions/0018-ma200-sleeve-1000-plan-departure.md), `research_results/phase2c/ma200-comparison-sleeve1000/REPORT.md` |
-| MA200 전진 관측 | **등록, 2026-10-03 시작.** 슬리브 1,000, 주문 없음, 매일 Telegram(월요일 주간표·1일 월간표). 10-03~10-09 운영 점검(수익성 검증 아님) | [MA200_FORWARD_OBSERVATION](docs/MA200_FORWARD_OBSERVATION.md), 서버 `evidence/ma200-observation/` |
-| MA200 Demo 실행 | **가동 중.** 매일 10:05 KST 실행, 10분마다 보호 장치(손실 중단·실행기 정지·불일치 → 자동 감축 청산·정지). Demo 검증 10단계 통과. 포지션 BTC 0.0034·ETH 0.080 롱 | [Decision 0020](docs/decisions/0020-ma200-live-risk-contract.md), 서버 `evidence/ma200-live-demo/` |
+| MA200 전진 관측 | **진행 중, 2026-10-03 시작.** 슬리브 1,000, 주문 없음, 매일 Telegram(Demo 실제 포함, 월요일 주간표·1일 월간표). 10-07 가상 자산 1,003.83. 10-03~10-09 운영 점검(수익성 검증 아님) | [MA200_FORWARD_OBSERVATION](docs/MA200_FORWARD_OBSERVATION.md), 서버 `evidence/ma200-observation/` |
+| MA200 Demo 실행 | **가동 중.** 매일 10:05 KST 실행, 10분마다 보호 장치(손실 중단·실행기 정지·불일치 → 자동 감축 청산·정지). Demo 검증 10단계 통과. 포지션 BTC 0.0034·ETH 0.080 롱, 10-07 실행 자산 986.78(중단선까지 186.78). 보호 장치 조회 재시도·연속 실패 알림 | [Decision 0020](docs/decisions/0020-ma200-live-risk-contract.md), 서버 `evidence/ma200-live-demo/` |
 | Phase 3 | 실자본 미승인(Mainnet 잠금). 남은 것: −10% 중단선과 위험 수준 재결정, 실자본 ADR, 계좌·API 키 | Decision 0020 |
 
-서버 cron: 매일 11:10 KST MA200 관측(`freqtrade-v3-observe:current`, `sha256:cb90aea1…`), 10-02 미리보기 Telegram 전달 확인.
+서버 cron(10-07부터): 11:10 KST 관측, 10:05 Demo 실행, 10분마다 보호 장치. 이미지 `freqtrade-v3-{live,observe}:current` = `e22190a`(`sha256:e8a2e8e0…`).
+23시 운영 리포트·일요일 연구/주간 리포트는 Decision 0022로 중단(스크립트는 수동용으로 남김).
 서버(`ft-tokyo`, `/home/kai/freqtrade-v3`) 컨테이너: `phase1-postgres` 실행, `phase1-telegram-bot` 실행,
-`freqtrade_kai`(zero-entry shadow) 실행. **주간 실행기는 없다**(마지막 `phase1-demo-week-run-20260928-restart1` exit 137,
+`freqtrade_kai`(zero-entry shadow, 보고 중단) 실행. **주간 실행기는 없다**(마지막 `phase1-demo-week-run-20260928-restart1` exit 137,
 대기 중 사용자 지시로 정지). Demo 계정: 선물 0, 미체결 없음, 현물 BTC `0.00050308` = 정산 잔량 69건 합계.
 서버 작업 복사본은 `5e8afe1`, 현행 이미지 `freqtrade-v3-demo-auto:5e8afe1`(`sha256:ef02aba8…`).
 저장소 브랜치 `codex/v2-to-v3-infrastructure`, 테스트 441개 통과(PostgreSQL 포함).
@@ -61,7 +64,9 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 3. **확인 검증용 미사용 데이터는 새 등록 이후 데이터뿐이다.**
 4. `1a124d1`의 일시 거부 재시도와 청산 단계 예산 규칙은 테스트만 있고 실제 Demo 거부로는 아직 작동한 적 없다.
 5. 진입 위험 결정 행에 관측 레버리지가 저장되지 않는다(디스패치 payload에는 있음).
-6. PostgreSQL 통합 테스트 72개는 이번 연구 작업 동안 건너뛰었다. 집행 경로를 바꾸거나 배포할 때는 반드시 실제로 통과시킨다.
+6. **Demo 펀딩률은 실제 시장과 다르다.** 10-07 BTC Demo +0.028%/8h vs Mainnet −0.005%. Demo 실제 손익은 관측보다 펀딩만큼 불리하게
+   나온다(10-07까지 Demo 펀딩 −2.52 vs 가상 약 −0.2). 실행 품질 판정은 가격·체결 기준으로, 펀딩은 관측 쪽 실제 시장 값으로 본다.
+7. PostgreSQL 통합 테스트 72개는 이번 연구 작업 동안 건너뛰었다. 집행 경로를 바꾸거나 배포할 때는 반드시 실제로 통과시킨다.
 
 ## 다음 할 일 (순서대로)
 

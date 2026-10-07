@@ -1,5 +1,18 @@
 # Server state
 
+## Latest verified state — 2026-10-07 13:27 KST
+
+- Source `e22190a` synced (`git archive | tar -xm`); image `freqtrade-v3-live:current` =
+  `freqtrade-v3-observe:current` = `sha256:e8a2e8e0…` (also tagged `:e22190a`), promoted 13:16 KST after a
+  read-only smoke test (`status` and an observation replay to /tmp without Telegram).
+- Decision 0022: the observation period P&L is fixed, the report carries the Demo actual account, the guard retries reads
+  and alerts on repeated failures (`guard-health.json`, created on the first failure).
+- Crontab reinstalled from `deploy/freqtrade-v3.cron` (backup `/tmp/crontab.before.20261007131647`): only MA200
+  observation 11:10, Demo executor 10:05, guard every 10 minutes. The 23:00 operations report and Sunday research
+  are removed. `freqtrade_kai` (shadow) still runs and is no longer reported.
+- First guard run on the new image 13:20 KST: `ok`, equity 975.31 USDT (stop 800). Positions BTCUSDT 0.0034, ETHUSDT 0.080.
+- Demo funding differs from Mainnet (BTC +0.028%/8h vs −0.005% at 13:2x KST); Demo funding to date −2.52 USDT.
+
 ## Latest verified state — 2026-10-03 00:17 KST
 
 - Demo loss stop changed 900 → 800 USDT with `set-stop` (Decision 0021, journaled); image `freqtrade-v3-live:current`
