@@ -1,5 +1,19 @@
 # Server state
 
+## Latest verified state — 2026-10-09 11:30 KST
+
+- 7-day operational dry run passed (read-only review):
+  - Observation reports 10-03..10-09: 7/7 written, Telegram delivered, all checks true, skipped orders 0/2.
+  - Exact recomputation of 10-09 on `freqtrade-v3-observe:current`. Output went to /tmp and was deleted, no Telegram.
+  - No exceptions in `ma200-observation.log`.
+- Demo executor 10-03..10-09: 7/7 `ok`, no orders, Telegram delivered.
+  - Equity 985.09 → 956.98.
+  - Funding −2.77 cumulative. Demo rates differ from Mainnet.
+- Guard since 10-03 00:00 UTC: 878 `ok` + 1 exception (10-06 04:20 UTC, Demo 408/-1007, before the retry fix).
+  - No halt, no `guard-health.json`.
+  - Lowest equity 947.71 (10-08 18:10 UTC). Latest 957.97 at 02:20 UTC.
+- No state was changed. Crontab and images are unchanged from 2026-10-07 (`e22190a`).
+
 ## Latest verified state — 2026-10-07 13:27 KST
 
 - Source `e22190a` synced (`git archive | tar -xm`); image `freqtrade-v3-live:current` =

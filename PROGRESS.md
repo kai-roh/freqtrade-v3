@@ -1,6 +1,6 @@
 # PROGRESS
 
-기준일: 2026-10-07 KST. 새 세션은 이 파일부터 읽는다. 상세 근거는 각 링크 문서에 있고,
+기준일: 2026-10-09 KST. 새 세션은 이 파일부터 읽는다. 상세 근거는 각 링크 문서에 있고,
 이 파일은 **현재 상태·열린 문제·다음 할 일**만 최신으로 유지한다. 과거 이력은 여기 쓰지 않는다.
 
 ## 한 줄 요약
@@ -21,6 +21,7 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 양립하지 않는 것으로 나와, 사용자가 **−20%(800 USDT)로 완화**했고 Demo에도 적용했다([Decision 0021](docs/decisions/0021-ma200-stop-20-percent.md), 위험 수준 25% 유지).
 10-07에 관측 보고의 기간 손익 버그(24시간·주 손익이 최근 1시간만 계산)를 고치고, 보고에 Demo 실제 계좌를 넣었으며,
 거래하지 않는 섀도 봇의 23시·일요일 리포트를 끄고, 보호 장치 실패 알림을 추가했다([Decision 0022](docs/decisions/0022-ma200-reports-and-guard-health.md)).
+**7일 운영 점검(10-03~10-09)은 2026-10-09에 통과했다**(운영 항목 4/4, 수익성 검증 아님).
 실거래는 아직 승인되지 않았다(Mainnet 잠금). 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 현재 상태
@@ -41,8 +42,8 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 | Phase 2c BTC·ETH 추세 연구 | **게이트 불통과 `STOP_NO_EDGE`.** walk-forward 연속 계좌(2022-08~2026-10) 순수익 200.6 USDT(연 8.4%, 슬리브 500), Sharpe 0.54 < BH-VT 0.78, PBO 0.34, 부트스트랩 구간 0 포함. 수익은 주로 롱(+340), 숏은 −80 | [Decision 0016](docs/decisions/0016-phase2c-result-stop-no-edge.md), `research_results/phase2c/REPORT.md` |
 | MA200 후속 비교 | **`PAUSE_RESEARCH`.** C1~C4(수익 유지·낙폭·효율·최악 연도) 통과, C5 구현 실패(BTC 주문 234/322 건너뜀). 현물 보유가 Sharpe 0.93으로 가장 높음 | [Decision 0017](docs/decisions/0017-ma200-comparison-pause-research.md), `research_results/phase2c/ma200-comparison/REPORT.md` |
 | MA200 슬리브 1,000 | **`OBSERVE_ELIGIBLE`(계획 이탈).** 순손익 675 vs 현물 보유 847, MDD 13.3% vs 22.6%, 최악 연도 −21 vs −92, 주문 건너뜀 3/99 | [Decision 0018](docs/decisions/0018-ma200-sleeve-1000-plan-departure.md), `research_results/phase2c/ma200-comparison-sleeve1000/REPORT.md` |
-| MA200 전진 관측 | **진행 중, 2026-10-03 시작.** 슬리브 1,000, 주문 없음, 매일 Telegram(Demo 실제 포함, 월요일 주간표·1일 월간표). 10-07 가상 자산 1,003.83. 10-03~10-09 운영 점검(수익성 검증 아님) | [MA200_FORWARD_OBSERVATION](docs/MA200_FORWARD_OBSERVATION.md), 서버 `evidence/ma200-observation/` |
-| MA200 Demo 실행 | **가동 중.** 매일 10:05 KST 실행, 10분마다 보호 장치(손실 중단·실행기 정지·불일치 → 자동 감축 청산·정지). Demo 검증 10단계 통과. 포지션 BTC 0.0034·ETH 0.080 롱, 10-07 실행 자산 986.78(중단선까지 186.78). 보호 장치 조회 재시도·연속 실패 알림 | [Decision 0020](docs/decisions/0020-ma200-live-risk-contract.md), 서버 `evidence/ma200-live-demo/` |
+| MA200 전진 관측 | **진행 중, 2026-10-03 시작. 7일 운영 점검 통과(10-09).** 보고·전달 7/7, 점검 7/7, 건너뜀 0, 서버 재계산 동일, 예외 0. 10-09 가상 자산 974.71(−2.5%, 시장 하락; 선물 보유와 같음, 현물 보유 972.98) | [MA200_FORWARD_OBSERVATION](docs/MA200_FORWARD_OBSERVATION.md), 서버 `evidence/ma200-observation/` |
+| MA200 Demo 실행 | **가동 중.** 매일 10:05 KST 실행, 10분마다 보호 장치(손실 중단·실행기 정지·불일치 → 자동 감축 청산·정지). Demo 검증 10단계 통과. 포지션 BTC 0.0034·ETH 0.080 롱. 7일 실행 7/7 정상(주문 없음), 보호 장치 878/879 정상(10-06 Demo 시간 초과 1회), 정지 0. 10-09 실행 자산 956.98, 최저 947.71(10-09 03:10 KST), 중단선 800 | [Decision 0020](docs/decisions/0020-ma200-live-risk-contract.md), 서버 `evidence/ma200-live-demo/` |
 | Phase 3 | 실자본 미승인(Mainnet 잠금). 남은 것: −10% 중단선과 위험 수준 재결정, 실자본 ADR, 계좌·API 키 | Decision 0020 |
 
 서버 cron(10-07부터): 11:10 KST 관측, 10:05 Demo 실행, 10분마다 보호 장치. 이미지 `freqtrade-v3-{live,observe}:current` = `e22190a`(`sha256:e8a2e8e0…`).
@@ -70,7 +71,7 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 
 ## 다음 할 일 (순서대로)
 
-1. 매일 Telegram(관측 11:10, Demo 실행 10:05, 보호 장치 발동 시) 확인, 10-09에 7일 운영 점검과 Demo 실행 판정.
+1. 매일 Telegram(관측 11:10, Demo 실행 10:05, 보호 장치 발동 시) 확인. 관측은 계속되며 첫 방향 전환 때 실행 경로를 실제로 확인한다.
 2. 실거래 준비: 실자본 사용 결정(ADR), 계좌와 선물 거래 권한 API 키(사용자 준비). 그 뒤 Mainnet 잠금 해제.
    ML은 Decision 0002에 따라 결정론적 전략이 두 비용 regime을 통과한 뒤에만.
 2. 저장소: 로컬 커밋 push, `codex/v2-to-v3-infrastructure` → `main` PR·머지.
