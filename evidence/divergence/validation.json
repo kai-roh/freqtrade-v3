@@ -1,0 +1,42 @@
+{
+  "checks": [
+    "ruff check . passed",
+    "ruff format --check . passed (255 files)",
+    "compileall changed research modules passed",
+    "all result source/manifest/registration hashes match",
+    "trade price-cost decomposition reconciles",
+    "12 monthly and 6 fixed slices reconcile"
+  ],
+  "full_suite": {
+    "passed": 443,
+    "skip_reason": "PostgreSQL test DSN not configured",
+    "skipped": 72
+  },
+  "new_tests_passed": 25,
+  "review": {
+    "other_concrete_bugs": 0,
+    "timeout_target_gap_cap": "fixed with upward/downward gap regressions"
+  },
+  "runtime_changed": false,
+  "sha256": {
+    "docs/DIVERGENCE_PREREGISTRATION.md": "e6250288fd23944747005447c2910e049691e54867d646ff79266de8ca7c30c1",
+    "docs/decisions/0023-divergence-scalp-research-insufficient.md": "9d035e81fba305fce8e0e3b9253468234005131cded0190fae61a7e91cdcc3db",
+    "evidence/divergence/data-manifest.json": "098c309ebedaeb87f5cc23932d49e038fc8975c28b2c1b2cf194626d727bab25",
+    "research_results/divergence/REPORT.md": "7c76e754fcc11efc10e165a7e6d5a41dceabb6c7eef4cd6a7aa96a5b398f021e",
+    "research_results/divergence/daily-1m-normal.csv": "39c9a28b1e95c6465a089a91afbdfed39df7656af9d2ebe067bec39ca41a99d5",
+    "research_results/divergence/daily-1m-stress.csv": "e5d47a7eb612b5c90f93fef308f32710e77abc9d2d0e2f0c5d1c431566bdb6a5",
+    "research_results/divergence/daily-5m-normal.csv": "9514fac175a7d213d07342c506465e063ee3df25c9e37ddb5ed739b2ad634c66",
+    "research_results/divergence/daily-5m-stress.csv": "044e59308d36bfb24b200fe2d9327160d70ae2f9d63271f378b25066a5f003af",
+    "research_results/divergence/summary.json": "3e2161ad8489c25c3918e0ed165e0dea0bff2aa6c9daf6ef404807f4022f047a",
+    "research_results/divergence/trades-1m-normal.csv": "3355343dc089e86096d3835d920e940f1d51550380ca0834d1f287fdcd409782",
+    "research_results/divergence/trades-1m-stress.csv": "f19c81e377211222388c09fe03207a84874e9cee44d0c65e83b3e5e48e32089d",
+    "research_results/divergence/trades-5m-normal.csv": "0b82cf870d3741bd238a86bba81af215be8b5781092c4623cf00d392694d869b",
+    "research_results/divergence/trades-5m-stress.csv": "e82bfc0a89e92168c23bc109d06dbe6f47a1e192f530c56314850414d2fb0e8a",
+    "scripts/build_divergence_dataset.py": "473fc36624844fd7fda4bcaed65c5c7fe3b93f13eb3d3c50ce44d77e186bef63",
+    "scripts/run_divergence_research.py": "bf8344a7f9a8aff0d2da408ff9a51d5f10f292c7ab746bf0f5134087fa4a56b2",
+    "tests/test_divergence.py": "4710157c40e2e239a2b544a6077a079296d238ac9b4a0345e02236cf136129be",
+    "tests/test_divergence_research.py": "7f4cfb34b40ec7012d333225f60ab1d26c5ae8267898d0d0ffc0386992cfd69a",
+    "v3/divergence.py": "f6e8723ae68b6b90876477fc1f5b203d20d7abade1b89b39cc38974c30427486"
+  },
+  "verified_at": "2026-10-18T11:36:26.182582+00:00"
+}

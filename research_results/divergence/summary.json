@@ -1,0 +1,522 @@
+{
+  "config": {
+    "1m/normal/BTC": {
+      "fee_bps": 5.0,
+      "initial_equity": 500.0,
+      "lot_step": 0.001,
+      "max_holding_bars": 10,
+      "max_notional": 500.0,
+      "min_notional": 100,
+      "risk_usdt": 2.5,
+      "slippage_bps": 2.0
+    },
+    "1m/normal/ETH": {
+      "fee_bps": 5.0,
+      "initial_equity": 500.0,
+      "lot_step": 0.001,
+      "max_holding_bars": 10,
+      "max_notional": 500.0,
+      "min_notional": 20,
+      "risk_usdt": 2.5,
+      "slippage_bps": 2.0
+    },
+    "1m/stress/BTC": {
+      "fee_bps": 5.0,
+      "initial_equity": 500.0,
+      "lot_step": 0.001,
+      "max_holding_bars": 10,
+      "max_notional": 500.0,
+      "min_notional": 100,
+      "risk_usdt": 2.5,
+      "slippage_bps": 5.0
+    },
+    "1m/stress/ETH": {
+      "fee_bps": 5.0,
+      "initial_equity": 500.0,
+      "lot_step": 0.001,
+      "max_holding_bars": 10,
+      "max_notional": 500.0,
+      "min_notional": 20,
+      "risk_usdt": 2.5,
+      "slippage_bps": 5.0
+    },
+    "5m/normal/BTC": {
+      "fee_bps": 5.0,
+      "initial_equity": 500.0,
+      "lot_step": 0.001,
+      "max_holding_bars": 10,
+      "max_notional": 500.0,
+      "min_notional": 100,
+      "risk_usdt": 2.5,
+      "slippage_bps": 2.0
+    },
+    "5m/normal/ETH": {
+      "fee_bps": 5.0,
+      "initial_equity": 500.0,
+      "lot_step": 0.001,
+      "max_holding_bars": 10,
+      "max_notional": 500.0,
+      "min_notional": 20,
+      "risk_usdt": 2.5,
+      "slippage_bps": 2.0
+    },
+    "5m/stress/BTC": {
+      "fee_bps": 5.0,
+      "initial_equity": 500.0,
+      "lot_step": 0.001,
+      "max_holding_bars": 10,
+      "max_notional": 500.0,
+      "min_notional": 100,
+      "risk_usdt": 2.5,
+      "slippage_bps": 5.0
+    },
+    "5m/stress/ETH": {
+      "fee_bps": 5.0,
+      "initial_equity": 500.0,
+      "lot_step": 0.001,
+      "max_holding_bars": 10,
+      "max_notional": 500.0,
+      "min_notional": 20,
+      "risk_usdt": 2.5,
+      "slippage_bps": 5.0
+    }
+  },
+  "decisions": {
+    "1m": {
+      "decision": "INSUFFICIENT_TRADES",
+      "gates": {
+        "at_least_100_trades": false,
+        "both_at_least_4_positive_folds": false,
+        "both_concentration_at_most_80pct": false,
+        "both_costs_positive": false,
+        "both_mdd_at_most_10pct": true,
+        "both_pf_at_least_1_15": false,
+        "normal_bootstrap_lower_positive": false
+      }
+    },
+    "5m": {
+      "decision": "INSUFFICIENT_TRADES",
+      "gates": {
+        "at_least_100_trades": false,
+        "both_at_least_4_positive_folds": false,
+        "both_concentration_at_most_80pct": false,
+        "both_costs_positive": false,
+        "both_mdd_at_most_10pct": true,
+        "both_pf_at_least_1_15": false,
+        "normal_bootstrap_lower_positive": false
+      }
+    }
+  },
+  "development_only": true,
+  "generated_at": "2026-10-18T11:35:36.049764+00:00",
+  "git_sha": "f97264d21a2c566d499134efa5c3b6d379931b06",
+  "manifest_sha256": "098c309ebedaeb87f5cc23932d49e038fc8975c28b2c1b2cf194626d727bab25",
+  "registration_sha256": "e6250288fd23944747005447c2910e049691e54867d646ff79266de8ca7c30c1",
+  "results": {
+    "1m/normal": {
+      "bootstrap": {
+        "block_days": 7,
+        "lower_95": -0.13140655217536543,
+        "mean_daily_pnl": -0.08415850433477866,
+        "samples": 2000,
+        "seed": 42,
+        "upper_95": -0.04116532018004785
+      },
+      "exit_reasons": {
+        "stop": 17,
+        "timeout": 13
+      },
+      "fees": 13.703986746678243,
+      "final_equity": 969.2821459178058,
+      "funding_pnl": 0.0,
+      "initial_equity": 1000,
+      "max_drawdown_pct": 3.0717854082194185,
+      "monthly_pnl": {
+        "2025-10": -1.1949977273800414,
+        "2025-11": -1.1487754322859018,
+        "2025-12": -5.811623977539398,
+        "2026-01": 0.0,
+        "2026-02": -1.58057661386556,
+        "2026-03": -5.471734814509205,
+        "2026-04": -2.6659300117379416,
+        "2026-05": -0.09306924209988665,
+        "2026-06": -2.0243120028505928,
+        "2026-07": -2.181216098907271,
+        "2026-08": -6.248449645685923,
+        "2026-09": -2.297168515332487
+      },
+      "net_pnl": -30.717854082194208,
+      "no_trade_pnl": 0.0,
+      "per_symbol": {
+        "BTC": {
+          "average_net_pnl": -0.9343346081770516,
+          "fees": 6.378404656010766,
+          "final_equity": 486.9193154855214,
+          "funding_pnl": -0.0,
+          "initial_equity": 500.0,
+          "max_drawdown_pct": -2.6983390711873723,
+          "net_pnl": -13.080684514478605,
+          "price_pnl": -4.150918162100607,
+          "profit_factor": 0.012387338777974221,
+          "return_pct": -2.616136902895716,
+          "skipped_signals": 25,
+          "slippage_cost": 2.551361696367348,
+          "trades": 14,
+          "win_rate": 0.07142857142857142
+        },
+        "ETH": {
+          "average_net_pnl": -1.1023230979822178,
+          "fees": 7.325582090667476,
+          "final_equity": 482.36283043228445,
+          "funding_pnl": -0.0,
+          "initial_equity": 500.0,
+          "max_drawdown_pct": -3.7317438825191007,
+          "net_pnl": -17.637169567715546,
+          "price_pnl": -7.381354936035758,
+          "profit_factor": 0.024874079057844032,
+          "return_pct": -3.52743391354311,
+          "skipped_signals": 32,
+          "slippage_cost": 2.9302325410122503,
+          "trades": 16,
+          "win_rate": 0.1875
+        }
+      },
+      "positive_folds": 0,
+      "positive_profit_concentration": 0.732774911493799,
+      "price_pnl": -11.532273098136365,
+      "profit_factor": 0.01959561861427603,
+      "return_pct": -3.0717854082194185,
+      "signals": {
+        "BTC": {
+          "entry_signals": 39,
+          "low_pivots": 60287,
+          "uptrend_bars": 161099,
+          "volume_ok_bars": 134508
+        },
+        "ETH": {
+          "entry_signals": 48,
+          "low_pivots": 65016,
+          "uptrend_bars": 157920,
+          "volume_ok_bars": 132988
+        }
+      },
+      "skipped_signals": 57,
+      "slippage_cost": 5.481594237379599,
+      "trades": 30,
+      "two_month_pnl": {
+        "2025-10..2025-11": -2.3437731596659432,
+        "2025-12..2026-01": -5.811623977539398,
+        "2026-02..2026-03": -7.0523114283747645,
+        "2026-04..2026-05": -2.7589992538378283,
+        "2026-06..2026-07": -4.205528101757864,
+        "2026-08..2026-09": -8.54561816101841
+      },
+      "win_rate": 0.13333333333333333
+    },
+    "1m/stress": {
+      "bootstrap": {
+        "block_days": 7,
+        "lower_95": -0.14333442981621808,
+        "mean_daily_pnl": -0.09295449524664111,
+        "samples": 2000,
+        "seed": 42,
+        "upper_95": -0.04789045042998003
+      },
+      "exit_reasons": {
+        "stop": 15,
+        "timeout": 11
+      },
+      "fees": 11.850589900042507,
+      "final_equity": 966.071609234976,
+      "funding_pnl": 0.0,
+      "initial_equity": 1000,
+      "max_drawdown_pct": 3.3928390765023964,
+      "monthly_pnl": {
+        "2025-10": -2.0905293921075554,
+        "2025-11": -1.1780899111748795,
+        "2025-12": -6.0725841802112654,
+        "2026-01": 0.0,
+        "2026-02": -1.862828275273614,
+        "2026-03": -6.056012292714399,
+        "2026-04": -1.9760895276014026,
+        "2026-05": -0.3810988552498884,
+        "2026-06": -2.5725447438777564,
+        "2026-07": -2.225163636885668,
+        "2026-08": -7.137719929090849,
+        "2026-09": -2.375730020836727
+      },
+      "net_pnl": -33.928390765024005,
+      "no_trade_pnl": 0.0,
+      "per_symbol": {
+        "BTC": {
+          "average_net_pnl": -1.1895796087585395,
+          "fees": 5.501249189242069,
+          "final_equity": 485.72504469489746,
+          "funding_pnl": -0.0,
+          "initial_equity": 500.0,
+          "max_drawdown_pct": -2.9105331123931766,
+          "net_pnl": -14.274955305102537,
+          "price_pnl": -3.2724577447335106,
+          "profit_factor": 0.0,
+          "return_pct": -2.8549910610205065,
+          "skipped_signals": 27,
+          "slippage_cost": 5.501248371126894,
+          "trades": 12,
+          "win_rate": 0.0
+        },
+        "ETH": {
+          "average_net_pnl": -1.403816818565837,
+          "fees": 6.349340710800439,
+          "final_equity": 480.34656454007853,
+          "funding_pnl": -0.0,
+          "initial_equity": 500.0,
+          "max_drawdown_pct": -3.9306870919842973,
+          "net_pnl": -19.653435459921468,
+          "price_pnl": -6.954755777010422,
+          "profit_factor": 0.002284642148040588,
+          "return_pct": -3.9306870919842973,
+          "skipped_signals": 34,
+          "slippage_cost": 6.3493389721108535,
+          "trades": 14,
+          "win_rate": 0.07142857142857142
+        }
+      },
+      "positive_folds": 0,
+      "positive_profit_concentration": 1.0,
+      "price_pnl": -10.227213521743934,
+      "profit_factor": 0.0013246802458636135,
+      "return_pct": -3.3928390765023964,
+      "signals": {
+        "BTC": {
+          "entry_signals": 39,
+          "low_pivots": 60287,
+          "uptrend_bars": 161099,
+          "volume_ok_bars": 134508
+        },
+        "ETH": {
+          "entry_signals": 48,
+          "low_pivots": 65016,
+          "uptrend_bars": 157920,
+          "volume_ok_bars": 132988
+        }
+      },
+      "skipped_signals": 61,
+      "slippage_cost": 11.850587343237748,
+      "trades": 26,
+      "two_month_pnl": {
+        "2025-10..2025-11": -3.268619303282435,
+        "2025-12..2026-01": -6.0725841802112654,
+        "2026-02..2026-03": -7.918840567988013,
+        "2026-04..2026-05": -2.357188382851291,
+        "2026-06..2026-07": -4.797708380763424,
+        "2026-08..2026-09": -9.513449949927576
+      },
+      "win_rate": 0.038461538461538464
+    },
+    "5m/normal": {
+      "bootstrap": {
+        "block_days": 7,
+        "lower_95": -0.06641544150822853,
+        "mean_daily_pnl": -0.03362641816576909,
+        "samples": 2000,
+        "seed": 42,
+        "upper_95": -0.007808336079800042
+      },
+      "exit_reasons": {
+        "stop": 4,
+        "timeout": 5
+      },
+      "fees": 3.736841211598546,
+      "final_equity": 987.7263573694943,
+      "funding_pnl": 0.0,
+      "initial_equity": 1000,
+      "max_drawdown_pct": 1.2421739122819853,
+      "monthly_pnl": {
+        "2025-10": 0.0,
+        "2025-11": 0.0,
+        "2025-12": -2.4693254062140113,
+        "2026-01": -3.9505754333330287,
+        "2026-02": -2.497948534068996,
+        "2026-03": 0.0,
+        "2026-04": 0.5450485783801469,
+        "2026-05": -1.0925584612199373,
+        "2026-06": 0.0,
+        "2026-07": 0.0,
+        "2026-08": -1.3520170586440372,
+        "2026-09": -1.4562663154058555
+      },
+      "net_pnl": -12.27364263050572,
+      "no_trade_pnl": 0.0,
+      "per_symbol": {
+        "BTC": {
+          "average_net_pnl": -0.7654378794038021,
+          "fees": 1.4040187893955918,
+          "final_equity": 497.7036863617886,
+          "funding_pnl": -0.0,
+          "initial_equity": 500.0,
+          "max_drawdown_pct": -0.4845018115019806,
+          "net_pnl": -2.2963136382114158,
+          "price_pnl": -0.3306873462851944,
+          "profit_factor": 0.19182650321645386,
+          "return_pct": -0.4592627276422845,
+          "skipped_signals": 8,
+          "slippage_cost": 0.56160750253062,
+          "trades": 3,
+          "win_rate": 0.3333333333333333
+        },
+        "ETH": {
+          "average_net_pnl": -1.6628881653824001,
+          "fees": 2.332822422202954,
+          "final_equity": 490.02267100770564,
+          "funding_pnl": -0.0,
+          "initial_equity": 500.0,
+          "max_drawdown_pct": -2.025085096921675,
+          "net_pnl": -9.97732899229436,
+          "price_pnl": -6.711377869665539,
+          "profit_factor": 0.0,
+          "return_pct": -1.995465798458873,
+          "skipped_signals": 16,
+          "slippage_cost": 0.9331287004259079,
+          "trades": 6,
+          "win_rate": 0.0
+        }
+      },
+      "positive_folds": 0,
+      "positive_profit_concentration": 1.0,
+      "price_pnl": -7.042065215950733,
+      "profit_factor": 0.04251983057383222,
+      "return_pct": -1.2273642630505677,
+      "signals": {
+        "BTC": {
+          "entry_signals": 11,
+          "low_pivots": 13945,
+          "uptrend_bars": 32219,
+          "volume_ok_bars": 26639
+        },
+        "ETH": {
+          "entry_signals": 22,
+          "low_pivots": 14274,
+          "uptrend_bars": 31584,
+          "volume_ok_bars": 26264
+        }
+      },
+      "skipped_signals": 24,
+      "slippage_cost": 1.494736202956528,
+      "trades": 9,
+      "two_month_pnl": {
+        "2025-10..2025-11": 0.0,
+        "2025-12..2026-01": -6.41990083954704,
+        "2026-02..2026-03": -2.497948534068996,
+        "2026-04..2026-05": -0.5475098828397904,
+        "2026-06..2026-07": 0.0,
+        "2026-08..2026-09": -2.8082833740498927
+      },
+      "win_rate": 0.1111111111111111
+    },
+    "5m/stress": {
+      "bootstrap": {
+        "block_days": 7,
+        "lower_95": -0.07264016835365736,
+        "mean_daily_pnl": -0.03732593652495736,
+        "samples": 2000,
+        "seed": 42,
+        "upper_95": -0.009753664280881884
+      },
+      "exit_reasons": {
+        "stop": 4,
+        "timeout": 5
+      },
+      "fees": 3.420686547933162,
+      "final_equity": 986.3760331683906,
+      "funding_pnl": 0.0,
+      "initial_equity": 1000,
+      "max_drawdown_pct": 1.362584906834441,
+      "monthly_pnl": {
+        "2025-10": 0.0,
+        "2025-11": 0.0,
+        "2025-12": -2.4942998258120497,
+        "2026-01": -4.524266183826967,
+        "2026-02": -2.491621329275631,
+        "2026-03": 0.0,
+        "2026-04": 0.22608174662514102,
+        "2026-05": -1.1534505858750208,
+        "2026-06": 0.0,
+        "2026-07": 0.0,
+        "2026-08": -1.6180423398799348,
+        "2026-09": -1.5683683135649744
+      },
+      "net_pnl": -13.623966831609437,
+      "no_trade_pnl": 0.0,
+      "per_symbol": {
+        "BTC": {
+          "average_net_pnl": -0.9844170579201895,
+          "fees": 1.246981971148694,
+          "final_equity": 497.04674882623937,
+          "funding_pnl": -0.0,
+          "initial_equity": 500.0,
+          "max_drawdown_pct": -0.5906502347521214,
+          "net_pnl": -2.953251173760634,
+          "price_pnl": -0.45928734628520024,
+          "profit_factor": 0.07110980582608836,
+          "return_pct": -0.5906502347521214,
+          "skipped_signals": 8,
+          "slippage_cost": 1.2469818563266744,
+          "trades": 3,
+          "win_rate": 0.3333333333333333
+        },
+        "ETH": {
+          "average_net_pnl": -1.7784526096414723,
+          "fees": 2.173704576784468,
+          "final_equity": 489.3292843421512,
+          "funding_pnl": -0.0,
+          "initial_equity": 500.0,
+          "max_drawdown_pct": -2.1345195789167604,
+          "net_pnl": -10.670715657848802,
+          "price_pnl": -6.3233080851071595,
+          "profit_factor": 0.0,
+          "return_pct": -2.1341431315697657,
+          "skipped_signals": 16,
+          "slippage_cost": 2.1737029959572056,
+          "trades": 6,
+          "win_rate": 0.0
+        }
+      },
+      "positive_folds": 0,
+      "positive_profit_concentration": 1.0,
+      "price_pnl": -6.782595431392359,
+      "profit_factor": 0.016323534560045237,
+      "return_pct": -1.362396683160949,
+      "signals": {
+        "BTC": {
+          "entry_signals": 11,
+          "low_pivots": 13945,
+          "uptrend_bars": 32219,
+          "volume_ok_bars": 26639
+        },
+        "ETH": {
+          "entry_signals": 22,
+          "low_pivots": 14274,
+          "uptrend_bars": 31584,
+          "volume_ok_bars": 26264
+        }
+      },
+      "skipped_signals": 24,
+      "slippage_cost": 3.4206848522838795,
+      "trades": 9,
+      "two_month_pnl": {
+        "2025-10..2025-11": 0.0,
+        "2025-12..2026-01": -7.018566009639017,
+        "2026-02..2026-03": -2.491621329275631,
+        "2026-04..2026-05": -0.9273688392498798,
+        "2026-06..2026-07": 0.0,
+        "2026-08..2026-09": -3.1864106534449093
+      },
+      "win_rate": 0.1111111111111111
+    }
+  },
+  "source_sha256": {
+    "scripts/build_divergence_dataset.py": "473fc36624844fd7fda4bcaed65c5c7fe3b93f13eb3d3c50ce44d77e186bef63",
+    "scripts/run_divergence_research.py": "bf8344a7f9a8aff0d2da408ff9a51d5f10f292c7ab746bf0f5134087fa4a56b2",
+    "v3/divergence.py": "f6e8723ae68b6b90876477fc1f5b203d20d7abade1b89b39cc38974c30427486"
+  }
+}
