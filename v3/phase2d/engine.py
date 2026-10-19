@@ -21,6 +21,8 @@ MIN_HISTORY_DAYS = 90
 LIQUIDITY_WINDOW = 30
 SPOT_FEE_BPS = 10.0
 PERP_FEE_BPS = 5.0
+# Weekly decisions fall on Sundays (filled at Monday 00:00 UTC).
+ANCHOR = pd.Timestamp("2017-12-31", tz="UTC")
 
 
 def slippage_bps(rank: float) -> float:
@@ -138,7 +140,7 @@ def simulate(
     start: pd.Timestamp,
     end: pd.Timestamp,
     every: int = 7,
-    anchor: pd.Timestamp = pd.Timestamp("2017-12-31", tz="UTC"),
+    anchor: pd.Timestamp = ANCHOR,
     cost_multiplier: float = 1.0,
 ) -> Result:
     """Run one account from flat over days [start, end] (returns earned on those days).
