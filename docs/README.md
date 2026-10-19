@@ -31,6 +31,7 @@ file are historical records and are not rewritten.
 | 0021 | User decision: MA200 loss stop at −20% (800 USDT), Demo included; risk level stays at 25% | 2026-10-03 |
 | 0022 | MA200 report period fix, Demo actual in the report, shadow reports retired, guard failure alerts | 2026-10-07 |
 | 0023 | Register Phase 2d: broad multi-asset, long-history strategy search (120 trials, holdout 2025-01~2026-09) | 2026-10-19 |
+| 0024 | Phase 2d STOP_NO_EDGE (no family passed development gates); register Phase 2e single-hypothesis momentum-ensemble check | 2026-10-19 |
 
 ## Phase 1 (Binance Demo two-leg carry execution)
 

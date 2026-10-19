@@ -284,8 +284,10 @@ def save_panel(panel: DailyPanel, path: Path) -> str:
 
 
 def load_panel(path: Path) -> DailyPanel:
-    long = pd.read_csv(path, parse_dates=["day"]).set_index(["day", "symbol"])
-    long.index = long.index.set_levels(long.index.levels[0].tz_localize("UTC"), level=0)
+    long = pd.read_csv(path, parse_dates=["day"]).set_index(["day", "symbol"]).astype(float)
+    days = pd.DatetimeIndex(long.index.levels[0])
+    days = days.tz_convert("UTC") if days.tz is not None else days.tz_localize("UTC")
+    long.index = long.index.set_levels(days, level=0)
     wide = {c: long[c].unstack("symbol").sort_index() for c in long.columns}
     full = pd.date_range(wide["close"].index.min(), wide["close"].index.max(), freq="D")
     return DailyPanel(

@@ -30,10 +30,8 @@ class Config:
     def every(self) -> int:
         if self.family == "F6":
             return self.lookback
-        if self.family in {"EW10", "BTCETH"}:
-            return 30
-        if self.family == "BTC":
-            return 100_000  # bought once at the start
+        if self.family in {"EW10", "BTCETH", "BTC"}:
+            return 30  # BTC at 100%: bought at the first decision, then no trades
         return 7
 
     def label(self) -> str:
@@ -181,3 +179,24 @@ def weight_fn(config: Config, market: Market) -> WeightFn:
         return f6
 
     raise ValueError(f"unknown family {c.family}")
+
+
+E1_MEMBERS = tuple(
+    Config("F1", n=10, lookback=lb, k=k, market_filter=True)
+    for lb in (7, 14, 30, 60, 90)
+    for k in (3, 5)
+)
+
+
+def ensemble_fn(members: tuple[Config, ...], market: Market) -> WeightFn:
+    """Phase 2e E1: the simple average of the members' target weights."""
+    fns = [weight_fn(c, market) for c in members]
+
+    def combined(m: Market, i: int) -> dict[int, float]:
+        total: dict[int, float] = {}
+        for fn in fns:
+            for j, w in fn(m, i).items():
+                total[j] = total.get(j, 0.0) + w / len(fns)
+        return total
+
+    return combined

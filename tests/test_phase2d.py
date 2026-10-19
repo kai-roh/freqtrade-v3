@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from v3.phase2d.data import DailyPanel, eligible_symbol
+from v3.phase2d.data import DailyPanel, eligible_symbol, load_panel, save_panel
 from v3.phase2d.engine import Market, metrics, simulate, split_reused_symbols
 from v3.phase2d.evaluate import deflated_sharpe, pbo_cscv
 from v3.phase2d.strategies import Config, registered_grid, weight_fn
@@ -175,3 +175,27 @@ def test_metrics_basic():
     out = metrics(r)
     assert out["total"] == pytest.approx(1.01 * 0.98 * 1.03 - 1)
     assert out["mdd"] == pytest.approx(0.02)
+
+
+def test_panel_round_trip(tmp_path):
+    n = 50
+    p = panel({"AUSDT": np.arange(1.0, n + 1), "BUSDT": np.full(n, 2.0)},
+              funding={"AUSDT": np.full(n, 1e-4), "BUSDT": np.zeros(n)})
+    save_panel(p, tmp_path / "p.csv.gz")
+    q = load_panel(tmp_path / "p.csv.gz")
+    assert str(q.close.index.tz) == "UTC"
+    pd.testing.assert_frame_equal(q.close, p.close, check_freq=False, check_names=False)
+    assert q.funding["AUSDT"].iloc[0] == pytest.approx(1e-4)
+
+
+def test_btc_benchmark_buys_in_any_window():
+    n = len(DAYS)
+    m = Market(panel({"BTCUSDT": 100 * 1.001 ** np.arange(n), "ETHUSDT": np.full(n, 10.0)}), "spot")
+    from v3.phase2d.strategies import BENCHMARKS
+
+    btc = BENCHMARKS[0]
+    for start in (DAYS[150], DAYS[211]):
+        res = simulate(m, weight_fn(btc, m), start=start, end=DAYS[390], every=btc.every,
+                       anchor=DAYS[0])
+        assert res.turnover == pytest.approx(1.0)  # one purchase, then held
+        assert res.returns.iloc[-1] == pytest.approx(0.001)
