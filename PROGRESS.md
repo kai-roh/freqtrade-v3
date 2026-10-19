@@ -1,6 +1,6 @@
 # PROGRESS
 
-기준일: 2026-10-09 KST. 새 세션은 이 파일부터 읽는다. 상세 근거는 각 링크 문서에 있고,
+기준일: 2026-10-19 KST. 새 세션은 이 파일부터 읽는다. 상세 근거는 각 링크 문서에 있고,
 이 파일은 **현재 상태·열린 문제·다음 할 일**만 최신으로 유지한다. 과거 이력은 여기 쓰지 않는다.
 
 ## 한 줄 요약
@@ -22,6 +22,10 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 10-07에 관측 보고의 기간 손익 버그(24시간·주 손익이 최근 1시간만 계산)를 고치고, 보고에 Demo 실제 계좌를 넣었으며,
 거래하지 않는 섀도 봇의 23시·일요일 리포트를 끄고, 보호 장치 실패 알림을 추가했다([Decision 0022](docs/decisions/0022-ma200-reports-and-guard-health.md)).
 **7일 운영 점검(10-03~10-09)은 2026-10-09에 통과했다**(운영 항목 4/4, 수익성 검증 아님).
+10-19 사용자가 수익률 확인을 최우선으로 요구해, Binance USDT 전 종목(상장폐지 포함)·2017년~ 데이터로 6개 전략군 120개 설정을
+사전등록 탐색했다(Phase 2d). 개발 게이트 통과 없음 `STOP_NO_EDGE`([Decision 0024](docs/decisions/0024-phase2d-stop-and-register-phase2e.md)).
+가장 일관된 묶음(상위 10종목 모멘텀+BTC 필터) 앙상블을 단일 가설로 holdout(2025-01~2026-09)에서 한 번 검증했으나
+−3.7%(BTC −19.6%)로 `FAIL`([Decision 0025](docs/decisions/0025-phase2e-result-fail.md)).
 실거래는 아직 승인되지 않았다(Mainnet 잠금). 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 2026-10-18 추가 연구 — 다이버전스 단타
@@ -66,6 +70,8 @@ BTC·ETH 공식 1분봉으로 2025-10~2026-09를 백테스트했다(1분/5분, �
 | MA200 슬리브 1,000 | **`OBSERVE_ELIGIBLE`(계획 이탈).** 순손익 675 vs 현물 보유 847, MDD 13.3% vs 22.6%, 최악 연도 −21 vs −92, 주문 건너뜀 3/99 | [Decision 0018](docs/decisions/0018-ma200-sleeve-1000-plan-departure.md), `research_results/phase2c/ma200-comparison-sleeve1000/REPORT.md` |
 | MA200 전진 관측 | **진행 중, 2026-10-03 시작. 7일 운영 점검 통과(10-09).** 보고·전달 7/7, 점검 7/7, 건너뜀 0, 서버 재계산 동일, 예외 0. 10-09 가상 자산 974.71(−2.5%, 시장 하락; 선물 보유와 같음, 현물 보유 972.98) | [MA200_FORWARD_OBSERVATION](docs/MA200_FORWARD_OBSERVATION.md), 서버 `evidence/ma200-observation/` |
 | MA200 Demo 실행 | **가동 중.** 매일 10:05 KST 실행, 10분마다 보호 장치(손실 중단·실행기 정지·불일치 → 자동 감축 청산·정지). Demo 검증 10단계 통과. 포지션 BTC 0.0034·ETH 0.080 롱. 7일 실행 7/7 정상(주문 없음), 보호 장치 878/879 정상(10-06 Demo 시간 초과 1회), 정지 0. 10-09 실행 자산 956.98, 최저 947.71(10-09 03:10 KST), 중단선 800 | [Decision 0020](docs/decisions/0020-ma200-live-risk-contract.md), 서버 `evidence/ma200-live-demo/` |
+| Phase 2d 다종목 탐색 | **`STOP_NO_EDGE`.** 120개 설정, 최고 F1(Sharpe 1.11, CAGR 72%, MDD 76%) DSR 0.55·PBO 0.47. 기준선 BTC Sharpe 0.75 | [Decision 0024](docs/decisions/0024-phase2d-stop-and-register-phase2e.md), `research_results/phase2d/` |
+| Phase 2e 앙상블 확인 | **`FAIL`.** holdout −3.7%, Sharpe 0.19, MDD 40% (BTC −19.6%, −0.08, 53%). 보유보다 덜 잃었지만 수익 아님. holdout 소진 | [Decision 0025](docs/decisions/0025-phase2e-result-fail.md), `research_results/phase2e/` |
 | Phase 3 | 실자본 미승인(Mainnet 잠금). 남은 것: −10% 중단선과 위험 수준 재결정, 실자본 ADR, 계좌·API 키 | Decision 0020 |
 
 서버 cron(10-07부터): 11:10 KST 관측, 10:05 Demo 실행, 10분마다 보호 장치. 이미지 `freqtrade-v3-{live,observe}:current` = `e22190a`(`sha256:e8a2e8e0…`).
