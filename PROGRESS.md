@@ -26,6 +26,8 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 사전등록 탐색했다(Phase 2d). 개발 게이트 통과 없음 `STOP_NO_EDGE`([Decision 0024](docs/decisions/0024-phase2d-stop-and-register-phase2e.md)).
 가장 일관된 묶음(상위 10종목 모멘텀+BTC 필터) 앙상블을 단일 가설로 holdout(2025-01~2026-09)에서 한 번 검증했으나
 −3.7%(BTC −19.6%)로 `FAIL`([Decision 0025](docs/decisions/0025-phase2e-result-fail.md)).
+10-20 사용자 요청(추세 롱숏·하락장 숏 위주, 새 정보)으로 66개 설정을 사전등록 탐색했다(Phase 2f). 숏 쪽은 2022년 하락장을 포함해도 수익이 없었고 개발 게이트 통과 없음 `STOP_NO_EDGE`.
+테이커 매수 흐름 앙상블(T1)을 단일 가설로 2024-01~2026-09에서 한 번 검증했다. +381%, Sharpe 1.86, MDD 21%로 V1~V4는 통과했지만 DSR 0.84 < 0.95로 `FAIL`([Decision 0028](docs/decisions/0028-phase2g-result-fail-dsr.md)). 수익의 약 절반은 숏 스퀴즈 종목의 펀딩 수취이고 상위 10주에 집중됐다.
 실거래는 아직 승인되지 않았다(Mainnet 잠금). 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 2026-10-18 추가 연구 — 다이버전스 단타
@@ -72,6 +74,8 @@ BTC·ETH 공식 1분봉으로 2025-10~2026-09를 백테스트했다(1분/5분, �
 | MA200 Demo 실행 | **가동 중.** 매일 10:05 KST 실행, 10분마다 보호 장치(손실 중단·실행기 정지·불일치 → 자동 감축 청산·정지). Demo 검증 10단계 통과. 포지션 BTC 0.0034·ETH 0.080 롱. 7일 실행 7/7 정상(주문 없음), 보호 장치 878/879 정상(10-06 Demo 시간 초과 1회), 정지 0. 10-09 실행 자산 956.98, 최저 947.71(10-09 03:10 KST), 중단선 800 | [Decision 0020](docs/decisions/0020-ma200-live-risk-contract.md), 서버 `evidence/ma200-live-demo/` |
 | Phase 2d 다종목 탐색 | **`STOP_NO_EDGE`.** 120개 설정, 최고 F1(Sharpe 1.11, CAGR 72%, MDD 76%) DSR 0.55·PBO 0.47. 기준선 BTC Sharpe 0.75 | [Decision 0024](docs/decisions/0024-phase2d-stop-and-register-phase2e.md), `research_results/phase2d/` |
 | Phase 2e 앙상블 확인 | **`FAIL`.** holdout −3.7%, Sharpe 0.19, MDD 40% (BTC −19.6%, −0.08, 53%). 보유보다 덜 잃었지만 수익 아님. holdout 소진 | [Decision 0025](docs/decisions/0025-phase2e-result-fail.md), `research_results/phase2e/` |
+| Phase 2f 롱숏·포지션 탐색 | **`STOP_NO_EDGE`.** 66개 설정. 숏 쪽 손실(R1 −4%, R2 −53%), 숏 비중 큰 변형이 항상 최하. P3 테이커 흐름 6개 모두 Sharpe 1.47~1.83이나 PBO 0.73 | [Decision 0027](docs/decisions/0027-phase2f-stop-and-register-phase2g.md), `research_results/phase2f/` |
+| Phase 2g 테이커 흐름 확인 | **`FAIL`(DSR만).** 검증 +381%, Sharpe 1.86, MDD 21%(BTC +93%, 0.75, 53%). 2024 +48%, 2025~26 +250%. DSR 0.84. 펀딩 제외 +189%. 검증 구간 소진 | [Decision 0028](docs/decisions/0028-phase2g-result-fail-dsr.md), `research_results/phase2g/` |
 | Phase 3 | 실자본 미승인(Mainnet 잠금). 남은 것: −10% 중단선과 위험 수준 재결정, 실자본 ADR, 계좌·API 키 | Decision 0020 |
 
 서버 cron(10-07부터): 11:10 KST 관측, 10:05 Demo 실행, 10분마다 보호 장치. 이미지 `freqtrade-v3-{live,observe}:current` = `e22190a`(`sha256:e8a2e8e0…`).

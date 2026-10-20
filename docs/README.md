@@ -35,6 +35,7 @@ file are historical records and are not rewritten.
 | 0025 | Phase 2e result: E1 momentum ensemble FAIL on holdout (−3.7% vs BTC −19.6%; not positive) | 2026-10-19 |
 | 0026 | Register Phase 2f: regime long/short (asymmetric, alt shorts in down regimes) and positioning-data strategies (66 trials, cumulative M=187) | 2026-10-20 |
 | 0027 | Phase 2f STOP_NO_EDGE (short legs did not pay; PBO failures); register Phase 2g single-hypothesis taker-flow ensemble check | 2026-10-20 |
+| 0028 | Phase 2g result: T1 taker-flow ensemble FAIL on DSR only (validation +381%, Sharpe 1.86, MDD 21%; DSR 0.84 at M=188; half the return is funding, concentrated in squeezes) | 2026-10-20 |
 
 ## Phase 1 (Binance Demo two-leg carry execution)
 
