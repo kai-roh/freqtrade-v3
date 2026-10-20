@@ -30,6 +30,7 @@ Phase 1E 관측을 2026-10-02에 종료했고([Decision 0010](docs/decisions/001
 테이커 매수 흐름 앙상블(T1)을 단일 가설로 2024-01~2026-09에서 한 번 검증했다. +381%, Sharpe 1.86, MDD 21%로 V1~V4는 통과했지만 DSR 0.84 < 0.95로 `FAIL`([Decision 0028](docs/decisions/0028-phase2g-result-fail-dsr.md)). 수익의 약 절반은 숏 스퀴즈 종목의 펀딩 수취이고 상위 10주에 집중됐다.
 사용자 결정으로 MA200 Demo 실행기를 종료하고(최종 949.86 USDT) 같은 Demo 계좌에서 T1을 주 1회 실제 주문으로 관측한다([Decision 0029](docs/decisions/0029-t1-demo-execution-retire-ma200-executor.md)). 첫 리밸런싱 10-26 09:05 KST. MA200 가상 관측은 계속한다.
 일관성 우선 일중 판단 시스템(Phase 2h)을 사전등록했으나, 개발 구간에서 수수료 전 예측력(IC 0.03~0.055, Sharpe 1.5~2.4)은 있어도 회전 단위당 우위 1~7 bps가 시장가 수수료(5 bps)보다 작아 표본 외 실행 전에 중단했다([Decision 0031](docs/decisions/0031-phase2h-stop-at-development.md)). 2023~2026 표본 외 구간은 쓰지 않았다.
+같은 신호를 지정가(메이커, 2 bps, 보수적 체결) 주문으로 바꾼 Phase 2i도 개발 점검에서 최고 순 Sharpe 0.75(주 53%)로 진행 기준(1.5, 55%)에 못 미쳐 표본 외 전에 중단했다([Decision 0033](docs/decisions/0033-phase2i-stop-at-development.md)).
 실거래는 아직 승인되지 않았다(Mainnet 잠금). 실자본·Mainnet 주문은 어디에도 승인되지 않았다.
 
 ## 2026-10-18 추가 연구 — 다이버전스 단타
@@ -80,6 +81,7 @@ BTC·ETH 공식 1분봉으로 2025-10~2026-09를 백테스트했다(1분/5분, �
 | Phase 2g 테이커 흐름 확인 | **`FAIL`(DSR만).** 검증 +381%, Sharpe 1.86, MDD 21%(BTC +93%, 0.75, 53%). 2024 +48%, 2025~26 +250%. DSR 0.84. 펀딩 제외 +189%. 검증 구간 소진 | [Decision 0028](docs/decisions/0028-phase2g-result-fail-dsr.md), `research_results/phase2g/` |
 | T1 Demo 실행 | **가동(10-20 초기화).** 매일 09:05 KST, 월요일 리밸런싱, 10분 보호 장치, 중단선 650. 실행 검증 13/13 체결 | [Decision 0029](docs/decisions/0029-t1-demo-execution-retire-ma200-executor.md), 서버 `evidence/t1-live-demo/` |
 | Phase 2h 일중 판단 | **개발 단계 중단.** 수수료 전 Sharpe 1.5~2.4·주 70%+ (2022 하반기), 수수료 후 전 변형 손실 또는 본전. 표본 외 미사용 | [Decision 0031](docs/decisions/0031-phase2h-stop-at-development.md), `research_results/phase2h/` |
+| Phase 2i 메이커 체결 | **개발 점검 중단.** 4시간 신호 순 Sharpe 0.5~0.75(시장가 −2), 주 플러스 53~55%. 1시간은 큰 손실. 표본 외 미사용 | [Decision 0033](docs/decisions/0033-phase2i-stop-at-development.md), `research_results/phase2i/` |
 | Phase 3 | 실자본 미승인(Mainnet 잠금). 남은 것: −10% 중단선과 위험 수준 재결정, 실자본 ADR, 계좌·API 키 | Decision 0020 |
 
 서버 cron(10-07부터): 11:10 KST 관측, 10:05 Demo 실행, 10분마다 보호 장치. 이미지 `freqtrade-v3-{live,observe}:current` = `e22190a`(`sha256:e8a2e8e0…`).

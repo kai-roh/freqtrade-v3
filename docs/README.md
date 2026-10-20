@@ -40,6 +40,7 @@ file are historical records and are not rewritten.
 | 0030 | Register Phase 2h: consistency-first intraday decision system (conviction sizing, stops, daily loss limit; 8 trials; gates on weekly/monthly hit rate and concentration) | 2026-10-20 |
 | 0031 | Phase 2h stopped at development: intraday signal real pre-cost (IC 0.03–0.055) but edge 1–7 bps per unit turnover < taker fee; OOS 2023–2026 left unspent | 2026-10-20 |
 | 0032 | Register Phase 2i: Phase 2h signal with maker execution (trade-through fills, 2 bps; 16 trials; dev viability check before OOS; gates G1–G8 at M=300) | 2026-10-20 |
+| 0033 | Phase 2i stopped at development check: maker execution lifts the 4h signal to net Sharpe 0.5–0.75 (taker −2), below the 1.5 bar; OOS unspent | 2026-10-20 |
 
 ## Phase 1 (Binance Demo two-leg carry execution)
 

@@ -111,6 +111,37 @@ def smooth_predictions(
     return out
 
 
+@dataclass(frozen=True)
+class MakerFill:
+    """Phase 2i maker execution: a limit at the bar open fills only on a trade-through.
+
+    ``dip``/``pop``: the lowest low / highest high within the order window, relative to
+    the bar open, per (bar, symbol). A buy fills when ``dip < -through``; a sell when
+    ``pop > through``. Unfilled orders leave the old position.
+    """
+
+    dip: np.ndarray
+    pop: np.ndarray
+    maker_bps: float = 2.0
+    through: float = 1e-4
+
+
+def maker_windows(panel: HourlyPanel, bars15: dict[str, pd.DataFrame] | None, window: int):
+    """(dip, pop) arrays for a W-minute window starting at each bar open (W = 15 or 60)."""
+    o = panel.open
+    if window == 60:
+        return panel.low / o - 1, panel.high / o - 1
+    if window != 15 or bars15 is None:
+        raise ValueError("window must be 15 (with 15m bars) or 60")
+    low = pd.DataFrame({s: b["low"] for s, b in bars15.items()}).reindex(
+        index=panel.index, columns=panel.symbols
+    )
+    high = pd.DataFrame({s: b["high"] for s, b in bars15.items()}).reindex(
+        index=panel.index, columns=panel.symbols
+    )
+    return low.to_numpy() / o - 1, high.to_numpy() / o - 1
+
+
 @dataclass
 class Result:
     hourly_equity: pd.Series
@@ -148,7 +179,7 @@ def target_book(
 
 def simulate(
     panel: HourlyPanel, pred: np.ndarray, config: Config, start: pd.Timestamp,
-    end: pd.Timestamp, cost_multiplier: float = 1.0,
+    end: pd.Timestamp, cost_multiplier: float = 1.0, maker: MakerFill | None = None,
 ) -> Result:  # fmt: skip
     index = panel.index
     t0 = index.get_indexer([start])[0]
@@ -167,13 +198,15 @@ def simulate(
     day_start_equity = 1.0
     current_day = None
     res = Result(pd.Series(dtype=float), pd.Series(dtype=float))
+    res.extra.update(orders=0, fills=0, maker_costs=0.0, taker_costs=0.0, imbalance_sum=0.0)
     equity_marks = np.zeros(t1 - t0 + 1)
     bps = (FEE_BPS + panel.tier_bps) / 10_000 * cost_multiplier
 
-    def trade(t: int, new_values: np.ndarray, price: np.ndarray) -> float:
+    def trade(t: int, new_values: np.ndarray, price: np.ndarray, rate=None) -> float:
         nonlocal cash
         delta = new_values - values
-        cost = float(np.nansum(np.abs(delta) * bps[t]))
+        cost = float(np.nansum(np.abs(delta) * (bps[t] if rate is None else rate)))
+        res.extra["maker_costs" if rate is not None else "taker_costs"] += cost
         res.turnover += float(np.abs(delta).sum())
         res.costs += cost
         res.trades += int((np.abs(delta) > 0).sum())
@@ -230,7 +263,24 @@ def simulate(
                     | (np.sign(new) != np.sign(values))
                     | (np.abs(new) > np.abs(values))
                 )
-                trade(t, new, o[t])
+                rate = None
+                if maker is not None:
+                    delta = new - values
+                    want = np.abs(delta) > 0
+                    filled = (
+                        np.where(
+                            delta > 0,
+                            maker.dip[t] < -maker.through,
+                            maker.pop[t] > maker.through,
+                        )
+                        & want
+                    )
+                    res.extra["orders"] += int(want.sum())
+                    res.extra["fills"] += int(filled.sum())
+                    new = np.where(filled | ~want, new, values)
+                    opened &= filled
+                    rate = maker.maker_bps / 10_000 * cost_multiplier
+                trade(t, new, o[t], rate)
                 # Entry price / stop: reset on new or flipped positions; increases re-anchor.
                 for j in np.flatnonzero(opened):
                     entry[j] = o[t, j]
@@ -258,6 +308,7 @@ def simulate(
                 cost = abs(exit_value) * bps[t, j]
                 cash += exit_value - cost
                 res.costs += cost
+                res.extra["taker_costs"] += cost
                 res.turnover += abs(exit_value)
                 res.trades += 1
                 res.stops += 1
@@ -274,6 +325,8 @@ def simulate(
         equity = cash + values.sum()
         equity_marks[k] = equity
         gross = np.abs(values).sum() / equity if equity > 0 else 0
+        if equity > 0:
+            res.extra["imbalance_sum"] += abs(values.sum()) / equity
         res.gross_sum += gross
         res.hours += 1
         res.hours_invested += int(gross > 0)
