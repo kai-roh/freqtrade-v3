@@ -10,8 +10,12 @@ TZ=Asia/Seoul
 # 01:00 UTC execution candle closes. Public data only; Telegram report.
 10 11 * * * cd /home/kai/freqtrade-v3 && ./scripts/run_ma200_observation.sh >> /home/kai/freqtrade-v3/reports/logs/ma200-observation.log 2>&1
 
-# MA200 Demo executor (Decision 0020): daily at 10:05 KST (01:05 UTC), after the 01:00 UTC open.
-5 10 * * * cd /home/kai/freqtrade-v3 && ./scripts/run_ma200_live.sh execute >> /home/kai/freqtrade-v3/reports/logs/ma200-live-demo.log 2>&1
+# The MA200 Demo executor and guard were retired on 2026-10-20 (Decision 0029); the
+# order-free MA200 observation above keeps running.
 
-# MA200 Demo guard: every 10 minutes; flattens and halts on loss stop, stale executor, or mismatch.
-*/10 * * * * cd /home/kai/freqtrade-v3 && ./scripts/run_ma200_live.sh guard >> /home/kai/freqtrade-v3/reports/logs/ma200-guard-demo.log 2>&1
+# T1 taker-flow ensemble Demo executor (Decision 0029): daily at 09:05 KST (00:05 UTC).
+# Mondays rebalance to the Sunday decision; other days record the account.
+5 9 * * * cd /home/kai/freqtrade-v3 && ./scripts/run_t1_live.sh execute >> /home/kai/freqtrade-v3/reports/logs/t1-live-demo.log 2>&1
+
+# T1 Demo guard: every 10 minutes; flattens and halts on loss stop, stale executor, or mismatch.
+*/10 * * * * cd /home/kai/freqtrade-v3 && ./scripts/run_t1_live.sh guard >> /home/kai/freqtrade-v3/reports/logs/t1-guard-demo.log 2>&1

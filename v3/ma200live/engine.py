@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import time
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from decimal import Decimal
@@ -340,14 +341,20 @@ def execute_step(
     cap_bps: Decimal | None = None,
     attempts: int | None = None,
     role: str = "x",
+    make_id: Callable[[str, int], str] | None = None,
 ) -> dict[str, Any]:
+    """``make_id(symbol, attempt)`` overrides the MA200 client order id scheme."""
     remaining = step.qty
     filled = Decimal(0)
     notional = Decimal(0)
     orders = []
     price = Decimal(0)
     for attempt in range(attempts or config.attempts):
-        client_id = _client_id(config, role, day, run, step.symbol, index, attempt)
+        client_id = (
+            make_id(step.symbol, attempt)
+            if make_id
+            else _client_id(config, role, day, run, step.symbol, index, attempt)
+        )
         result = client.order_by_client_id(step.symbol, client_id)
         if result is None:
             price = _limit_price(
@@ -456,10 +463,13 @@ def strategy_equity(
     client: FuturesClient,
     config: LiveConfig,
     positions: dict[str, dict[str, Decimal]] | None = None,
+    every_symbol: bool = False,
 ) -> dict[str, Any]:
-    positions = positions or client.positions()
+    """Starting capital + income since the start + unrealized P&L. ``every_symbol``
+    counts income on any symbol (T1 owns the whole account after its start)."""
+    positions = positions or client.positions(every_symbol)
     kinds = {"REALIZED_PNL": Decimal(0), "COMMISSION": Decimal(0), "FUNDING_FEE": Decimal(0)}
-    for row in client.income(config.start_ms):
+    for row in client.income(config.start_ms, every_symbol):
         kind = row.get("incomeType")
         if kind in kinds:
             kinds[kind] += Decimal(str(row["income"]))

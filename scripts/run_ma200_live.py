@@ -8,6 +8,7 @@ Subcommands:
   clear-halt   lift a halt after review (records the actual positions as the baseline)
   set-stop     change the loss-stop level with an audit record (user decision)
   status       print the state without trading
+  retire       halt for good and close every position reduce-only (user decision; needs --note)
 
 Demo-only verification options: --test-override-weights, --test-stop-equity, --test-now.
 """
@@ -32,6 +33,7 @@ from v3.ma200live.engine import (  # noqa: E402
     GUARD_ALERT_AFTER,
     LiveConfig,
     StateStore,
+    flatten_all,
     guard_alert_due,
     run_executor,
     run_guard,
@@ -142,7 +144,8 @@ def main() -> int:
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter
     )
     parser.add_argument(
-        "command", choices=["init", "execute", "guard", "clear-halt", "set-stop", "status"]
+        "command",
+        choices=["init", "execute", "guard", "clear-halt", "set-stop", "status", "retire"],
     )
     parser.add_argument("--state-dir", type=Path, required=True)
     parser.add_argument("--credentials-env-file", type=Path, required=True)
@@ -228,6 +231,27 @@ def main() -> int:
         message = (
             f"[{config.environment.upper()}][MA200 보호] 손실 중단선 변경: "
             f"{before} → {after} USDT ({args.note})"
+        )
+    elif args.command == "retire":
+        if not args.note.strip():
+            raise SystemExit("retire needs --note naming the decision")
+        store.set_halt(["retired"], {"note": args.note})
+        store.journal({"event": "retired", "note": args.note})
+        results = flatten_all(client, store, config, f"retired: {args.note}")
+        positions = client.positions()
+        left = {s: str(positions[s]["qty"]) for s in SYMBOLS if positions[s]["qty"] != 0}
+        equity = strategy_equity(client, config, positions)
+        report = {
+            "kind": "retire",
+            "status": "retired" if not left else "error",
+            "flatten": results,
+            "left": left,
+            "equity": {k: str(v) for k, v in equity.items()},
+        }
+        message = (
+            f"[{config.environment.upper()}][MA200 실행] 종료: {args.note} · 전량 청산"
+            f"{'' if not left else f' 실패, 남은 포지션 {left}'} · 최종 전략 자산 "
+            f"{Decimal(equity['equity']):,.2f} USDT"
         )
     elif args.command == "clear-halt":
         positions = client.positions()

@@ -28,15 +28,17 @@ def test_scheduled_research_refreshes_data_archives_results_and_reports() -> Non
     assert "./scripts/run_operations_report.sh weekly" in script
 
 
-def test_cron_contract_schedules_the_ma200_kst_jobs() -> None:
+def test_cron_contract_schedules_the_kst_jobs() -> None:
     cron = (ROOT / "deploy/freqtrade-v3.cron").read_text()
     jobs = [line for line in cron.splitlines() if line and not line.startswith("#")]
 
     assert "TZ=Asia/Seoul" in cron
     assert "CRON_TZ=" not in cron
     assert any(j.startswith("10 11 * * * ") and "run_ma200_observation.sh" in j for j in jobs)
-    assert any(j.startswith("5 10 * * * ") and "run_ma200_live.sh execute" in j for j in jobs)
-    assert any(j.startswith("*/10 * * * * ") and "run_ma200_live.sh guard" in j for j in jobs)
+    assert any(j.startswith("5 9 * * * ") and "run_t1_live.sh execute" in j for j in jobs)
+    assert any(j.startswith("*/10 * * * * ") and "run_t1_live.sh guard" in j for j in jobs)
+    # Retired by Decision 0029: the MA200 Demo executor and guard (same Demo account as T1).
+    assert not any("run_ma200_live.sh" in j for j in jobs)
     # Retired by Decision 0022: the shadow dry-run reports.
     assert not any("run_operations_report.sh" in j for j in jobs)
     assert not any("run_scheduled_research.sh" in j for j in jobs)
