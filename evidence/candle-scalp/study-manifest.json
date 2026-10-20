@@ -1,0 +1,53 @@
+{
+  "data_reused": true,
+  "development_only": true,
+  "end_exclusive": "2026-10-01T00:00:00+00:00",
+  "files": {
+    "BTC/bars": {
+      "first": "2025-09-01T00:00:00+00:00",
+      "last": "2026-09-30T23:59:00+00:00",
+      "missing_minutes": 0,
+      "path": "user_data/data-divergence/BTC-1m.feather",
+      "rows": 568800,
+      "sha256": "c0ea99e6bf3b97a4b60a85ab9682e0fd03480f166a0ed458bcfe62662a6a7765"
+    },
+    "BTC/funding_rate": {
+      "path": "user_data/data-divergence/BTC-funding_rate.feather",
+      "rows": 7398,
+      "sha256": "15dc79e2cf45f1d28168153602f5421241b68b4366efed273a66935f55f6db55",
+      "source": "user_data/data-phase2c/binance/futures/BTC_USDT_USDT-1h-funding_rate.feather"
+    },
+    "BTC/mark": {
+      "path": "user_data/data-divergence/BTC-mark.feather",
+      "rows": 59184,
+      "sha256": "72719fa57e666e5714b9bbe5f3e7f77a08eed45e9f277975c375a1d652f8daf8",
+      "source": "user_data/data-phase2c/binance/futures/BTC_USDT_USDT-1h-mark.feather"
+    },
+    "ETH/bars": {
+      "first": "2025-09-01T00:00:00+00:00",
+      "last": "2026-09-30T23:59:00+00:00",
+      "missing_minutes": 0,
+      "path": "user_data/data-divergence/ETH-1m.feather",
+      "rows": 568800,
+      "sha256": "626a45915e900633dd4dfb35234bb1923eacce77debb4c9ec8d061947532538b"
+    },
+    "ETH/funding_rate": {
+      "path": "user_data/data-divergence/ETH-funding_rate.feather",
+      "rows": 7398,
+      "sha256": "41ec4a5636db92316edd5116b1af2c4a1f99e6623eacd8e23cf98f7fd0d455ae",
+      "source": "user_data/data-phase2c/binance/futures/ETH_USDT_USDT-1h-funding_rate.feather"
+    },
+    "ETH/mark": {
+      "path": "user_data/data-divergence/ETH-mark.feather",
+      "rows": 59184,
+      "sha256": "3d09c2f6e38d591024f97812bafa0ee2eb63e8d09fb7a559a52fe6bffbf8bd77",
+      "source": "user_data/data-phase2c/binance/futures/ETH_USDT_USDT-1h-mark.feather"
+    }
+  },
+  "generated_at": "2026-10-18T12:44:29.074617+00:00",
+  "registration": "docs/CANDLE_SCALP_PREREGISTRATION.md",
+  "registration_sha256": "3d7ab5edaa0b1085328a54fb817e38bae14174aaa4ba026aeedd804c85b099d0",
+  "source_manifest": "evidence/divergence/data-manifest.json",
+  "source_manifest_sha256": "098c309ebedaeb87f5cc23932d49e038fc8975c28b2c1b2cf194626d727bab25",
+  "start": "2025-10-01T00:00:00+00:00"
+}

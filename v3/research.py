@@ -43,6 +43,10 @@ class ResearchConfig:
     min_train_trades: int = 30
     normal_cost_bps: float = 20.0
     stress_cost_bps: float = 30.0
+    # Fraction of research capital committed per trade. Matches configs/research.json
+    # (50 USDT stake of a 1,000 USDT wallet) so the drawdown gate measures a portfolio,
+    # not a 100%-of-capital-per-trade equity path.
+    capital_fraction_per_trade: float = 0.05
 
 
 @dataclass(frozen=True)
@@ -133,23 +137,29 @@ def _candidate_catalog() -> tuple[Candidate, ...]:
     )
 
 
-def _risk_catalog() -> tuple[RiskConfig, ...]:
+def _risk_catalog(round_trip_cost_bps: float = 0.0) -> tuple[RiskConfig, ...]:
+    """Candidate exits. The recorded round-trip cost is the run's normal cost so the
+    persisted selection is truthful; metrics apply cost separately via cost_stress."""
+    cost = round_trip_cost_bps
     return (
-        RiskConfig(stop_atr=1.5, target_atr=2.25, max_holding_candles=16, round_trip_cost_bps=0),
-        RiskConfig(stop_atr=2.0, target_atr=3.0, max_holding_candles=16, round_trip_cost_bps=0),
-        RiskConfig(stop_atr=2.0, target_atr=3.0, max_holding_candles=24, round_trip_cost_bps=0),
+        RiskConfig(stop_atr=1.5, target_atr=2.25, max_holding_candles=16, round_trip_cost_bps=cost),
+        RiskConfig(stop_atr=2.0, target_atr=3.0, max_holding_candles=16, round_trip_cost_bps=cost),
+        RiskConfig(stop_atr=2.0, target_atr=3.0, max_holding_candles=24, round_trip_cost_bps=cost),
     )
 
 
-def _metric_frame(events: pd.DataFrame) -> pd.DataFrame:
+def _metric_frame(events: pd.DataFrame, capital_fraction: float = 1.0) -> pd.DataFrame:
+    """Trades on a capital basis: pnl and notional are fractions of research capital."""
+    if not 0 < capital_fraction <= 1:
+        raise ValueError("capital_fraction must be in (0, 1]")
     if events.empty:
         return EMPTY_TRADES.copy()
     return pd.DataFrame(
         {
-            "pnl": events["gross_return"].astype(float),
+            "pnl": events["gross_return"].astype(float) * capital_fraction,
             "pair": events["pair"].astype(str),
             "side": events["side"].astype(str),
-            "notional": 1.0,
+            "notional": capital_fraction,
             "entry_time": events["entry_time"],
             "exit_time": events["exit_time"],
         }
@@ -189,10 +199,34 @@ def _run_slice(
     side: str,
     options: dict[str, float],
     risk: RiskConfig,
+    capital_fraction: float = 1.0,
+    entry_index: pd.Index | None = None,
 ) -> pd.DataFrame:
+    """Backtest one slice. ``entry_index`` restricts signal rows so trades may only be
+    opened inside it while exits resolve on the (causal, later) rows also present in
+    ``market``; without it every row of the slice may open a trade."""
     signals = _signals_for_side(candidate, features, side, options)
+    if entry_index is not None:
+        signals = signals.copy()
+        signals.loc[~signals.index.isin(entry_index), ["long", "short"]] = False
     events = backtest_events(market, features, signals, pair=pair, risk_config=risk)
-    return _metric_frame(events)
+    return _metric_frame(events, capital_fraction)
+
+
+def _exit_extended_index(
+    full_index: pd.Index, validation_index: list[Any], extra_rows: int
+) -> pd.Index:
+    """Validation rows plus up to ``extra_rows`` following rows for exit resolution only.
+
+    Trades opened near the fold boundary otherwise close at the boundary candle's
+    close instead of their stop, target, or time exit. The extra rows are later data
+    than the fold, are never used for entries, and never touch parameter selection.
+    """
+    if not validation_index:
+        return pd.Index(validation_index)
+    last = full_index.get_loc(validation_index[-1])
+    extension = full_index[last + 1 : last + 1 + extra_rows]
+    return pd.Index(validation_index).append(extension)
 
 
 def _selection_key(
@@ -213,6 +247,7 @@ def _select_on_training(
     side: str,
     min_trades: int,
     cost_fraction: float,
+    capital_fraction: float = 1.0,
 ) -> tuple[dict[str, float], RiskConfig, TradeMetrics] | None:
     if candidate.name == "no_trade":
         return None
@@ -220,7 +255,7 @@ def _select_on_training(
     selected: tuple[dict[str, float], RiskConfig, TradeMetrics] | None = None
     selected_key: tuple[Any, ...] | None = None
     for options in candidate.signal_options:
-        for risk in _risk_catalog():
+        for risk in _risk_catalog(cost_fraction * 10_000.0):
             trades = _run_slice(
                 market,
                 features,
@@ -229,6 +264,7 @@ def _select_on_training(
                 side=side,
                 options=options,
                 risk=risk,
+                capital_fraction=capital_fraction,
             )
             metrics = compute_trade_metrics(trades, cost_stress=cost_fraction)
             if metrics.trade_count < min_trades:
@@ -374,6 +410,8 @@ def run_milestone_one(
         raise ValueError("min_train_trades must be positive")
     if not 0 <= config.normal_cost_bps <= config.stress_cost_bps:
         raise ValueError("cost assumptions must be non-negative and stress >= normal")
+    if not 0 < config.capital_fraction_per_trade <= 1:
+        raise ValueError("capital_fraction_per_trade must be in (0, 1]")
 
     markets: dict[str, pd.DataFrame] = {}
     features: dict[str, pd.DataFrame] = {}
@@ -439,6 +477,7 @@ def run_milestone_one(
                         side=side,
                         min_trades=config.min_train_trades,
                         cost_fraction=normal_cost,
+                        capital_fraction=config.capital_fraction_per_trade,
                     )
                     if selection is None:
                         empty = EMPTY_TRADES.copy()
@@ -449,14 +488,19 @@ def run_milestone_one(
                         )
                         continue
                     options, risk, train_metrics = selection
+                    exit_index = _exit_extended_index(
+                        markets[pair].index, validation_index, maximum_holding_candles
+                    )
                     fold_trades = _run_slice(
-                        markets[pair].loc[validation_index],
-                        features[pair].loc[validation_index],
+                        markets[pair].loc[exit_index],
+                        features[pair].loc[exit_index],
                         candidate,
                         pair=pair,
                         side=side,
                         options=options,
                         risk=risk,
+                        capital_fraction=config.capital_fraction_per_trade,
+                        entry_index=pd.Index(validation_index),
                     )
                     validation_trades.append(fold_trades)
                     portfolio_fold_trades[(candidate.name, side)][fold.fold_id].append(fold_trades)

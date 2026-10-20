@@ -1,0 +1,21 @@
+{
+  "database": "PostgreSQL 16.14",
+  "image_digest": "sha256:e84240fdc0f11ac4cff65865db840555aa09c02ae532eb4c95822881164da0e4",
+  "observed_at": "2026-09-03",
+  "round_trip": [
+    {
+      "direction": "up",
+      "public_table_count": 14
+    },
+    {
+      "direction": "down",
+      "public_table_count": 0
+    },
+    {
+      "direction": "up",
+      "public_table_count": 14
+    }
+  ],
+  "scope": "ephemeral local container migration verification",
+  "status": "passed"
+}

@@ -1,0 +1,58 @@
+{
+  "cutoff": "2026-10-01T23:00:00+00:00",
+  "development_only": true,
+  "files": {
+    "BTC/funding_rate": {
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-10-01T16:00:00+00:00",
+      "rows": 7398,
+      "settlement_interval_minutes": 480,
+      "sha256": "15dc79e2cf45f1d28168153602f5421241b68b4366efed273a66935f55f6db55",
+      "start": "2020-01-01T00:00:00+00:00"
+    },
+    "BTC/futures": {
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "rows": 59184,
+      "sha256": "c699ff849904fc2d757ccd810733aabed2d1735c1c7b6b7ffef1d6505eec6559",
+      "start": "2020-01-01T00:00:00+00:00"
+    },
+    "BTC/mark": {
+      "end": "2026-10-01T23:00:00+00:00",
+      "rows": 59184,
+      "sha256": "72719fa57e666e5714b9bbe5f3e7f77a08eed45e9f277975c375a1d652f8daf8",
+      "start": "2020-01-01T00:00:00+00:00"
+    },
+    "ETH/funding_rate": {
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-10-01T16:00:00+00:00",
+      "rows": 7398,
+      "settlement_interval_minutes": 480,
+      "sha256": "41ec4a5636db92316edd5116b1af2c4a1f99e6623eacd8e23cf98f7fd0d455ae",
+      "start": "2020-01-01T00:00:00+00:00"
+    },
+    "ETH/futures": {
+      "coverage": 1.0,
+      "end": "2026-10-01T23:00:00+00:00",
+      "rows": 59184,
+      "sha256": "7baec7466bd2b7e12c0bdb583cfa8125bf7383af4095e000e9abf999e3ed37a1",
+      "start": "2020-01-01T00:00:00+00:00"
+    },
+    "ETH/mark": {
+      "end": "2026-10-01T23:00:00+00:00",
+      "rows": 59184,
+      "sha256": "3d09c2f6e38d591024f97812bafa0ee2eb63e8d09fb7a559a52fe6bffbf8bd77",
+      "start": "2020-01-01T00:00:00+00:00"
+    }
+  },
+  "generated_at": "2026-10-02T08:37:26.798124+00:00",
+  "missing": [],
+  "registration": "docs/PHASE2C_PREREGISTRATION.md",
+  "schema_version": 1,
+  "start": "2020-01-01T00:00:00+00:00",
+  "timeframe": "1h"
+}

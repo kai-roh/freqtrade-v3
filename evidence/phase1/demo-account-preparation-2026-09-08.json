@@ -1,0 +1,33 @@
+{
+  "actions_applied": [
+    "set_margin_type_isolated",
+    "set_leverage_2"
+  ],
+  "actions_required": [
+    "set_margin_type_isolated",
+    "set_leverage_2"
+  ],
+  "apply_requested": true,
+  "blocked_reasons": [],
+  "captured_at": "2026-09-08T11:30:58.863013+00:00",
+  "environment": "demo",
+  "flat": true,
+  "leverage": 2,
+  "margin_type": "ISOLATED",
+  "nonzero_position_count": 0,
+  "official_sources": {
+    "binance_demo_spot": "https://developers.binance.com/en/docs/products/spot/demo-mode/general-info",
+    "binance_usdm_trade": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade"
+  },
+  "open_order_count": 0,
+  "ready_for_phase1_demo_execution": true,
+  "safety": {
+    "mainnet_endpoints_called": false,
+    "matching_engine_orders_submitted": false,
+    "transfers_submitted": false
+  },
+  "schema_version": 1,
+  "symbol": "BTCUSDT",
+  "usdt_available_at_least_300": true,
+  "usdt_available_positive": true
+}

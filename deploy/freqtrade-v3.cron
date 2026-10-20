@@ -1,0 +1,21 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+TZ=Asia/Seoul
+
+# The 23:00 operations report and the Sunday research/weekly report were retired on
+# 2026-10-07 (Decision 0022): they described the non-trading V3ShadowStrategy dry run.
+# The MA200 observation report below carries the daily, weekly, and monthly results.
+
+# Order-free MA200 forward observation: daily at 11:10 KST (02:10 UTC), after the
+# 01:00 UTC execution candle closes. Public data only; Telegram report.
+10 11 * * * cd /home/kai/freqtrade-v3 && ./scripts/run_ma200_observation.sh >> /home/kai/freqtrade-v3/reports/logs/ma200-observation.log 2>&1
+
+# The MA200 Demo executor and guard were retired on 2026-10-20 (Decision 0029); the
+# order-free MA200 observation above keeps running.
+
+# T1 taker-flow ensemble Demo executor (Decision 0029): daily at 09:05 KST (00:05 UTC).
+# Mondays rebalance to the Sunday decision; other days record the account.
+5 9 * * * cd /home/kai/freqtrade-v3 && ./scripts/run_t1_live.sh execute >> /home/kai/freqtrade-v3/reports/logs/t1-live-demo.log 2>&1
+
+# T1 Demo guard: every 10 minutes; flattens and halts on loss stop, stale executor, or mismatch.
+*/10 * * * * cd /home/kai/freqtrade-v3 && ./scripts/run_t1_live.sh guard >> /home/kai/freqtrade-v3/reports/logs/t1-guard-demo.log 2>&1

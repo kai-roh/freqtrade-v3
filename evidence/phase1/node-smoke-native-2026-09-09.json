@@ -1,0 +1,170 @@
+{
+  "accounts_at_stop": 2,
+  "blocked_requests": [],
+  "captured_at": "2026-09-08T16:43:08.308796+00:00",
+  "connected": false,
+  "data_connected_at_stop": true,
+  "deployment_authorized": false,
+  "diagnostic_only": true,
+  "environment": "demo",
+  "errors": [
+    "TimeoutError"
+  ],
+  "execution_connected_at_stop": false,
+  "failure_frames": [
+    {
+      "function": "run_node_smoke",
+      "line": 184,
+      "module": "node_smoke.py"
+    },
+    {
+      "function": "uvloop.loop.Loop.run_until_complete",
+      "line": 1518,
+      "module": "loop.pyx"
+    },
+    {
+      "function": "wait_for",
+      "line": 519,
+      "module": "tasks.py"
+    },
+    {
+      "function": "__aexit__",
+      "line": 115,
+      "module": "timeouts.py"
+    }
+  ],
+  "http_requests": [
+    {
+      "method": "GET",
+      "path": "/api/v3/exchangeInfo",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/exchangeInfo",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v3/exchangeInfo",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/exchangeInfo",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v3/account",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v2/account",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v3/time",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v3/positionRisk",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v2/account",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/commissionRate",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v2/account",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v3/positionRisk",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/symbolConfig",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/commissionRate",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/positionSide/dual",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/time",
+      "received": true
+    },
+    {
+      "method": "POST",
+      "path": "/fapi/v1/listenKey",
+      "received": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/fapi/v1/listenKey",
+      "received": true
+    }
+  ],
+  "instruments_at_stop": [
+    "BTCUSDT-PERP.BINANCE_USDM",
+    "BTCUSDT.BINANCE_SPOT"
+  ],
+  "orders_submitted": false,
+  "passed": false,
+  "schema_version": 1,
+  "stopped": true,
+  "strategies_loaded": 0,
+  "websocket_error_codes": [
+    {
+      "code": -2028,
+      "product": "spot"
+    }
+  ],
+  "websocket_steps": [
+    {
+      "completed": true,
+      "product": "spot",
+      "step": "connect"
+    },
+    {
+      "completed": true,
+      "product": "futures",
+      "step": "connect"
+    },
+    {
+      "completed": true,
+      "product": "futures",
+      "step": "session_logon"
+    },
+    {
+      "completed": true,
+      "product": "futures",
+      "step": "subscribe_user_data_stream"
+    },
+    {
+      "error": "RuntimeError",
+      "product": "spot",
+      "step": "session_logon"
+    }
+  ]
+}

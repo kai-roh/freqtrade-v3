@@ -1,0 +1,157 @@
+{
+  "account_count": 2,
+  "account_venue_mapping_valid": true,
+  "accounts_at_stop": 2,
+  "blocked_requests": [],
+  "canonical_instruments": [
+    "BTCUSDT-PERP.BINANCE",
+    "BTCUSDT.BINANCE"
+  ],
+  "captured_at": "2026-09-11T01:50:58.313457+00:00",
+  "connected": true,
+  "data_connected_at_stop": true,
+  "deployment_authorized": false,
+  "diagnostic_only": true,
+  "environment": "demo",
+  "errors": [],
+  "execution_connected_at_stop": true,
+  "hmac_spot_compat": true,
+  "http_requests": [
+    {
+      "method": "GET",
+      "path": "/api/v3/exchangeInfo",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/exchangeInfo",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v3/exchangeInfo",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/exchangeInfo",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v3/account",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v3/time",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v2/account",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v2/account",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v3/positionRisk",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/commissionRate",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v3/positionRisk",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v2/account",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/commissionRate",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/symbolConfig",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/positionSide/dual",
+      "received": true
+    },
+    {
+      "method": "GET",
+      "path": "/fapi/v1/time",
+      "received": true
+    },
+    {
+      "method": "POST",
+      "path": "/fapi/v1/listenKey",
+      "received": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/fapi/v1/listenKey",
+      "received": true
+    }
+  ],
+  "instruments": [
+    "BTCUSDT-PERP.BINANCE_USDM_DEMO",
+    "BTCUSDT.BINANCE_SPOT_DEMO"
+  ],
+  "instruments_at_stop": [
+    "BTCUSDT-PERP.BINANCE_USDM_DEMO",
+    "BTCUSDT.BINANCE_SPOT_DEMO"
+  ],
+  "orders_submitted": false,
+  "passed": true,
+  "schema_version": 1,
+  "stopped": true,
+  "strategies_loaded": 0,
+  "websocket_error_codes": [],
+  "websocket_steps": [
+    {
+      "completed": true,
+      "product": "spot",
+      "step": "connect"
+    },
+    {
+      "completed": true,
+      "product": "spot",
+      "step": "session_logon"
+    },
+    {
+      "completed": true,
+      "product": "spot",
+      "step": "subscribe_user_data_stream"
+    },
+    {
+      "completed": true,
+      "product": "futures",
+      "step": "connect"
+    },
+    {
+      "completed": true,
+      "product": "futures",
+      "step": "session_logon"
+    },
+    {
+      "completed": true,
+      "product": "futures",
+      "step": "subscribe_user_data_stream"
+    }
+  ]
+}

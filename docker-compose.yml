@@ -2,12 +2,14 @@ services:
   freqtrade_v3_shadow:
     image: freqtradeorg/freqtrade@sha256:50720a4af314a812be2cfbf5cc6331c63e9332b06f3f4372241f54bc61a35486
     restart: unless-stopped
-    container_name: freqtrade_v3_shadow
+    # Reuse the retired V2 container identity so existing host monitoring and
+    # the localhost API tunnel continue to work without infrastructure changes.
+    container_name: freqtrade_kai
     volumes:
       - "./user_data:/freqtrade/user_data"
       - "./configs:/freqtrade/configs:ro"
     ports:
-      - "127.0.0.1:8081:8080"
+      - "127.0.0.1:8080:8080"
     env_file:
       - .env
     environment:
@@ -22,7 +24,7 @@ services:
       --logfile /freqtrade/user_data/logs/freqtrade-v3-shadow.log
       --db-url sqlite:////freqtrade/user_data/tradesv3_v3.sqlite
       --config /freqtrade/configs/dry-run.json
-      --strategy ${FREQTRADE_STRATEGY}
+      --strategy V3ShadowStrategy
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/api/v1/ping || exit 1"]
       interval: 60s

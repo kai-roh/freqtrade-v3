@@ -1,0 +1,17 @@
+{
+  "account_unchanged": true,
+  "captured_at": "2026-09-14T08:18:37.030224+00:00",
+  "client_order_id": "v3p3308faac07354d88a7abf97cfc1fa",
+  "environment": "demo",
+  "errors": [],
+  "executed_quantity": "0.00000000",
+  "matching_engine_post_attempts": 1,
+  "passed": false,
+  "price": "76950.72000000",
+  "product": "spot",
+  "quantity": "0.00020000",
+  "status": "NEW",
+  "strategy_started": false,
+  "telegram_delivered": true,
+  "venue_order_id": "64634141675"
+}

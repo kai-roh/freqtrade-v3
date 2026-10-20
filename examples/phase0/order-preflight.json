@@ -1,0 +1,38 @@
+{
+  "instrument": {
+    "venue": "hyperliquid",
+    "environment": "testnet",
+    "instrument_id": "BTC",
+    "minimum_notional": "10",
+    "minimum_quantity": "0.00001",
+    "quantity_increment": "0.00001",
+    "price_increment": "0.1",
+    "price_significant_digits": 5,
+    "price_max_decimal_places": 1,
+    "integer_price_has_no_significant_digit_limit": true,
+    "asset_index": 0,
+    "active": true,
+    "source": "replace-with-captured-venue-metadata"
+  },
+  "order": {
+    "price": "60000",
+    "quantity": "0.00050",
+    "observed_leverage": "2",
+    "quote_age_ms": 100,
+    "order_reject_probe": "passed"
+  },
+  "policy": {
+    "maximum_leverage": "2",
+    "minimum_notional_headroom": "3",
+    "maximum_quote_age_ms": 250,
+    "require_order_reject_probe": true
+  },
+  "intent": {
+    "entry_reason": "funding spread above threshold",
+    "target_position": "perp short leg for paper carry probe",
+    "normal_exit": "funding spread closes or scheduled settlement review",
+    "risk_exit": "leverage, margin, quote freshness, or delta drift failure",
+    "max_holding_or_review_at": "next funding settlement",
+    "cost_and_risk_budget": "max legging loss 5 bps; max two requotes"
+  }
+}

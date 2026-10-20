@@ -1,0 +1,193 @@
+{
+  "files": {
+    "ADA/funding_rate": {
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-09-16T08:00:00+00:00",
+      "rows": 1352,
+      "settlement_interval_minutes": 480,
+      "sha256": "f78b77b05b0870b09d52539ab4bc2b3c91d57824e905e8a5789bbc0455379902",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "ADA/futures": {
+      "coverage": 1.0,
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "51c70d972e4576f87674d6adfc5ae512ccd3faae30fe0d300a5c1477c2ffee46",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "ADA/mark": {
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "18000f3f1afeb8b4c9d5f62f7774bdc9aa27d645b0104561d8056c41a40b9cd2",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BNB/funding_rate": {
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-09-16T08:00:00+00:00",
+      "rows": 1352,
+      "settlement_interval_minutes": 480,
+      "sha256": "326ac1b01586baa2c4808146346b7e48a9f9a054614bf9050d8ada143299fbfd",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BNB/futures": {
+      "coverage": 1.0,
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "05efb79e2f788a5c77e83f44725fea944677867c600277860c00c887de78c35c",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BNB/mark": {
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "ca65a86ea646e4ce3ed7ada07ded2774ad5b4b48e5aae1cf0404b2a076917d43",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BTC/funding_rate": {
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-09-16T08:00:00+00:00",
+      "rows": 1352,
+      "settlement_interval_minutes": 480,
+      "sha256": "22e9441d6e88ce867371bede6e96d1aa7e3f6d471a001d7fb51934ef644210e9",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BTC/futures": {
+      "coverage": 1.0,
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "4c39f7ed4312d95d9dd4b693052f3848ef166113b496002b30e2e192e5e5f92f",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "BTC/mark": {
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "27abd31b1386e027e141ea50f0e63524479b070eb996d3278049d9b4127c8868",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "DOGE/funding_rate": {
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-09-16T08:00:00+00:00",
+      "rows": 1352,
+      "settlement_interval_minutes": 480,
+      "sha256": "e7605248339dab65b78097e93e496c102b80eaf7cfdd1f676d85a40dd2728314",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "DOGE/futures": {
+      "coverage": 1.0,
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "1822d3bd845d25f0c1e3567a1965bd2fe61adefb904f58772b948a37a39ae3d0",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "DOGE/mark": {
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "b3f7474202367de7610181398f01eb946492829c191f62885d2f1f2be3b46eb4",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "ETH/funding_rate": {
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-09-16T08:00:00+00:00",
+      "rows": 1352,
+      "settlement_interval_minutes": 480,
+      "sha256": "7c88929fcbbb9313ad5432bcd1637a5433feb1e138f1408387fe11d0229c674b",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "ETH/futures": {
+      "coverage": 1.0,
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "836b8620c418ad4faa89a176ebada037a186cbba3e253ffbdcccada368948108",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "ETH/mark": {
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "d9867962e658fae0e2f08eba018bda6e4cf5dc699d3f32430c7d3d0884690b56",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "LINK/funding_rate": {
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-09-16T08:00:00+00:00",
+      "rows": 1352,
+      "settlement_interval_minutes": 480,
+      "sha256": "fe2cb5ec49bf1014a721d24d90c2e8524576c624d1433254b84ffae258731b8b",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "LINK/futures": {
+      "coverage": 1.0,
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "06d49ffa91869d9a5af6913b0734995ac827c9a3dcf543248384edd43e8703e8",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "LINK/mark": {
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "9075497da4690742249e19acf76154a39eb29885846509695d03e16a6c9d3f0c",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "SOL/funding_rate": {
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-09-16T08:00:00+00:00",
+      "rows": 1352,
+      "settlement_interval_minutes": 480,
+      "sha256": "6e2251fd39fd49bdd7b29ca32acebc01e433ef875265f65ee6cbc538ac312018",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "SOL/futures": {
+      "coverage": 1.0,
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "92d4341dd80f65d5846de66345b61227906ffe2ce050e561e381092a42b34582",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "SOL/mark": {
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "5ba8f591fb62b0f8e443fa4c683e0e5ea0f354924e36e12626a03bc6e4f90b8b",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "XRP/funding_rate": {
+      "distinct_intervals_minutes": [
+        480
+      ],
+      "end": "2026-09-16T08:00:00+00:00",
+      "rows": 1352,
+      "settlement_interval_minutes": 480,
+      "sha256": "a06c8805c89315726d96f95fc087ca088f6ef1d83aa29e821e2f1cc991c34c95",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "XRP/futures": {
+      "coverage": 1.0,
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "af28dc145a2ac6d887ab07cecb8d816f7acd62ccab637c9b2b6830a18ff18c92",
+      "start": "2025-06-23T00:00:00+00:00"
+    },
+    "XRP/mark": {
+      "end": "2026-09-16T13:00:00+00:00",
+      "rows": 10814,
+      "sha256": "efa66997066771adae6a319a9daed4d76f09f394d05e5055d3a25c1af049342b",
+      "start": "2025-06-23T00:00:00+00:00"
+    }
+  },
+  "generated_at": "2026-09-16T15:01:02.636249+00:00",
+  "missing": [],
+  "requested_days": 450,
+  "schema_version": 1,
+  "timeframe": "1h"
+}

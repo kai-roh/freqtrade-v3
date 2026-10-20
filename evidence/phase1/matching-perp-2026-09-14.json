@@ -1,0 +1,17 @@
+{
+  "account_unchanged": true,
+  "captured_at": "2026-09-14T12:50:58.208967+00:00",
+  "client_order_id": "v3pdfbe5b729cfc4ca2a5972456ea25d",
+  "environment": "demo",
+  "errors": [],
+  "executed_quantity": "0.0000",
+  "matching_engine_post_attempts": 1,
+  "passed": true,
+  "price": "78574.30",
+  "product": "perp",
+  "quantity": "0.0008",
+  "status": "CANCELED",
+  "strategy_started": false,
+  "telegram_delivered": true,
+  "venue_order_id": "28585069232"
+}

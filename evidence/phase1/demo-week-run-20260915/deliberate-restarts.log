@@ -1,0 +1,4 @@
+2026-09-15T14:31:18Z restart2: killing phase1-demo-week-run-20260915-restart1 during open episode (state HEDGE_REQUIRED)
+2026-09-15T14:31:22Z restart2: started phase1-demo-week-run-20260915-restart2 image=sha256:b5f2ebf7901ffc401039804f182db2f358aad9d4eeccae8f2d78f277e999c8a6 source=81999bd5b5a12ec0fd105e5419983073b1a73806
+2026-09-15T16:36:43Z restart3: killing phase1-demo-week-run-20260915-restart2 during open episode (state HEDGE_REQUIRED)
+2026-09-15T16:36:46Z restart3: started phase1-demo-week-run-20260915-restart3 image=sha256:b5f2ebf7901ffc401039804f182db2f358aad9d4eeccae8f2d78f277e999c8a6 source=81999bd5b5a12ec0fd105e5419983073b1a73806

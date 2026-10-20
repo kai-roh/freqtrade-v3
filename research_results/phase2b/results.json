@@ -1,0 +1,1551 @@
+{
+  "decision": "STOP_NO_EDGE",
+  "generated_at": "2026-10-02T04:18:11Z",
+  "hypotheses": {
+    "H0": {
+      "note": "no-trade control; zero return by construction"
+    },
+    "H3": {
+      "normal": {
+        "stage_a": {
+          "activity": {
+            "annual_turnover_x_sleeve": 7.8943345484488185,
+            "blocked_entries": 177,
+            "decisions": 263,
+            "episodes": 2,
+            "forced_exits": 5,
+            "mean_episode_days": 7.333333333333333,
+            "stop_events": 1,
+            "traded_notional": 1167.9289468937977,
+            "trades": 24
+          },
+          "aggregate": {
+            "days": 270,
+            "expectancy": -0.00012273137245854036,
+            "max_drawdown": 0.03405773731235495,
+            "profit_factor": 0.5767861663866886,
+            "sharpe": -0.9508296622331692,
+            "total_return": -0.03338957696376732
+          },
+          "asset_contribution": 0.3606520808990227,
+          "asset_pnl": {
+            "ADA": 0.0,
+            "BNB": 4.597394589211855,
+            "BTC": 4.28118694090672,
+            "DOGE": -4.528339768666089,
+            "ETH": -1.9045385626338178,
+            "LINK": 3.8688690814281776,
+            "SOL": -4.921409844298524,
+            "XRP": -7.593881098114365
+          },
+          "cost": "normal",
+          "decomposition": {
+            "fees": 0.3303495994572062,
+            "funding_pnl": 0.42098722434659863,
+            "price_pnl": -6.621705886512502,
+            "slippage": 0.14684713113036663,
+            "total_pnl": -6.6779153927534765
+          },
+          "fills": {
+            "maker_fill_rate": 0.9444444444444444,
+            "maker_filled": 17,
+            "maker_notional": 845.382913298976,
+            "maker_notional_share": 0.7238307737361427,
+            "maker_orders": 18,
+            "taker_fallback": 1,
+            "taker_notional": 322.54603359482184,
+            "taker_planned": 0,
+            "taker_risk": 6
+          },
+          "fold_contribution": 1.0,
+          "folds": [
+            {
+              "decomposition": {
+                "fees": 0.3303495994572062,
+                "funding_pnl": 0.42098722434659863,
+                "price_pnl": -6.621705886512502,
+                "slippage": 0.14684713113036663,
+                "total_pnl": -6.6779153927534765
+              },
+              "episodes": 2,
+              "fills": {
+                "maker_fill_rate": 0.9444444444444444,
+                "maker_filled": 17,
+                "maker_notional": 845.382913298976,
+                "maker_notional_share": 0.7238307737361427,
+                "maker_orders": 18,
+                "taker_fallback": 1,
+                "taker_notional": 322.54603359482184,
+                "taker_planned": 0,
+                "taker_risk": 6
+              },
+              "fold": 0,
+              "selected": "H3 W=168h k=3",
+              "training_sharpe": -0.1633643446322559,
+              "validation": {
+                "days": 45,
+                "expectancy": -0.000736388234751242,
+                "max_drawdown": 0.03405773731235495,
+                "profit_factor": 0.5767861663866886,
+                "sharpe": -2.321776281401522,
+                "total_return": -0.03338957696376732
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 1,
+              "selected": "H3 W=168h k=3",
+              "training_sharpe": -0.16336434463225594,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 2,
+              "selected": "H3 W=336h k=3",
+              "training_sharpe": 0.09978824458458053,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 3,
+              "selected": "H3 W=336h k=3",
+              "training_sharpe": 0.09978824458458053,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 4,
+              "selected": "H3 W=336h k=3",
+              "training_sharpe": 0.6381122645134452,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 5,
+              "selected": "H3 W=336h k=3",
+              "training_sharpe": 0.638112264513445,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            }
+          ],
+          "gates": {
+            "asset_contribution": true,
+            "expectancy_positive": false,
+            "fold_contribution": false,
+            "max_drawdown": true,
+            "pbo": false,
+            "positive_folds": false,
+            "profit_factor": false
+          },
+          "passed": false,
+          "pbo": {
+            "median_logit": -0.4054651081081643,
+            "pbo": 0.6046620046620047,
+            "rows": 389,
+            "splits": 12870,
+            "strategies": 4
+          },
+          "positive_folds": 0
+        },
+        "stage_b": {
+          "activity": {
+            "annual_turnover_x_sleeve": 0.0,
+            "blocked_entries": 62,
+            "decisions": 62,
+            "episodes": 0,
+            "forced_exits": 0,
+            "mean_episode_days": null,
+            "stop_events": 0,
+            "traded_notional": 0.0,
+            "trades": 0
+          },
+          "cost": "normal",
+          "decomposition": {
+            "fees": 0.0,
+            "funding_pnl": 0.0,
+            "price_pnl": 0.0,
+            "slippage": 0.0,
+            "total_pnl": 0.0
+          },
+          "episodes": [],
+          "fills": {
+            "maker_fill_rate": null,
+            "maker_filled": 0,
+            "maker_notional": 0.0,
+            "maker_notional_share": null,
+            "maker_orders": 0,
+            "taker_fallback": 0,
+            "taker_notional": 0.0,
+            "taker_planned": 0,
+            "taker_risk": 0
+          },
+          "gates": {
+            "funding_exceeds_costs": false,
+            "max_drawdown": true,
+            "minimum_cycles": false,
+            "net_return_positive": false
+          },
+          "metrics": {
+            "days": 63,
+            "expectancy": 0.0,
+            "max_drawdown": 0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "total_return": 0.0
+          },
+          "passed": false,
+          "per_symbol": {
+            "ADA": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "BNB": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "BTC": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "DOGE": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "ETH": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "LINK": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "SOL": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "XRP": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            }
+          },
+          "selected": "H3 W=336h k=3",
+          "training_sharpe": 0.638112264513445,
+          "verdict": "UNDECIDABLE"
+        }
+      },
+      "passed": false,
+      "stage_a_passed": false,
+      "stage_b_verdicts": {
+        "normal": "UNDECIDABLE",
+        "stress": "UNDECIDABLE"
+      },
+      "stress": {
+        "stage_a": {
+          "activity": {
+            "annual_turnover_x_sleeve": 7.8943345484488185,
+            "blocked_entries": 177,
+            "decisions": 263,
+            "episodes": 2,
+            "forced_exits": 5,
+            "mean_episode_days": 7.333333333333333,
+            "stop_events": 1,
+            "traded_notional": 1167.9289468937977,
+            "trades": 24
+          },
+          "aggregate": {
+            "days": 270,
+            "expectancy": -0.00012300703066670012,
+            "max_drawdown": 0.03405773731235495,
+            "profit_factor": 0.5762384226678456,
+            "sharpe": -0.9528566862645705,
+            "total_return": -0.03346170639210244
+          },
+          "asset_contribution": 0.3606520808990227,
+          "asset_pnl": {
+            "ADA": 0.0,
+            "BNB": 4.597394589211855,
+            "BTC": 4.28118694090672,
+            "DOGE": -4.528339768666089,
+            "ETH": -1.9045385626338178,
+            "LINK": 3.8688690814281776,
+            "SOL": -4.921409844298524,
+            "XRP": -7.593881098114365
+          },
+          "cost": "stress",
+          "decomposition": {
+            "fees": 0.3303495994572062,
+            "funding_pnl": 0.42098722434659863,
+            "price_pnl": -6.621705886512495,
+            "slippage": 0.16127301679741093,
+            "total_pnl": -6.692341278420514
+          },
+          "fills": {
+            "maker_fill_rate": 0.9444444444444444,
+            "maker_filled": 17,
+            "maker_notional": 845.382913298976,
+            "maker_notional_share": 0.7238307737361427,
+            "maker_orders": 18,
+            "taker_fallback": 1,
+            "taker_notional": 322.54603359482184,
+            "taker_planned": 0,
+            "taker_risk": 6
+          },
+          "fold_contribution": 1.0,
+          "folds": [
+            {
+              "decomposition": {
+                "fees": 0.3303495994572062,
+                "funding_pnl": 0.42098722434659863,
+                "price_pnl": -6.621705886512495,
+                "slippage": 0.16127301679741093,
+                "total_pnl": -6.692341278420514
+              },
+              "episodes": 2,
+              "fills": {
+                "maker_fill_rate": 0.9444444444444444,
+                "maker_filled": 17,
+                "maker_notional": 845.382913298976,
+                "maker_notional_share": 0.7238307737361427,
+                "maker_orders": 18,
+                "taker_fallback": 1,
+                "taker_notional": 322.54603359482184,
+                "taker_planned": 0,
+                "taker_risk": 6
+              },
+              "fold": 0,
+              "selected": "H3 W=168h k=3",
+              "training_sharpe": -0.2084399674665744,
+              "validation": {
+                "days": 45,
+                "expectancy": -0.0007380421840002008,
+                "max_drawdown": 0.03405773731235495,
+                "profit_factor": 0.5762384226678456,
+                "sharpe": -2.3267884588691463,
+                "total_return": -0.03346170639210244
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 1,
+              "selected": "H3 W=168h k=3",
+              "training_sharpe": -0.2084399674665744,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 2,
+              "selected": "H3 W=336h k=3",
+              "training_sharpe": 0.05121442434473083,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 3,
+              "selected": "H3 W=336h k=3",
+              "training_sharpe": 0.05121442434473083,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 4,
+              "selected": "H3 W=336h k=3",
+              "training_sharpe": 0.6381122645134452,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 5,
+              "selected": "H3 W=336h k=3",
+              "training_sharpe": 0.638112264513445,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            }
+          ],
+          "gates": {
+            "asset_contribution": true,
+            "expectancy_positive": false,
+            "fold_contribution": false,
+            "max_drawdown": true,
+            "pbo": false,
+            "positive_folds": false,
+            "profit_factor": false
+          },
+          "passed": false,
+          "pbo": {
+            "median_logit": -0.4054651081081643,
+            "pbo": 0.6046620046620047,
+            "rows": 389,
+            "splits": 12870,
+            "strategies": 4
+          },
+          "positive_folds": 0
+        },
+        "stage_b": {
+          "activity": {
+            "annual_turnover_x_sleeve": 0.0,
+            "blocked_entries": 62,
+            "decisions": 62,
+            "episodes": 0,
+            "forced_exits": 0,
+            "mean_episode_days": null,
+            "stop_events": 0,
+            "traded_notional": 0.0,
+            "trades": 0
+          },
+          "cost": "stress",
+          "decomposition": {
+            "fees": 0.0,
+            "funding_pnl": 0.0,
+            "price_pnl": 0.0,
+            "slippage": 0.0,
+            "total_pnl": 0.0
+          },
+          "episodes": [],
+          "fills": {
+            "maker_fill_rate": null,
+            "maker_filled": 0,
+            "maker_notional": 0.0,
+            "maker_notional_share": null,
+            "maker_orders": 0,
+            "taker_fallback": 0,
+            "taker_notional": 0.0,
+            "taker_planned": 0,
+            "taker_risk": 0
+          },
+          "gates": {
+            "funding_exceeds_costs": false,
+            "max_drawdown": true,
+            "minimum_cycles": false,
+            "net_return_positive": false
+          },
+          "metrics": {
+            "days": 63,
+            "expectancy": 0.0,
+            "max_drawdown": 0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "total_return": 0.0
+          },
+          "passed": false,
+          "per_symbol": {
+            "ADA": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "BNB": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "BTC": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "DOGE": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "ETH": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "LINK": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "SOL": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "XRP": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            }
+          },
+          "selected": "H3 W=336h k=3",
+          "training_sharpe": 0.638112264513445,
+          "verdict": "UNDECIDABLE"
+        }
+      }
+    },
+    "H3T": {
+      "normal": {
+        "stage_a": {
+          "activity": {
+            "annual_turnover_x_sleeve": 7.892673656947072,
+            "blocked_entries": 177,
+            "decisions": 263,
+            "episodes": 2,
+            "forced_exits": 5,
+            "mean_episode_days": 7.3125,
+            "stop_events": 1,
+            "traded_notional": 1167.6832259592927,
+            "trades": 24
+          },
+          "aggregate": {
+            "days": 270,
+            "expectancy": -0.00012607336995207823,
+            "max_drawdown": 0.03555773731235656,
+            "profit_factor": 0.5656709323066068,
+            "sharpe": -0.9696223462845538,
+            "total_return": -0.034273569551220295
+          },
+          "asset_contribution": 0.3727431371587302,
+          "asset_pnl": {
+            "ADA": 0.0,
+            "BNB": 4.843115523716892,
+            "BTC": 4.28118694090672,
+            "DOGE": -4.528339768666089,
+            "ETH": -1.9045385626338178,
+            "LINK": 3.8688690814281776,
+            "SOL": -4.921409844298524,
+            "XRP": -7.593881098114365
+          },
+          "cost": "normal",
+          "decomposition": {
+            "fees": 0.5838416129796465,
+            "funding_pnl": 0.42098722434659863,
+            "price_pnl": -6.375984952007707,
+            "slippage": 0.3158745696032609,
+            "total_pnl": -6.8547139102440156
+          },
+          "fills": {
+            "maker_fill_rate": null,
+            "maker_filled": 0,
+            "maker_notional": 0.0,
+            "maker_notional_share": 0.0,
+            "maker_orders": 0,
+            "taker_fallback": 0,
+            "taker_notional": 1167.6832259592927,
+            "taker_planned": 18,
+            "taker_risk": 6
+          },
+          "fold_contribution": 1.0,
+          "folds": [
+            {
+              "decomposition": {
+                "fees": 0.5838416129796465,
+                "funding_pnl": 0.42098722434659863,
+                "price_pnl": -6.375984952007707,
+                "slippage": 0.3158745696032609,
+                "total_pnl": -6.8547139102440156
+              },
+              "episodes": 2,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": 0.0,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 1167.6832259592927,
+                "taker_planned": 18,
+                "taker_risk": 6
+              },
+              "fold": 0,
+              "selected": "H3T W=168h k=3",
+              "training_sharpe": -0.2050126330834908,
+              "validation": {
+                "days": 45,
+                "expectancy": -0.0007564402197124694,
+                "max_drawdown": 0.03555773731235656,
+                "profit_factor": 0.5656709323066068,
+                "sharpe": -2.3682601249647166,
+                "total_return": -0.034273569551220295
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 1,
+              "selected": "H3T W=168h k=3",
+              "training_sharpe": -0.2050126330834908,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 2,
+              "selected": "H3T W=336h k=3",
+              "training_sharpe": 0.054403800378684884,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 3,
+              "selected": "H3T W=336h k=3",
+              "training_sharpe": 0.054403800378684884,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 4,
+              "selected": "H3T W=336h k=3",
+              "training_sharpe": 0.5831568194342281,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 5,
+              "selected": "H3T W=336h k=3",
+              "training_sharpe": 0.5831568194342279,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            }
+          ],
+          "gates": {
+            "asset_contribution": true,
+            "expectancy_positive": false,
+            "fold_contribution": false,
+            "max_drawdown": true,
+            "pbo": false,
+            "positive_folds": false,
+            "profit_factor": false
+          },
+          "passed": false,
+          "pbo": {
+            "median_logit": -0.4054651081081643,
+            "pbo": 0.6286713286713287,
+            "rows": 389,
+            "splits": 12870,
+            "strategies": 4
+          },
+          "positive_folds": 0
+        },
+        "stage_b": {
+          "activity": {
+            "annual_turnover_x_sleeve": 0.0,
+            "blocked_entries": 62,
+            "decisions": 62,
+            "episodes": 0,
+            "forced_exits": 0,
+            "mean_episode_days": null,
+            "stop_events": 0,
+            "traded_notional": 0.0,
+            "trades": 0
+          },
+          "cost": "normal",
+          "decomposition": {
+            "fees": 0.0,
+            "funding_pnl": 0.0,
+            "price_pnl": 0.0,
+            "slippage": 0.0,
+            "total_pnl": 0.0
+          },
+          "episodes": [],
+          "fills": {
+            "maker_fill_rate": null,
+            "maker_filled": 0,
+            "maker_notional": 0.0,
+            "maker_notional_share": null,
+            "maker_orders": 0,
+            "taker_fallback": 0,
+            "taker_notional": 0.0,
+            "taker_planned": 0,
+            "taker_risk": 0
+          },
+          "gates": {
+            "funding_exceeds_costs": false,
+            "max_drawdown": true,
+            "minimum_cycles": false,
+            "net_return_positive": false
+          },
+          "metrics": {
+            "days": 63,
+            "expectancy": 0.0,
+            "max_drawdown": 0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "total_return": 0.0
+          },
+          "passed": false,
+          "per_symbol": {
+            "ADA": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "BNB": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "BTC": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "DOGE": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "ETH": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "LINK": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "SOL": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "XRP": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            }
+          },
+          "selected": "H3T W=336h k=3",
+          "training_sharpe": 0.583156819434228,
+          "verdict": "UNDECIDABLE"
+        }
+      },
+      "passed": false,
+      "stage_a_passed": false,
+      "stage_b_verdicts": {
+        "normal": "UNDECIDABLE",
+        "stress": "UNDECIDABLE"
+      },
+      "stress": {
+        "stage_a": {
+          "activity": {
+            "annual_turnover_x_sleeve": 7.892673656947072,
+            "blocked_entries": 177,
+            "decisions": 263,
+            "episodes": 2,
+            "forced_exits": 5,
+            "mean_episode_days": 7.3125,
+            "stop_events": 1,
+            "traded_notional": 1167.6832259592927,
+            "trades": 24
+          },
+          "aggregate": {
+            "days": 270,
+            "expectancy": -0.00013117870483511754,
+            "max_drawdown": 0.036457737312356686,
+            "profit_factor": 0.5531041862119555,
+            "sharpe": -1.0032031081455426,
+            "total_return": -0.035613404768102375
+          },
+          "asset_contribution": 0.3727431371587302,
+          "asset_pnl": {
+            "ADA": 0.0,
+            "BNB": 4.843115523716892,
+            "BTC": 4.28118694090672,
+            "DOGE": -4.528339768666089,
+            "ETH": -1.9045385626338178,
+            "LINK": 3.8688690814281776,
+            "SOL": -4.921409844298524,
+            "XRP": -7.593881098114365
+          },
+          "cost": "stress",
+          "decomposition": {
+            "fees": 0.5838416129796465,
+            "funding_pnl": 0.42098722434659863,
+            "price_pnl": -6.375984952007794,
+            "slippage": 0.5838416129796465,
+            "total_pnl": -7.122680953620488
+          },
+          "fills": {
+            "maker_fill_rate": null,
+            "maker_filled": 0,
+            "maker_notional": 0.0,
+            "maker_notional_share": 0.0,
+            "maker_orders": 0,
+            "taker_fallback": 0,
+            "taker_notional": 1167.6832259592927,
+            "taker_planned": 18,
+            "taker_risk": 6
+          },
+          "fold_contribution": 1.0,
+          "folds": [
+            {
+              "decomposition": {
+                "fees": 0.5838416129796465,
+                "funding_pnl": 0.42098722434659863,
+                "price_pnl": -6.375984952007794,
+                "slippage": 0.5838416129796465,
+                "total_pnl": -7.122680953620488
+              },
+              "episodes": 2,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": 0.0,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 1167.6832259592927,
+                "taker_planned": 18,
+                "taker_risk": 6
+              },
+              "fold": 0,
+              "selected": "H3T W=168h k=3",
+              "training_sharpe": -0.2303909776186057,
+              "validation": {
+                "days": 45,
+                "expectancy": -0.0007870722290107052,
+                "max_drawdown": 0.036457737312356686,
+                "profit_factor": 0.5531041862119555,
+                "sharpe": -2.451411036017341,
+                "total_return": -0.035613404768102375
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 1,
+              "selected": "H3T W=168h k=3",
+              "training_sharpe": -0.2303909776186057,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 2,
+              "selected": "H3T W=336h k=3",
+              "training_sharpe": 0.00651207307553825,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 3,
+              "selected": "H3T W=336h k=3",
+              "training_sharpe": 0.00651207307553825,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 4,
+              "selected": "H3T W=336h k=3",
+              "training_sharpe": 0.5502392501755681,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            },
+            {
+              "decomposition": {
+                "fees": 0.0,
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0,
+                "slippage": 0.0,
+                "total_pnl": 0.0
+              },
+              "episodes": 0,
+              "fills": {
+                "maker_fill_rate": null,
+                "maker_filled": 0,
+                "maker_notional": 0.0,
+                "maker_notional_share": null,
+                "maker_orders": 0,
+                "taker_fallback": 0,
+                "taker_notional": 0.0,
+                "taker_planned": 0,
+                "taker_risk": 0
+              },
+              "fold": 5,
+              "selected": "H3T W=336h k=3",
+              "training_sharpe": 0.5502392501755681,
+              "validation": {
+                "days": 45,
+                "expectancy": 0.0,
+                "max_drawdown": 0.0,
+                "profit_factor": 0.0,
+                "sharpe": 0.0,
+                "total_return": 0.0
+              }
+            }
+          ],
+          "gates": {
+            "asset_contribution": true,
+            "expectancy_positive": false,
+            "fold_contribution": false,
+            "max_drawdown": true,
+            "pbo": false,
+            "positive_folds": false,
+            "profit_factor": false
+          },
+          "passed": false,
+          "pbo": {
+            "median_logit": -0.4054651081081643,
+            "pbo": 0.5722610722610723,
+            "rows": 389,
+            "splits": 12870,
+            "strategies": 4
+          },
+          "positive_folds": 0
+        },
+        "stage_b": {
+          "activity": {
+            "annual_turnover_x_sleeve": 0.0,
+            "blocked_entries": 62,
+            "decisions": 62,
+            "episodes": 0,
+            "forced_exits": 0,
+            "mean_episode_days": null,
+            "stop_events": 0,
+            "traded_notional": 0.0,
+            "trades": 0
+          },
+          "cost": "stress",
+          "decomposition": {
+            "fees": 0.0,
+            "funding_pnl": 0.0,
+            "price_pnl": 0.0,
+            "slippage": 0.0,
+            "total_pnl": 0.0
+          },
+          "episodes": [],
+          "fills": {
+            "maker_fill_rate": null,
+            "maker_filled": 0,
+            "maker_notional": 0.0,
+            "maker_notional_share": null,
+            "maker_orders": 0,
+            "taker_fallback": 0,
+            "taker_notional": 0.0,
+            "taker_planned": 0,
+            "taker_risk": 0
+          },
+          "gates": {
+            "funding_exceeds_costs": false,
+            "max_drawdown": true,
+            "minimum_cycles": false,
+            "net_return_positive": false
+          },
+          "metrics": {
+            "days": 63,
+            "expectancy": 0.0,
+            "max_drawdown": 0.0,
+            "profit_factor": 0.0,
+            "sharpe": 0.0,
+            "total_return": 0.0
+          },
+          "passed": false,
+          "per_symbol": {
+            "ADA": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "BNB": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "BTC": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "DOGE": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "ETH": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "LINK": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "SOL": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            },
+            "XRP": {
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0
+            }
+          },
+          "selected": "H3T W=336h k=3",
+          "training_sharpe": 0.5502392501755681,
+          "verdict": "UNDECIDABLE"
+        }
+      }
+    }
+  },
+  "panel": {
+    "end": "2026-10-01T23:00:00+00:00",
+    "hours": 11184,
+    "settlements": 1398,
+    "start": "2025-06-23T00:00:00+00:00"
+  },
+  "phase2_h1_reference": {
+    "normal": {
+      "decomposition": {
+        "fees": 9.45155120949999,
+        "funding_pnl": 3.3783871519597457,
+        "price_pnl": -3.700673397066611,
+        "slippage": 4.36381416534487,
+        "total_pnl": -14.137651619951724
+      },
+      "episodes": 15,
+      "trades": 347
+    },
+    "stress": {
+      "decomposition": {
+        "fees": 9.452998070631937,
+        "funding_pnl": 3.1698700153114094,
+        "price_pnl": -9.280678743577033,
+        "slippage": 9.452998070631937,
+        "total_pnl": -25.016804869529494
+      },
+      "episodes": 15,
+      "trades": 347
+    }
+  },
+  "registration": "docs/PHASE2B_PREREGISTRATION.md",
+  "schema_version": 1,
+  "stage_a_folds": [
+    {
+      "fold": 0,
+      "train": [
+        "2025-07-07T00:00:00+00:00",
+        "2026-01-03T00:00:00+00:00"
+      ],
+      "validation": [
+        "2026-01-17T00:00:00+00:00",
+        "2026-02-16T00:00:00+00:00"
+      ]
+    },
+    {
+      "fold": 1,
+      "train": [
+        "2025-08-06T00:00:00+00:00",
+        "2026-02-02T00:00:00+00:00"
+      ],
+      "validation": [
+        "2026-02-16T00:00:00+00:00",
+        "2026-03-18T00:00:00+00:00"
+      ]
+    },
+    {
+      "fold": 2,
+      "train": [
+        "2025-09-05T00:00:00+00:00",
+        "2026-03-04T00:00:00+00:00"
+      ],
+      "validation": [
+        "2026-03-18T00:00:00+00:00",
+        "2026-04-17T00:00:00+00:00"
+      ]
+    },
+    {
+      "fold": 3,
+      "train": [
+        "2025-10-05T00:00:00+00:00",
+        "2026-04-03T00:00:00+00:00"
+      ],
+      "validation": [
+        "2026-04-17T00:00:00+00:00",
+        "2026-05-17T00:00:00+00:00"
+      ]
+    },
+    {
+      "fold": 4,
+      "train": [
+        "2025-11-04T00:00:00+00:00",
+        "2026-05-03T00:00:00+00:00"
+      ],
+      "validation": [
+        "2026-05-17T00:00:00+00:00",
+        "2026-06-16T00:00:00+00:00"
+      ]
+    },
+    {
+      "fold": 5,
+      "train": [
+        "2025-12-04T00:00:00+00:00",
+        "2026-06-02T00:00:00+00:00"
+      ],
+      "validation": [
+        "2026-06-16T00:00:00+00:00",
+        "2026-07-16T00:00:00+00:00"
+      ]
+    }
+  ],
+  "stage_a_horizon": "2026-07-30T00:00:00+00:00",
+  "stage_b": {
+    "entry_end": "2026-09-30T00:00:00+00:00",
+    "evaluation": [
+      "2026-07-31T00:00:00+00:00",
+      "2026-10-01T00:00:00+00:00"
+    ],
+    "train": [
+      "2026-01-17T00:00:00+00:00",
+      "2026-07-16T00:00:00+00:00"
+    ]
+  },
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "BNB",
+    "XRP",
+    "DOGE",
+    "ADA",
+    "LINK"
+  ]
+}

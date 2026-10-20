@@ -1,0 +1,122 @@
+{
+  "captured_at": "2026-09-03T02:27:04.465026+00:00",
+  "conclusion": {
+    "dedicated_demo_credentials_valid": false,
+    "demo_authenticated_integration_ready": false,
+    "mainnet_credentials_valid": true,
+    "orders_remain_disabled": true
+  },
+  "demo": {
+    "authentication": {
+      "spot_account": {
+        "exchange_code": -2015,
+        "http_status": 401,
+        "ok": false
+      },
+      "usdm_account": {
+        "exchange_code": -2015,
+        "http_status": 401,
+        "ok": false
+      }
+    },
+    "credential_source": "mainnet_cross_check",
+    "funding": {
+      "http_status": 200,
+      "last_funding_rate": "0.00010000",
+      "next_funding_time": 1788422400000,
+      "ok": true,
+      "symbol": "BTCUSDT",
+      "venue_time": 1788402424000
+    },
+    "public": {
+      "spot": {
+        "http_status": 200,
+        "ok": true
+      },
+      "usdm": {
+        "http_status": 200,
+        "ok": true
+      }
+    },
+    "spot_instrument": {
+      "base_asset": "BTC",
+      "filters": {
+        "minimum_notional": "5.00000000",
+        "minimum_quantity": "0.00001000",
+        "quantity_step": "0.00001000",
+        "tick_size": "0.01000000"
+      },
+      "http_status": 200,
+      "ok": true,
+      "quote_asset": "USDT",
+      "status": "TRADING",
+      "symbol": "BTCUSDT"
+    },
+    "usdm_instrument": {
+      "base_asset": "BTC",
+      "filters": {
+        "minimum_notional": "50",
+        "minimum_quantity": "0.0001",
+        "quantity_step": "0.0001",
+        "tick_size": "0.10"
+      },
+      "http_status": 200,
+      "ok": true,
+      "quote_asset": "USDT",
+      "status": "TRADING",
+      "symbol": "BTCUSDT"
+    }
+  },
+  "location": "oracle-tokyo",
+  "mainnet_read_only": {
+    "spot_account": {
+      "account_type": "SPOT",
+      "can_trade": true,
+      "http_status": 200,
+      "ok": true,
+      "permissions": [
+        "TRD_GRP_057"
+      ]
+    },
+    "spot_commission": {
+      "bnb_discount_enabled_for_account": true,
+      "bnb_discount_enabled_for_symbol": true,
+      "bnb_discount_factor": "0.75000000",
+      "http_status": 200,
+      "ok": true,
+      "standard_maker_bps": "10.00000000",
+      "standard_taker_bps": "10.00000000"
+    },
+    "usdm_account": {
+      "can_trade": null,
+      "http_status": 200,
+      "multi_assets_margin": null,
+      "ok": true
+    },
+    "usdm_commission": {
+      "http_status": 200,
+      "maker_bps": "2.000000",
+      "ok": true,
+      "taker_bps": "5.000000"
+    },
+    "usdm_symbol_config": {
+      "auto_add_margin": false,
+      "http_status": 200,
+      "leverage": 4,
+      "margin_type": "ISOLATED",
+      "max_notional_value": "600000000",
+      "ok": true,
+      "symbol": "BTCUSDT"
+    }
+  },
+  "safety": {
+    "http_methods": [
+      "GET"
+    ],
+    "order_endpoints_called": false,
+    "secret_fields_recorded": false,
+    "transfer_endpoints_called": false
+  },
+  "schema_version": 1,
+  "symbol": "BTCUSDT"
+}

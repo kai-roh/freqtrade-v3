@@ -1,0 +1,97 @@
+{
+  "environment": "demo",
+  "economic_approval": false,
+  "manifest": {
+    "schema_version": 1,
+    "manifest_id": "143a620327918a44530eb7ef0daf626e9e8ef939771809e0f3b2e84532c8b0d1",
+    "generated_at": "2026-09-15T09:06:00Z",
+    "source_dirty": false,
+    "dependencies_exact": true,
+    "git_commit_sha": "3f0da66699724883037bdf09516f86dc57b15590",
+    "container_image_digest": "sha256:4995ef790243f75511375037239fc18a79fc52bf47064263b4768b08c397bf08",
+    "dependency_lock_sha256": "f83f893eb97e449a6dfd1f141093b9e54bd21588d8190cf03664ac6268256218",
+    "config_sha256": "5236a0de99c40b19b955f9f1bbe8b73fa4e572e444764fc367769a9ae5990927",
+    "model_artifact_sha256": "084b2710058127323cfb3c67206b8f89241a1c366d3cfaf92ffad1b51bc632ec",
+    "data_snapshot_id": "demo-engineering:2026-09-15T09:06:00+00:00",
+    "timerange": {
+      "start": "2026-09-15T09:06:00Z",
+      "end": "2026-09-15T09:06:01Z"
+    }
+  },
+  "events": [
+    {
+      "at": "2026-09-15T09:06:05.124095+00:00",
+      "kind": "start",
+      "status": "RUNNING",
+      "strategy_started": true,
+      "hold_seconds": 300
+    },
+    {
+      "at": "2026-09-15T09:06:06.506130+00:00",
+      "kind": "trade",
+      "submitted": true,
+      "status": "ENQUEUED",
+      "intent_id": "09a7f1cf-51d1-43ab-b8a6-fa65041ba6ed",
+      "command_id": "e91e7e6e-31ae-47e4-b9bb-829009972cb6",
+      "action": "spot_buy_ioc"
+    },
+    {
+      "at": "2026-09-15T09:06:09.488473+00:00",
+      "kind": "trade",
+      "fill_confirmed": true,
+      "instrument": "BTCUSDT.BINANCE_SPOT_DEMO",
+      "quantity": "0.00285000",
+      "price": "76935.43000000",
+      "side": "BUY"
+    },
+    {
+      "at": "2026-09-15T09:06:10.829942+00:00",
+      "kind": "trade",
+      "submitted": true,
+      "status": "ENQUEUED",
+      "command_id": "9389860f-8195-4118-a6cc-2e33309d6700",
+      "client_order_id": "v3a40910990ca8f4405b37080804b334",
+      "action": "hedge_perp_sell"
+    },
+    {
+      "at": "2026-09-15T09:06:13.802341+00:00",
+      "kind": "trade",
+      "fill_confirmed": true,
+      "instrument": "BTCUSDT-PERP.BINANCE_USDM_DEMO",
+      "quantity": "0.0028",
+      "price": "76942.40",
+      "side": "SELL"
+    },
+    {
+      "at": "2026-09-15T09:11:08.924643+00:00",
+      "kind": "trade",
+      "submitted": true,
+      "status": "ENQUEUED",
+      "command_id": "5670da9e-b486-4b8f-83c9-2c27dd4a0876",
+      "client_order_id": "v3aebf23e33980c498d807ef60603cf7",
+      "action": "close_perp_buy"
+    },
+    {
+      "at": "2026-09-15T09:11:11.938203+00:00",
+      "kind": "trade",
+      "fill_confirmed": true,
+      "instrument": "BTCUSDT-PERP.BINANCE_USDM_DEMO",
+      "quantity": "0.0028",
+      "price": "76943.90",
+      "side": "BUY"
+    },
+    {
+      "at": "2026-09-15T09:11:17.547487+00:00",
+      "kind": "error",
+      "error_type": "ValueError",
+      "error_frames": [
+        {
+          "file": "run_phase1_demo_auto.py",
+          "line": 240,
+          "function": "execute"
+        }
+      ],
+      "new_entries_halted": true
+    }
+  ]
+}

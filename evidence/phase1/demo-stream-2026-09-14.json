@@ -1,0 +1,10 @@
+{
+  "environment": "demo",
+  "orders_submitted": false,
+  "passed": true,
+  "quote_samples": {
+    "BTCUSDT-PERP.BINANCE": 38,
+    "BTCUSDT.BINANCE": 55
+  },
+  "spot_exchange_age_measured": false
+}

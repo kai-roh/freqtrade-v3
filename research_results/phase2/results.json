@@ -1,0 +1,1931 @@
+{
+  "config": {
+    "embargo_days": 14,
+    "fold_count": 6,
+    "max_contribution": 0.5,
+    "max_drawdown_max": 0.1,
+    "min_positive_folds": 4,
+    "pbo_max": 0.2,
+    "pbo_partitions": 16,
+    "profit_factor_min": 1.15,
+    "train_days": 180,
+    "validation_days": 30
+  },
+  "decision": "STOP_NO_EDGE",
+  "folds": [
+    {
+      "fold": 0,
+      "train_end": "2026-01-03T00:00:00+00:00",
+      "train_start": "2025-07-07T00:00:00+00:00",
+      "validation_end": "2026-02-16T00:00:00+00:00",
+      "validation_start": "2026-01-17T00:00:00+00:00"
+    },
+    {
+      "fold": 1,
+      "train_end": "2026-02-02T00:00:00+00:00",
+      "train_start": "2025-08-06T00:00:00+00:00",
+      "validation_end": "2026-03-18T00:00:00+00:00",
+      "validation_start": "2026-02-16T00:00:00+00:00"
+    },
+    {
+      "fold": 2,
+      "train_end": "2026-03-04T00:00:00+00:00",
+      "train_start": "2025-09-05T00:00:00+00:00",
+      "validation_end": "2026-04-17T00:00:00+00:00",
+      "validation_start": "2026-03-18T00:00:00+00:00"
+    },
+    {
+      "fold": 3,
+      "train_end": "2026-04-03T00:00:00+00:00",
+      "train_start": "2025-10-05T00:00:00+00:00",
+      "validation_end": "2026-05-17T00:00:00+00:00",
+      "validation_start": "2026-04-17T00:00:00+00:00"
+    },
+    {
+      "fold": 4,
+      "train_end": "2026-05-03T00:00:00+00:00",
+      "train_start": "2025-11-04T00:00:00+00:00",
+      "validation_end": "2026-06-16T00:00:00+00:00",
+      "validation_start": "2026-05-17T00:00:00+00:00"
+    },
+    {
+      "fold": 5,
+      "train_end": "2026-06-02T00:00:00+00:00",
+      "train_start": "2025-12-04T00:00:00+00:00",
+      "validation_end": "2026-07-16T00:00:00+00:00",
+      "validation_start": "2026-06-16T00:00:00+00:00"
+    }
+  ],
+  "generated_at": "2026-09-17T00:30:00Z",
+  "hypotheses": {
+    "H0": {
+      "note": "no-trade control; zero return by construction",
+      "passed": false
+    },
+    "H1": {
+      "normal": {
+        "aggregate": {
+          "days": 270,
+          "expectancy": -0.000270596532848964,
+          "max_drawdown": 0.12405169644116039,
+          "profit_factor": 0.8689099724639657,
+          "sharpe": -0.792422709569043,
+          "total_return": -0.07579364102115482
+        },
+        "asset_contribution": 0.5171886274837153,
+        "asset_pnl": {
+          "ADA": -3.2990786160212093,
+          "BNB": -14.410888700546819,
+          "BTC": 28.84924130457986,
+          "DOGE": -12.432293592146129,
+          "ETH": 26.68897635308224,
+          "LINK": 0.24267111582168227,
+          "SOL": -2.957581042169481,
+          "XRP": -23.00333306770619
+        },
+        "blocked_entries": 276,
+        "cost": "normal",
+        "decomposition": {
+          "fees": 9.45155120949999,
+          "funding_pnl": 3.3783871519597457,
+          "price_pnl": -3.700673397066611,
+          "slippage": 4.36381416534487,
+          "total_pnl": -14.137651619951724
+        },
+        "decomposition_answers": {
+          "costs_exceed_funding": true,
+          "dominant_asset": "BTC",
+          "funding_positive_but_price_loss_dominates": true
+        },
+        "episodes": 15,
+        "fold_contribution": 0.37880624651399164,
+        "folds": [
+          {
+            "fold": 0,
+            "selected": "H1 W=168h k=3 s_min=0.5bp",
+            "training_sharpe": 0.9865038277086998,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.0017038889082961583,
+              "max_drawdown": 0.07915080108438266,
+              "profit_factor": 0.3977686498034746,
+              "sharpe": -4.844172637105506,
+              "total_return": -0.07479845403565322
+            },
+            "validation_summary": {
+              "blocked_entries": 43,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 126,
+              "decomposition": {
+                "fees": 1.1216318459364756,
+                "funding_pnl": 0.7503771239003039,
+                "price_pnl": -13.974216962233058,
+                "slippage": 0.6142191228613548,
+                "total_pnl": -14.959690807130585
+              },
+              "episodes": 3,
+              "forced_exits": 0,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.010912631481637942,
+                  "price_pnl": 3.8847946770413913
+                },
+                "BNB": {
+                  "funding_pnl": -0.0034819988864866628,
+                  "price_pnl": 9.140135162628184
+                },
+                "BTC": {
+                  "funding_pnl": -0.021063472891166647,
+                  "price_pnl": 8.498710369523657
+                },
+                "DOGE": {
+                  "funding_pnl": 0.02999782578608598,
+                  "price_pnl": -17.01499222422838
+                },
+                "ETH": {
+                  "funding_pnl": -0.01074257525275006,
+                  "price_pnl": 4.224451667763155
+                },
+                "LINK": {
+                  "funding_pnl": 0.12165156840317917,
+                  "price_pnl": 7.5262524056679325
+                },
+                "SOL": {
+                  "funding_pnl": 0.42332347393325165,
+                  "price_pnl": -13.296253156409321
+                },
+                "XRP": {
+                  "funding_pnl": 0.19977967132655144,
+                  "price_pnl": -16.93731586421974
+                }
+              },
+              "rule": "H1 W=168h k=3 s_min=0.5bp",
+              "stop_events": 2,
+              "total_return": -0.07479845403565288,
+              "traded_notional": 2243.263691872951,
+              "trades": 46
+            }
+          },
+          {
+            "fold": 1,
+            "selected": "H1 W=48h k=3 s_min=0.5bp",
+            "training_sharpe": 2.2385836448210537,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.0003931824570427055,
+              "max_drawdown": 0.029564880094299126,
+              "profit_factor": 1.2052491118294226,
+              "sharpe": 1.3174277016754532,
+              "total_return": 0.017118249371972816
+            },
+            "validation_summary": {
+              "blocked_entries": 33,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 132,
+              "decomposition": {
+                "fees": 2.1601780672826094,
+                "funding_pnl": 0.3973017356977207,
+                "price_pnl": 6.0505974328925465,
+                "slippage": 0.8640712269130446,
+                "total_pnl": 3.423649874394613
+              },
+              "episodes": 1,
+              "forced_exits": 2,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": -0.004648300543818707,
+                  "price_pnl": 10.699560276888988
+                },
+                "BNB": {
+                  "funding_pnl": -0.003438291553636495,
+                  "price_pnl": -10.997743941279147
+                },
+                "BTC": {
+                  "funding_pnl": 0.01416014280733793,
+                  "price_pnl": -2.429252157832444
+                },
+                "DOGE": {
+                  "funding_pnl": 0.0774136034300913,
+                  "price_pnl": -2.8180850127419603
+                },
+                "ETH": {
+                  "funding_pnl": -0.033179697284391275,
+                  "price_pnl": 6.288477493629429
+                },
+                "LINK": {
+                  "funding_pnl": 0.07018496187951419,
+                  "price_pnl": -2.967079069163873
+                },
+                "SOL": {
+                  "funding_pnl": 0.17743240273075414,
+                  "price_pnl": 9.256803850078292
+                },
+                "XRP": {
+                  "funding_pnl": 0.09937691423187009,
+                  "price_pnl": -0.9820840066864491
+                }
+              },
+              "rule": "H1 W=48h k=3 s_min=0.5bp",
+              "stop_events": 0,
+              "total_return": 0.017118249371973038,
+              "traded_notional": 4320.356134565219,
+              "trades": 83
+            }
+          },
+          {
+            "fold": 2,
+            "selected": "H1 W=48h k=3 s_min=0.5bp",
+            "training_sharpe": 2.4309751020386203,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.0005921887050688326,
+              "max_drawdown": 0.03003368407773166,
+              "profit_factor": 1.3482239552724469,
+              "sharpe": 1.8674296085076678,
+              "total_return": 0.026169264998669117
+            },
+            "validation_summary": {
+              "blocked_entries": 30,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 132,
+              "decomposition": {
+                "fees": 2.2111350607440046,
+                "funding_pnl": 0.6393498252846735,
+                "price_pnl": 7.690092259490689,
+                "slippage": 0.8844540242976026,
+                "total_pnl": 5.233852999733756
+              },
+              "episodes": 2,
+              "forced_exits": 5,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.007600361527514436,
+                  "price_pnl": 13.666032701732377
+                },
+                "BNB": {
+                  "funding_pnl": 0.029901370813100667,
+                  "price_pnl": -9.158310649263818
+                },
+                "BTC": {
+                  "funding_pnl": 0.10146789983225542,
+                  "price_pnl": 2.3753858822843057
+                },
+                "DOGE": {
+                  "funding_pnl": -0.003023610709723558,
+                  "price_pnl": 6.792538916715017
+                },
+                "ETH": {
+                  "funding_pnl": 0.05633270255864532,
+                  "price_pnl": 0.03440214955980281
+                },
+                "LINK": {
+                  "funding_pnl": 0.2007468623232188,
+                  "price_pnl": 1.2551121927513549
+                },
+                "SOL": {
+                  "funding_pnl": 0.1961529507795141,
+                  "price_pnl": -5.098180056798313
+                },
+                "XRP": {
+                  "funding_pnl": 0.050171288160147647,
+                  "price_pnl": -2.176888877489766
+                }
+              },
+              "rule": "H1 W=48h k=3 s_min=0.5bp",
+              "stop_events": 0,
+              "total_return": 0.026169264998668673,
+              "traded_notional": 4422.2701214880135,
+              "trades": 83
+            }
+          },
+          {
+            "fold": 3,
+            "selected": "H1 W=48h k=3 s_min=0.5bp",
+            "training_sharpe": 2.4867940440844896,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.0019914520655333256,
+              "max_drawdown": 0.11798023871313071,
+              "profit_factor": 0.4015324935401812,
+              "sharpe": -4.690587467976155,
+              "total_return": -0.08713411200831656
+            },
+            "validation_summary": {
+              "blocked_entries": 32,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 120,
+              "decomposition": {
+                "fees": 2.2574944201875407,
+                "funding_pnl": 0.4740950818143586,
+                "price_pnl": -14.401626359625293,
+                "slippage": 1.24179670366481,
+                "total_pnl": -17.426822401663287
+              },
+              "episodes": 5,
+              "forced_exits": 0,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.1003395125062861,
+                  "price_pnl": -11.917784665726408
+                },
+                "BNB": {
+                  "funding_pnl": 0.045444930694837044,
+                  "price_pnl": -1.293741922794247
+                },
+                "BTC": {
+                  "funding_pnl": 0.0931019722335899,
+                  "price_pnl": 4.465112355917256
+                },
+                "DOGE": {
+                  "funding_pnl": 0.0608518408337894,
+                  "price_pnl": -4.32102190535786
+                },
+                "ETH": {
+                  "funding_pnl": 0.06222277935440309,
+                  "price_pnl": 0.13263632312296636
+                },
+                "LINK": {
+                  "funding_pnl": 0.12150613040890496,
+                  "price_pnl": -1.7879289575867432
+                },
+                "SOL": {
+                  "funding_pnl": -0.008898422761341805,
+                  "price_pnl": 1.8878493928141609
+                },
+                "XRP": {
+                  "funding_pnl": -0.0004736614561099096,
+                  "price_pnl": -1.5667469800141944
+                }
+              },
+              "rule": "H1 W=48h k=3 s_min=0.5bp",
+              "stop_events": 4,
+              "total_return": -0.08713411200831644,
+              "traded_notional": 4514.988840375084,
+              "trades": 89
+            }
+          },
+          {
+            "fold": 4,
+            "selected": "H1 W=48h k=2 s_min=1.0bp",
+            "training_sharpe": 2.4166958520487514,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.00031602183895637685,
+              "max_drawdown": 0.038995733272869676,
+              "profit_factor": 1.2219942964250714,
+              "sharpe": 0.9377207779915093,
+              "total_return": 0.013392879765455445
+            },
+            "validation_summary": {
+              "blocked_entries": 70,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 129,
+              "decomposition": {
+                "fees": 0.8866677844825799,
+                "funding_pnl": 0.5711622787711762,
+                "price_pnl": 3.427576934063877,
+                "slippage": 0.4334954752613468,
+                "total_pnl": 2.6785759530911264
+              },
+              "episodes": 2,
+              "forced_exits": 1,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": -0.0012469156212510822,
+                  "price_pnl": -16.52981849611062
+                },
+                "BNB": {
+                  "funding_pnl": 0.0,
+                  "price_pnl": -3.1640317931697126
+                },
+                "BTC": {
+                  "funding_pnl": 0.09713429897861822,
+                  "price_pnl": 12.536046018540631
+                },
+                "DOGE": {
+                  "funding_pnl": 0.003140708991064535,
+                  "price_pnl": 2.8212906784335274
+                },
+                "ETH": {
+                  "funding_pnl": 0.10525119511192473,
+                  "price_pnl": 8.802977575417202
+                },
+                "LINK": {
+                  "funding_pnl": 0.11227728197383066,
+                  "price_pnl": -5.950278494769734
+                },
+                "SOL": {
+                  "funding_pnl": 0.20402688005762673,
+                  "price_pnl": 6.275160899774818
+                },
+                "XRP": {
+                  "funding_pnl": 0.05057882927936211,
+                  "price_pnl": -1.3637694540524166
+                }
+              },
+              "rule": "H1 W=48h k=2 s_min=1.0bp",
+              "stop_events": 1,
+              "total_return": 0.013392879765455667,
+              "traded_notional": 1773.33556896516,
+              "trades": 24
+            }
+          },
+          {
+            "fold": 5,
+            "selected": "H1 W=48h k=2 s_min=1.0bp",
+            "training_sharpe": 1.3990918185166394,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.0007703687756677846,
+              "max_drawdown": 0.024024227094442702,
+              "profit_factor": 1.6481569073258824,
+              "sharpe": 2.652590750474069,
+              "total_return": 0.03456391380811352
+            },
+            "validation_summary": {
+              "blocked_entries": 68,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 132,
+              "decomposition": {
+                "fees": 0.8144440308667787,
+                "funding_pnl": 0.546101106491513,
+                "price_pnl": 7.506903298344628,
+                "slippage": 0.32577761234671165,
+                "total_pnl": 6.912782761622651
+              },
+              "episodes": 2,
+              "forced_exits": 1,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.15810338664316806,
+                  "price_pnl": -3.37292378584047
+                },
+                "BNB": {
+                  "funding_pnl": 0.1173905931621387,
+                  "price_pnl": 0.8769878391019716
+                },
+                "BTC": {
+                  "funding_pnl": 0.09599760247893617,
+                  "price_pnl": 3.0224403927068835
+                },
+                "DOGE": {
+                  "funding_pnl": 0.010302657409292931,
+                  "price_pnl": 1.9292929292929273
+                },
+                "ETH": {
+                  "funding_pnl": 0.007607364589162164,
+                  "price_pnl": 7.0185393745126845
+                },
+                "LINK": {
+                  "funding_pnl": 0.07806598715501838,
+                  "price_pnl": 1.462160246779078
+                },
+                "SOL": {
+                  "funding_pnl": -0.022820974972764373,
+                  "price_pnl": -2.952178281396158
+                },
+                "XRP": {
+                  "funding_pnl": 0.10145449002656083,
+                  "price_pnl": -0.4774154168120077
+                }
+              },
+              "rule": "H1 W=48h k=2 s_min=1.0bp",
+              "stop_events": 0,
+              "total_return": 0.0345639138081133,
+              "traded_notional": 1628.8880617335576,
+              "trades": 22
+            }
+          }
+        ],
+        "gates": {
+          "asset_contribution": false,
+          "expectancy_positive": false,
+          "fold_contribution": true,
+          "max_drawdown": false,
+          "pbo": false,
+          "positive_folds": true,
+          "profit_factor": false
+        },
+        "passed": false,
+        "pbo": {
+          "median_logit": -0.8109302162163287,
+          "pbo": 0.7713286713286713,
+          "rows": 437,
+          "splits": 12870,
+          "strategies": 12
+        },
+        "positive_folds": 4,
+        "trades": 347
+      },
+      "passed": false,
+      "stress": {
+        "aggregate": {
+          "days": 270,
+          "expectancy": -0.00047284065934048415,
+          "max_drawdown": 0.16603358254334333,
+          "profit_factor": 0.7658839263904252,
+          "sharpe": -1.4340754147278205,
+          "total_return": -0.12458759599163316
+        },
+        "asset_contribution": 0.5015159860859362,
+        "asset_pnl": {
+          "ADA": -1.9604535322134147,
+          "BNB": -14.51376304030851,
+          "BTC": 26.81256242260318,
+          "DOGE": -14.173707288837589,
+          "ETH": 26.975646776068395,
+          "LINK": -2.2963613194499466,
+          "SOL": -3.8720240996394835,
+          "XRP": -23.08270864648645
+        },
+        "blocked_entries": 276,
+        "cost": "stress",
+        "decomposition": {
+          "fees": 9.452998070631937,
+          "funding_pnl": 3.1698700153114094,
+          "price_pnl": -9.280678743577033,
+          "slippage": 9.452998070631937,
+          "total_pnl": -25.016804869529494
+        },
+        "decomposition_answers": {
+          "costs_exceed_funding": true,
+          "dominant_asset": "ETH",
+          "funding_positive_but_price_loss_dominates": true
+        },
+        "episodes": 15,
+        "fold_contribution": 0.5960915632196234,
+        "folds": [
+          {
+            "fold": 0,
+            "selected": "H1 W=168h k=3 s_min=0.5bp",
+            "training_sharpe": 0.8851785833093266,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.0016707616997373566,
+              "max_drawdown": 0.07685249893963764,
+              "profit_factor": 0.3994307552391666,
+              "sharpe": -4.957390252968783,
+              "total_return": -0.0733384551552475
+            },
+            "validation_summary": {
+              "blocked_entries": 43,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 126,
+              "decomposition": {
+                "fees": 1.1212923174251301,
+                "funding_pnl": 0.7503771239003039,
+                "price_pnl": -13.17548352009953,
+                "slippage": 1.1212923174251301,
+                "total_pnl": -14.667691031049486
+              },
+              "episodes": 3,
+              "forced_exits": 0,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.010912631481637942,
+                  "price_pnl": 3.8847946770413913
+                },
+                "BNB": {
+                  "funding_pnl": -0.0034819988864866628,
+                  "price_pnl": 9.037260822866493
+                },
+                "BTC": {
+                  "funding_pnl": -0.021063472891166647,
+                  "price_pnl": 8.498710369523657
+                },
+                "DOGE": {
+                  "funding_pnl": 0.02999782578608598,
+                  "price_pnl": -16.179052196183946
+                },
+                "ETH": {
+                  "funding_pnl": -0.01074257525275006,
+                  "price_pnl": 4.316266475342758
+                },
+                "LINK": {
+                  "funding_pnl": 0.12165156840317917,
+                  "price_pnl": 7.532081949797579
+                },
+                "SOL": {
+                  "funding_pnl": 0.42332347393325165,
+                  "price_pnl": -13.24885417548741
+                },
+                "XRP": {
+                  "funding_pnl": 0.19977967132655144,
+                  "price_pnl": -17.016691443
+                }
+              },
+              "rule": "H1 W=168h k=3 s_min=0.5bp",
+              "stop_events": 2,
+              "total_return": -0.0733384551552474,
+              "traded_notional": 2242.58463485026,
+              "trades": 46
+            }
+          },
+          {
+            "fold": 1,
+            "selected": "H1 W=48h k=3 s_min=0.5bp",
+            "training_sharpe": 1.768850788686737,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.00025099359476386714,
+              "max_drawdown": 0.030182565794323178,
+              "profit_factor": 1.127457861792671,
+              "sharpe": 0.8438866953399649,
+              "total_return": 0.010637715170122242
+            },
+            "validation_summary": {
+              "blocked_entries": 33,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 132,
+              "decomposition": {
+                "fees": 2.1601780672826094,
+                "funding_pnl": 0.3973017356977207,
+                "price_pnl": 6.050597432892067,
+                "slippage": 2.1601780672826094,
+                "total_pnl": 2.127543034024569
+              },
+              "episodes": 1,
+              "forced_exits": 2,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": -0.004648300543818707,
+                  "price_pnl": 10.699560276888988
+                },
+                "BNB": {
+                  "funding_pnl": -0.003438291553636495,
+                  "price_pnl": -10.997743941279147
+                },
+                "BTC": {
+                  "funding_pnl": 0.01416014280733793,
+                  "price_pnl": -2.429252157832444
+                },
+                "DOGE": {
+                  "funding_pnl": 0.0774136034300913,
+                  "price_pnl": -2.8180850127419603
+                },
+                "ETH": {
+                  "funding_pnl": -0.033179697284391275,
+                  "price_pnl": 6.288477493629429
+                },
+                "LINK": {
+                  "funding_pnl": 0.07018496187951419,
+                  "price_pnl": -2.967079069163873
+                },
+                "SOL": {
+                  "funding_pnl": 0.17743240273075414,
+                  "price_pnl": 9.256803850078292
+                },
+                "XRP": {
+                  "funding_pnl": 0.09937691423187009,
+                  "price_pnl": -0.9820840066864491
+                }
+              },
+              "rule": "H1 W=48h k=3 s_min=0.5bp",
+              "stop_events": 0,
+              "total_return": 0.010637715170122908,
+              "traded_notional": 4320.356134565219,
+              "trades": 83
+            }
+          },
+          {
+            "fold": 2,
+            "selected": "H1 W=48h k=3 s_min=0.5bp",
+            "training_sharpe": 2.1659628330256075,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.00031370443570538024,
+              "max_drawdown": 0.034954967503002296,
+              "profit_factor": 0.7653536579427528,
+              "sharpe": -1.2135775496645331,
+              "total_return": -0.014551860405216388
+            },
+            "validation_summary": {
+              "blocked_entries": 30,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 129,
+              "decomposition": {
+                "fees": 2.2136773031502965,
+                "funding_pnl": 0.4308326886363373,
+                "price_pnl": 1.0861498366209497,
+                "slippage": 2.2136773031502965,
+                "total_pnl": -2.910372081043306
+              },
+              "episodes": 2,
+              "forced_exits": 2,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.01841897597522548,
+                  "price_pnl": 14.56901464209357
+                },
+                "BNB": {
+                  "funding_pnl": 0.029901370813100667,
+                  "price_pnl": -9.158310649263818
+                },
+                "BTC": {
+                  "funding_pnl": 0.032550750855578466,
+                  "price_pnl": 0.4712449544037227
+                },
+                "DOGE": {
+                  "funding_pnl": -0.009665581072577444,
+                  "price_pnl": 4.801457303109295
+                },
+                "ETH": {
+                  "funding_pnl": 0.009758135588971723,
+                  "price_pnl": 0.2758323319360301
+                },
+                "LINK": {
+                  "funding_pnl": 0.10673587727733537,
+                  "price_pnl": -1.6393688527179293
+                },
+                "SOL": {
+                  "funding_pnl": 0.19296187103855497,
+                  "price_pnl": -6.056831015449269
+                },
+                "XRP": {
+                  "funding_pnl": 0.050171288160147647,
+                  "price_pnl": -2.176888877489766
+                }
+              },
+              "rule": "H1 W=48h k=3 s_min=0.5bp",
+              "stop_events": 1,
+              "total_return": -0.014551860405216499,
+              "traded_notional": 4427.354606300596,
+              "trades": 83
+            }
+          },
+          {
+            "fold": 3,
+            "selected": "H1 W=48h k=3 s_min=0.5bp",
+            "training_sharpe": 2.183623620806365,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.00208792636240359,
+              "max_drawdown": 0.11997987423113564,
+              "profit_factor": 0.378863849878841,
+              "sharpe": -4.951524395284601,
+              "total_return": -0.09107902389217115
+            },
+            "validation_summary": {
+              "blocked_entries": 32,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 120,
+              "decomposition": {
+                "fees": 2.2567385674245406,
+                "funding_pnl": 0.4740950818143586,
+                "price_pnl": -14.176422725399451,
+                "slippage": 2.2567385674245406,
+                "total_pnl": -18.215804778434176
+              },
+              "episodes": 5,
+              "forced_exits": 0,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.1003395125062861,
+                  "price_pnl": -11.492960136727518
+                },
+                "BNB": {
+                  "funding_pnl": 0.045444930694837044,
+                  "price_pnl": -1.293741922794247
+                },
+                "BTC": {
+                  "funding_pnl": 0.0931019722335899,
+                  "price_pnl": 4.401491550797836
+                },
+                "DOGE": {
+                  "funding_pnl": 0.0608518408337894,
+                  "price_pnl": -4.900652046125181
+                },
+                "ETH": {
+                  "funding_pnl": 0.06222277935440309,
+                  "price_pnl": 0.13263632312296636
+                },
+                "LINK": {
+                  "funding_pnl": 0.12150613040890496,
+                  "price_pnl": -1.3442989064728508
+                },
+                "SOL": {
+                  "funding_pnl": -0.008898422761341805,
+                  "price_pnl": 1.8878493928141609
+                },
+                "XRP": {
+                  "funding_pnl": -0.0004736614561099096,
+                  "price_pnl": -1.5667469800141944
+                }
+              },
+              "rule": "H1 W=48h k=3 s_min=0.5bp",
+              "stop_events": 4,
+              "total_return": -0.09107902389217093,
+              "traded_notional": 4513.477134849084,
+              "trades": 89
+            }
+          },
+          {
+            "fold": 4,
+            "selected": "H1 W=48h k=2 s_min=1.0bp",
+            "training_sharpe": 1.803557264380169,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.0002663562533945902,
+              "max_drawdown": 0.03956013286605848,
+              "profit_factor": 1.1843791384253823,
+              "sharpe": 0.7886671187409445,
+              "total_return": 0.01112701821935036
+            },
+            "validation_summary": {
+              "blocked_entries": 70,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 129,
+              "decomposition": {
+                "fees": 0.8866677844825799,
+                "funding_pnl": 0.5711622787711762,
+                "price_pnl": 3.427576934064107,
+                "slippage": 0.8866677844825799,
+                "total_pnl": 2.2254036438701235
+              },
+              "episodes": 2,
+              "forced_exits": 1,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": -0.0012469156212510822,
+                  "price_pnl": -16.52981849611062
+                },
+                "BNB": {
+                  "funding_pnl": 0.0,
+                  "price_pnl": -3.1640317931697126
+                },
+                "BTC": {
+                  "funding_pnl": 0.09713429897861822,
+                  "price_pnl": 12.536046018540631
+                },
+                "DOGE": {
+                  "funding_pnl": 0.003140708991064535,
+                  "price_pnl": 2.8212906784335274
+                },
+                "ETH": {
+                  "funding_pnl": 0.10525119511192473,
+                  "price_pnl": 8.802977575417202
+                },
+                "LINK": {
+                  "funding_pnl": 0.11227728197383066,
+                  "price_pnl": -5.950278494769734
+                },
+                "SOL": {
+                  "funding_pnl": 0.20402688005762673,
+                  "price_pnl": 6.275160899774818
+                },
+                "XRP": {
+                  "funding_pnl": 0.05057882927936211,
+                  "price_pnl": -1.3637694540524166
+                }
+              },
+              "rule": "H1 W=48h k=2 s_min=1.0bp",
+              "stop_events": 1,
+              "total_return": 0.011127018219350582,
+              "traded_notional": 1773.33556896516,
+              "trades": 24
+            }
+          },
+          {
+            "fold": 5,
+            "selected": "H1 W=48h k=2 s_min=1.0bp",
+            "training_sharpe": 1.2132793482423128,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.0007179986936449649,
+              "max_drawdown": 0.024800669135765563,
+              "profit_factor": 1.586639792267506,
+              "sharpe": 2.455110856241936,
+              "total_return": 0.032120581715513685
+            },
+            "validation_summary": {
+              "blocked_entries": 68,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 132,
+              "decomposition": {
+                "fees": 0.8144440308667787,
+                "funding_pnl": 0.546101106491513,
+                "price_pnl": 7.506903298344826,
+                "slippage": 0.8144440308667787,
+                "total_pnl": 6.4241163431027815
+              },
+              "episodes": 2,
+              "forced_exits": 1,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.15810338664316806,
+                  "price_pnl": -3.37292378584047
+                },
+                "BNB": {
+                  "funding_pnl": 0.1173905931621387,
+                  "price_pnl": 0.8769878391019716
+                },
+                "BTC": {
+                  "funding_pnl": 0.09599760247893617,
+                  "price_pnl": 3.0224403927068835
+                },
+                "DOGE": {
+                  "funding_pnl": 0.010302657409292931,
+                  "price_pnl": 1.9292929292929273
+                },
+                "ETH": {
+                  "funding_pnl": 0.007607364589162164,
+                  "price_pnl": 7.0185393745126845
+                },
+                "LINK": {
+                  "funding_pnl": 0.07806598715501838,
+                  "price_pnl": 1.462160246779078
+                },
+                "SOL": {
+                  "funding_pnl": -0.022820974972764373,
+                  "price_pnl": -2.952178281396158
+                },
+                "XRP": {
+                  "funding_pnl": 0.10145449002656083,
+                  "price_pnl": -0.4774154168120077
+                }
+              },
+              "rule": "H1 W=48h k=2 s_min=1.0bp",
+              "stop_events": 0,
+              "total_return": 0.03212058171551391,
+              "traded_notional": 1628.8880617335576,
+              "trades": 22
+            }
+          }
+        ],
+        "gates": {
+          "asset_contribution": false,
+          "expectancy_positive": false,
+          "fold_contribution": false,
+          "max_drawdown": false,
+          "pbo": false,
+          "positive_folds": false,
+          "profit_factor": false
+        },
+        "passed": false,
+        "pbo": {
+          "median_logit": -0.8109302162163287,
+          "pbo": 0.7573426573426574,
+          "rows": 437,
+          "splits": 12870,
+          "strategies": 12
+        },
+        "positive_folds": 3,
+        "trades": 347
+      }
+    },
+    "H2": {
+      "normal": {
+        "aggregate": {
+          "days": 270,
+          "expectancy": -0.000752780865803041,
+          "max_drawdown": 0.2538409074063891,
+          "profit_factor": 0.7551690595167604,
+          "sharpe": -1.581596708784303,
+          "total_return": -0.19300470204281528
+        },
+        "asset_contribution": 0.29122782937628283,
+        "asset_pnl": {
+          "ADA": 8.925869639304247,
+          "BNB": -11.725468353760128,
+          "BTC": -18.360434207214645,
+          "DOGE": -20.22782684892254,
+          "ETH": 8.620182385602988,
+          "LINK": 5.648188962771897,
+          "SOL": -0.9916705865645713,
+          "XRP": 7.454854802447158
+        },
+        "blocked_entries": 0,
+        "cost": "normal",
+        "decomposition": {
+          "fees": 13.34488988008043,
+          "funding_pnl": 0.8497160222038208,
+          "price_pnl": -21.50602022854096,
+          "slippage": 6.335818927103243,
+          "total_pnl": -40.33701301352081
+        },
+        "decomposition_answers": {
+          "costs_exceed_funding": true,
+          "dominant_asset": "ADA",
+          "funding_positive_but_price_loss_dominates": true
+        },
+        "episodes": 16,
+        "fold_contribution": 0.7361242642739393,
+        "folds": [
+          {
+            "fold": 0,
+            "selected": "H2 L=3d k=3 H=3d",
+            "training_sharpe": 0.9402361167592456,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.0008277756488462727,
+              "max_drawdown": 0.06354560449010188,
+              "profit_factor": 0.738779599262605,
+              "sharpe": -1.6387194307034056,
+              "total_return": -0.03854793786761401
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 14,
+              "decomposition": {
+                "fees": 2.1104241534848174,
+                "funding_pnl": 0.2303945570562257,
+                "price_pnl": -4.850126728842685,
+                "slippage": 0.97943124825159,
+                "total_pnl": -7.709587573522867
+              },
+              "episodes": 2,
+              "forced_exits": 7,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": -0.05620589953550638,
+                  "price_pnl": 0.7387378464988998
+                },
+                "BNB": {
+                  "funding_pnl": 0.014850419135920239,
+                  "price_pnl": 2.6945910069498993
+                },
+                "BTC": {
+                  "funding_pnl": 0.035807290035669785,
+                  "price_pnl": 10.505914034967716
+                },
+                "DOGE": {
+                  "funding_pnl": -0.008062504202754046,
+                  "price_pnl": 0.9231653905918051
+                },
+                "ETH": {
+                  "funding_pnl": 0.08681908147364419,
+                  "price_pnl": -2.4645828430073564
+                },
+                "LINK": {
+                  "funding_pnl": -0.04111727211378555,
+                  "price_pnl": -22.473955125078348
+                },
+                "SOL": {
+                  "funding_pnl": 0.1713617231738515,
+                  "price_pnl": 4.1839524676972815
+                },
+                "XRP": {
+                  "funding_pnl": 0.02694171908918594,
+                  "price_pnl": 1.0420504925375482
+                }
+              },
+              "rule": "H2 L=3d k=3 H=3d",
+              "stop_events": 2,
+              "total_return": -0.038547937867614346,
+              "traded_notional": 4220.848306969633,
+              "trades": 68
+            }
+          },
+          {
+            "fold": 1,
+            "selected": "H2 L=3d k=2 H=3d",
+            "training_sharpe": 2.201947294631945,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.0004706452064219145,
+              "max_drawdown": 0.06979034908630544,
+              "profit_factor": 1.1818805081917376,
+              "sharpe": 0.8604552262714381,
+              "total_return": 0.01898052855900212
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 14,
+              "decomposition": {
+                "fees": 2.243674360135443,
+                "funding_pnl": 0.2651253050214938,
+                "price_pnl": 6.761520288585681,
+                "slippage": 0.9868655216713794,
+                "total_pnl": 3.796105711800351
+              },
+              "episodes": 2,
+              "forced_exits": 2,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.03284851689810141,
+                  "price_pnl": 8.45417221196081
+                },
+                "BNB": {
+                  "funding_pnl": -0.005201268952148154,
+                  "price_pnl": -11.390390601752301
+                },
+                "BTC": {
+                  "funding_pnl": 0.013558370327069762,
+                  "price_pnl": -4.547938622734591
+                },
+                "DOGE": {
+                  "funding_pnl": 0.08807452038188494,
+                  "price_pnl": -5.032318084585313
+                },
+                "ETH": {
+                  "funding_pnl": -0.0005022994905022988,
+                  "price_pnl": 3.924963147381675
+                },
+                "LINK": {
+                  "funding_pnl": 0.02054323530343513,
+                  "price_pnl": 8.281898194576712
+                },
+                "SOL": {
+                  "funding_pnl": -0.020443881931201606,
+                  "price_pnl": 10.541315666931624
+                },
+                "XRP": {
+                  "funding_pnl": 0.13624811248485444,
+                  "price_pnl": -3.47018162319263
+                }
+              },
+              "rule": "H2 L=3d k=2 H=3d",
+              "stop_events": 1,
+              "total_return": 0.018980528559001675,
+              "traded_notional": 4487.348720270887,
+              "trades": 54
+            }
+          },
+          {
+            "fold": 2,
+            "selected": "H2 L=3d k=2 H=3d",
+            "training_sharpe": 1.390083493645641,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.0011792249432885852,
+              "max_drawdown": 0.03601928856238717,
+              "profit_factor": 1.6670920620483958,
+              "sharpe": 2.7732402013563915,
+              "total_return": 0.052949270165296713
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 13,
+              "decomposition": {
+                "fees": 2.107271839020303,
+                "funding_pnl": -0.06612491412736184,
+                "price_pnl": 13.65202807719762,
+                "slippage": 0.8887772909905872,
+                "total_pnl": 10.589854033059368
+              },
+              "episodes": 1,
+              "forced_exits": 4,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": -0.07761865736727311,
+                  "price_pnl": 15.892563639911188
+                },
+                "BNB": {
+                  "funding_pnl": -0.06453892978635378,
+                  "price_pnl": -0.734641231868153
+                },
+                "BTC": {
+                  "funding_pnl": -0.02342858198140591,
+                  "price_pnl": -10.687069132367313
+                },
+                "DOGE": {
+                  "funding_pnl": 0.022792340987857384,
+                  "price_pnl": -2.1597096404589564
+                },
+                "ETH": {
+                  "funding_pnl": 0.007776953205074767,
+                  "price_pnl": -5.633777030370922
+                },
+                "LINK": {
+                  "funding_pnl": -0.037291484249738015,
+                  "price_pnl": 14.069642874799968
+                },
+                "SOL": {
+                  "funding_pnl": 0.05887893702402538,
+                  "price_pnl": 5.227714918940677
+                },
+                "XRP": {
+                  "funding_pnl": 0.04730450804045147,
+                  "price_pnl": -2.3226963213887046
+                }
+              },
+              "rule": "H2 L=3d k=2 H=3d",
+              "stop_events": 1,
+              "total_return": 0.052949270165296936,
+              "traded_notional": 4214.5436780406035,
+              "trades": 50
+            }
+          },
+          {
+            "fold": 3,
+            "selected": "H2 L=3d k=2 H=3d",
+            "training_sharpe": 2.8577677343585104,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.001623413576121751,
+              "max_drawdown": 0.09653373207008298,
+              "profit_factor": 0.5159880797154682,
+              "sharpe": -3.4595100892585284,
+              "total_return": -0.0721574402605536
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 14,
+              "decomposition": {
+                "fees": 2.560007589221349,
+                "funding_pnl": 0.12648390817001706,
+                "price_pnl": -10.609107399862214,
+                "slippage": 1.3888569711971188,
+                "total_pnl": -14.431488052110666
+              },
+              "episodes": 5,
+              "forced_exits": 0,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.08933910792324028,
+                  "price_pnl": -5.181089333230062
+                },
+                "BNB": {
+                  "funding_pnl": -0.03995627455897374,
+                  "price_pnl": 6.2593803820337826
+                },
+                "BTC": {
+                  "funding_pnl": -0.08593709527406664,
+                  "price_pnl": -2.719920068103619
+                },
+                "DOGE": {
+                  "funding_pnl": 0.09545221416270207,
+                  "price_pnl": -1.3189814890342149
+                },
+                "ETH": {
+                  "funding_pnl": 0.07279478355270762,
+                  "price_pnl": -4.401321017077265
+                },
+                "LINK": {
+                  "funding_pnl": -0.03342793786479368,
+                  "price_pnl": 1.6600788647299112
+                },
+                "SOL": {
+                  "funding_pnl": 0.025188392700002324,
+                  "price_pnl": -4.579182927143876
+                },
+                "XRP": {
+                  "funding_pnl": 0.0030307175291987665,
+                  "price_pnl": -0.32807181203648383
+                }
+              },
+              "rule": "H2 L=3d k=2 H=3d",
+              "stop_events": 4,
+              "total_return": -0.07215744026055337,
+              "traded_notional": 5120.015178442697,
+              "trades": 63
+            }
+          },
+          {
+            "fold": 4,
+            "selected": "H2 L=5d k=3 H=1d",
+            "training_sharpe": 1.5051641276926229,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.0012789379403673924,
+              "max_drawdown": 0.07237535694084606,
+              "profit_factor": 0.6085226558710243,
+              "sharpe": -3.3052279311692847,
+              "total_return": -0.057102074906186795
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 43,
+              "decomposition": {
+                "fees": 2.533736556115435,
+                "funding_pnl": 0.1888934956894968,
+                "price_pnl": -7.970607383052341,
+                "slippage": 1.1049645377589512,
+                "total_pnl": -11.42041498123723
+              },
+              "episodes": 2,
+              "forced_exits": 10,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": -0.029591665883914514,
+                  "price_pnl": -16.10307768922084
+                },
+                "BNB": {
+                  "funding_pnl": 0.0766402116990417,
+                  "price_pnl": -3.456438298827898
+                },
+                "BTC": {
+                  "funding_pnl": 0.059517181099423284,
+                  "price_pnl": -7.787416587755068
+                },
+                "DOGE": {
+                  "funding_pnl": -0.01171254112859736,
+                  "price_pnl": 1.82635528391733
+                },
+                "ETH": {
+                  "funding_pnl": 0.040145272964618804,
+                  "price_pnl": 12.580451283349952
+                },
+                "LINK": {
+                  "funding_pnl": -0.03170077181152556,
+                  "price_pnl": 5.668454002993073
+                },
+                "SOL": {
+                  "funding_pnl": 0.10031447173281105,
+                  "price_pnl": -13.03388304987493
+                },
+                "XRP": {
+                  "funding_pnl": -0.014718662982360898,
+                  "price_pnl": 12.334947672366098
+                }
+              },
+              "rule": "H2 L=5d k=3 H=1d",
+              "stop_events": 1,
+              "total_return": -0.05710207490618613,
+              "traded_notional": 5067.473112230874,
+              "trades": 93
+            }
+          },
+          {
+            "fold": 5,
+            "selected": "H2 L=10d k=2 H=3d",
+            "training_sharpe": 1.110676302387261,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.0024364281791933295,
+              "max_drawdown": 0.12670081145908774,
+              "profit_factor": 0.43377068667177604,
+              "sharpe": -4.830590394832401,
+              "total_return": -0.10580741075754896
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "normal",
+              "days": 45,
+              "decisions": 15,
+              "decomposition": {
+                "fees": 1.7897753821030844,
+                "funding_pnl": 0.1049436703939494,
+                "price_pnl": -18.489727082567022,
+                "slippage": 0.9869233572336168,
+                "total_pnl": -21.161482151509773
+              },
+              "episodes": 4,
+              "forced_exits": 6,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.0018557535533008408,
+                  "price_pnl": 5.163935807796307
+                },
+                "BNB": {
+                  "funding_pnl": -0.11757230823380303,
+                  "price_pnl": -4.96219145959914
+                },
+                "BTC": {
+                  "funding_pnl": 0.08283262888071227,
+                  "price_pnl": -3.2063536243091733
+                },
+                "DOGE": {
+                  "funding_pnl": -0.09462479049187764,
+                  "price_pnl": -14.558257549062404
+                },
+                "ETH": {
+                  "funding_pnl": 0.10030187716530543,
+                  "price_pnl": 4.307113176456056
+                },
+                "LINK": {
+                  "funding_pnl": 0.1219344895325316,
+                  "price_pnl": -1.556870108045544
+                },
+                "SOL": {
+                  "funding_pnl": 0.010216019987780016,
+                  "price_pnl": -3.6771033258026193
+                },
+                "XRP": {
+                  "funding_pnl": 0.0,
+                  "price_pnl": 0.0
+                }
+              },
+              "rule": "H2 L=10d k=2 H=3d",
+              "stop_events": 3,
+              "total_return": -0.10580741075754885,
+              "traded_notional": 3579.550764206167,
+              "trades": 48
+            }
+          }
+        ],
+        "gates": {
+          "asset_contribution": true,
+          "expectancy_positive": false,
+          "fold_contribution": false,
+          "max_drawdown": false,
+          "pbo": false,
+          "positive_folds": false,
+          "profit_factor": false
+        },
+        "passed": false,
+        "pbo": {
+          "median_logit": 0.15415067982725816,
+          "pbo": 0.42556332556332555,
+          "rows": 437,
+          "splits": 12870,
+          "strategies": 12
+        },
+        "positive_folds": 2,
+        "trades": 376
+      },
+      "passed": false,
+      "stress": {
+        "aggregate": {
+          "days": 270,
+          "expectancy": -0.0008538555474585539,
+          "max_drawdown": 0.26458650709819387,
+          "profit_factor": 0.7281245718464352,
+          "sharpe": -1.799795937555613,
+          "total_return": -0.21468981606545434
+        },
+        "asset_contribution": 0.2851844990380149,
+        "asset_pnl": {
+          "ADA": 9.044553939066875,
+          "BNB": -11.711661550850003,
+          "BTC": -18.37666060791001,
+          "DOGE": -19.564113597819905,
+          "ETH": 8.068686212503323,
+          "LINK": 5.842272772479035,
+          "SOL": -1.007789219704482,
+          "XRP": 8.759233037165309
+        },
+        "blocked_entries": 0,
+        "cost": "stress",
+        "decomposition": {
+          "fees": 13.343140573842778,
+          "funding_pnl": 0.8497160222038208,
+          "price_pnl": -19.795195037273977,
+          "slippage": 13.343140573842778,
+          "total_pnl": -45.63176016275571
+        },
+        "decomposition_answers": {
+          "costs_exceed_funding": true,
+          "dominant_asset": "ADA",
+          "funding_positive_but_price_loss_dominates": true
+        },
+        "episodes": 16,
+        "fold_contribution": 0.7868046229414547,
+        "folds": [
+          {
+            "fold": 0,
+            "selected": "H2 L=3d k=3 H=3d",
+            "training_sharpe": 0.6313477971895173,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.0008451527287029532,
+              "max_drawdown": 0.06572557564524971,
+              "profit_factor": 0.7327502735071351,
+              "sharpe": -1.7048758929319696,
+              "total_return": -0.03922550871249575
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 14,
+              "decomposition": {
+                "fees": 2.1095069237212476,
+                "funding_pnl": 0.2303945570562257,
+                "price_pnl": -3.8564824521130117,
+                "slippage": 2.1095069237212476,
+                "total_pnl": -7.845101742499281
+              },
+              "episodes": 2,
+              "forced_exits": 7,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": -0.05620589953550638,
+                  "price_pnl": 0.857422146261527
+                },
+                "BNB": {
+                  "funding_pnl": 0.014850419135920239,
+                  "price_pnl": 2.6384982247478987
+                },
+                "BTC": {
+                  "funding_pnl": 0.035807290035669785,
+                  "price_pnl": 10.449320047398338
+                },
+                "DOGE": {
+                  "funding_pnl": -0.008062504202754046,
+                  "price_pnl": 0.9141547580453988
+                },
+                "ETH": {
+                  "funding_pnl": 0.08681908147364419,
+                  "price_pnl": -2.7723036984404033
+                },
+                "LINK": {
+                  "funding_pnl": -0.04111727211378555,
+                  "price_pnl": -22.473955125078348
+                },
+                "SOL": {
+                  "funding_pnl": 0.1713617231738515,
+                  "price_pnl": 4.1839524676972815
+                },
+                "XRP": {
+                  "funding_pnl": 0.02694171908918594,
+                  "price_pnl": 2.3464287272556987
+                }
+              },
+              "rule": "H2 L=3d k=3 H=3d",
+              "stop_events": 2,
+              "total_return": -0.039225508712496415,
+              "traded_notional": 4219.013847442495,
+              "trades": 68
+            }
+          },
+          {
+            "fold": 1,
+            "selected": "H2 L=3d k=2 H=3d",
+            "training_sharpe": 1.6583022546359456,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.00033344585053315267,
+              "max_drawdown": 0.07419847909201369,
+              "profit_factor": 1.1241512002570764,
+              "sharpe": 0.6078083528598839,
+              "total_return": 0.01269648436668458
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 14,
+              "decomposition": {
+                "fees": 2.243674360135443,
+                "funding_pnl": 0.2651253050214938,
+                "price_pnl": 6.7615202885861745,
+                "slippage": 2.243674360135443,
+                "total_pnl": 2.539296873336781
+              },
+              "episodes": 2,
+              "forced_exits": 2,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.03284851689810141,
+                  "price_pnl": 8.45417221196081
+                },
+                "BNB": {
+                  "funding_pnl": -0.005201268952148154,
+                  "price_pnl": -11.390390601752301
+                },
+                "BTC": {
+                  "funding_pnl": 0.013558370327069762,
+                  "price_pnl": -4.547938622734591
+                },
+                "DOGE": {
+                  "funding_pnl": 0.08807452038188494,
+                  "price_pnl": -5.032318084585313
+                },
+                "ETH": {
+                  "funding_pnl": -0.0005022994905022988,
+                  "price_pnl": 3.924963147381675
+                },
+                "LINK": {
+                  "funding_pnl": 0.02054323530343513,
+                  "price_pnl": 8.281898194576712
+                },
+                "SOL": {
+                  "funding_pnl": -0.020443881931201606,
+                  "price_pnl": 10.541315666931624
+                },
+                "XRP": {
+                  "funding_pnl": 0.13624811248485444,
+                  "price_pnl": -3.47018162319263
+                }
+              },
+              "rule": "H2 L=3d k=2 H=3d",
+              "stop_events": 1,
+              "total_return": 0.012696484366683913,
+              "traded_notional": 4487.348720270887,
+              "trades": 54
+            }
+          },
+          {
+            "fold": 2,
+            "selected": "H2 L=3d k=2 H=3d",
+            "training_sharpe": 1.1935640459425372,
+            "validation": {
+              "days": 45,
+              "expectancy": 0.0010499707835126475,
+              "max_drawdown": 0.03670174068016663,
+              "profit_factor": 1.571986353549514,
+              "sharpe": 2.475806718159537,
+              "total_return": 0.046856797425150365
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 13,
+              "decomposition": {
+                "fees": 2.107271839020303,
+                "funding_pnl": -0.06612491412736184,
+                "price_pnl": 13.652028077198038,
+                "slippage": 2.107271839020303,
+                "total_pnl": 9.37135948503007
+              },
+              "episodes": 1,
+              "forced_exits": 4,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": -0.07761865736727311,
+                  "price_pnl": 15.892563639911188
+                },
+                "BNB": {
+                  "funding_pnl": -0.06453892978635378,
+                  "price_pnl": -0.734641231868153
+                },
+                "BTC": {
+                  "funding_pnl": -0.02342858198140591,
+                  "price_pnl": -10.687069132367313
+                },
+                "DOGE": {
+                  "funding_pnl": 0.022792340987857384,
+                  "price_pnl": -2.1597096404589564
+                },
+                "ETH": {
+                  "funding_pnl": 0.007776953205074767,
+                  "price_pnl": -5.633777030370922
+                },
+                "LINK": {
+                  "funding_pnl": -0.037291484249738015,
+                  "price_pnl": 14.069642874799968
+                },
+                "SOL": {
+                  "funding_pnl": 0.05887893702402538,
+                  "price_pnl": 5.227714918940677
+                },
+                "XRP": {
+                  "funding_pnl": 0.04730450804045147,
+                  "price_pnl": -2.3226963213887046
+                }
+              },
+              "rule": "H2 L=3d k=2 H=3d",
+              "stop_events": 1,
+              "total_return": 0.046856797425150365,
+              "traded_notional": 4214.5436780406035,
+              "trades": 50
+            }
+          },
+          {
+            "fold": 3,
+            "selected": "H2 L=3d k=2 H=3d",
+            "training_sharpe": 2.578752475639421,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.0016784386688899304,
+              "max_drawdown": 0.09836522326052688,
+              "profit_factor": 0.5044256511367754,
+              "sharpe": -3.6164512172311083,
+              "total_return": -0.0744189680132522
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 14,
+              "decomposition": {
+                "fees": 2.5591755127472644,
+                "funding_pnl": 0.12648390817001706,
+                "price_pnl": -9.891926485325888,
+                "slippage": 2.5591755127472644,
+                "total_pnl": -14.8837936026504
+              },
+              "episodes": 5,
+              "forced_exits": 0,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.08933910792324028,
+                  "price_pnl": -5.181089333230062
+                },
+                "BNB": {
+                  "funding_pnl": -0.03995627455897374,
+                  "price_pnl": 6.329279967145908
+                },
+                "BTC": {
+                  "funding_pnl": -0.08593709527406664,
+                  "price_pnl": -2.6795524812296065
+                },
+                "DOGE": {
+                  "funding_pnl": 0.09545221416270207,
+                  "price_pnl": -0.6462576053851734
+                },
+                "ETH": {
+                  "funding_pnl": 0.07279478355270762,
+                  "price_pnl": -4.645096334743883
+                },
+                "LINK": {
+                  "funding_pnl": -0.03342793786479368,
+                  "price_pnl": 1.854162674437049
+                },
+                "SOL": {
+                  "funding_pnl": 0.025188392700002324,
+                  "price_pnl": -4.595301560283787
+                },
+                "XRP": {
+                  "funding_pnl": 0.0030307175291987665,
+                  "price_pnl": -0.32807181203648383
+                }
+              },
+              "rule": "H2 L=3d k=2 H=3d",
+              "stop_events": 4,
+              "total_return": -0.07441896801325198,
+              "traded_notional": 5118.351025494527,
+              "trades": 63
+            }
+          },
+          {
+            "fold": 4,
+            "selected": "H2 L=5d k=3 H=1d",
+            "training_sharpe": 0.9972533394962346,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.001447430556334243,
+              "max_drawdown": 0.07579555808027444,
+              "profit_factor": 0.5727122621037113,
+              "sharpe": -3.721693888346518,
+              "total_return": -0.0642459349979716
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 43,
+              "decomposition": {
+                "fees": 2.533736556115435,
+                "funding_pnl": 0.1888934956894968,
+                "price_pnl": -7.970607383052852,
+                "slippage": 2.533736556115435,
+                "total_pnl": -12.849186999594224
+              },
+              "episodes": 2,
+              "forced_exits": 10,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": -0.029591665883914514,
+                  "price_pnl": -16.10307768922084
+                },
+                "BNB": {
+                  "funding_pnl": 0.0766402116990417,
+                  "price_pnl": -3.456438298827898
+                },
+                "BTC": {
+                  "funding_pnl": 0.059517181099423284,
+                  "price_pnl": -7.787416587755068
+                },
+                "DOGE": {
+                  "funding_pnl": -0.01171254112859736,
+                  "price_pnl": 1.82635528391733
+                },
+                "ETH": {
+                  "funding_pnl": 0.040145272964618804,
+                  "price_pnl": 12.580451283349952
+                },
+                "LINK": {
+                  "funding_pnl": -0.03170077181152556,
+                  "price_pnl": 5.668454002993073
+                },
+                "SOL": {
+                  "funding_pnl": 0.10031447173281105,
+                  "price_pnl": -13.03388304987493
+                },
+                "XRP": {
+                  "funding_pnl": -0.014718662982360898,
+                  "price_pnl": 12.334947672366098
+                }
+              },
+              "rule": "H2 L=5d k=3 H=1d",
+              "stop_events": 1,
+              "total_return": -0.06424593499797115,
+              "traded_notional": 5067.473112230874,
+              "trades": 93
+            }
+          },
+          {
+            "fold": 5,
+            "selected": "H2 L=10d k=2 H=3d",
+            "training_sharpe": 0.905302225525174,
+            "validation": {
+              "days": 45,
+              "expectancy": -0.0025355279648699965,
+              "max_drawdown": 0.1302677075364117,
+              "profit_factor": 0.4218343008118361,
+              "sharpe": -4.9931090060442775,
+              "total_return": -0.10982167088189387
+            },
+            "validation_summary": {
+              "blocked_entries": 0,
+              "cost": "stress",
+              "days": 45,
+              "decisions": 15,
+              "decomposition": {
+                "fees": 1.7897753821030844,
+                "funding_pnl": 0.1049436703939494,
+                "price_pnl": -18.48972708256644,
+                "slippage": 1.7897753821030844,
+                "total_pnl": -21.964334176378657
+              },
+              "episodes": 4,
+              "forced_exits": 6,
+              "per_symbol": {
+                "ADA": {
+                  "funding_pnl": 0.0018557535533008408,
+                  "price_pnl": 5.163935807796307
+                },
+                "BNB": {
+                  "funding_pnl": -0.11757230823380303,
+                  "price_pnl": -4.96219145959914
+                },
+                "BTC": {
+                  "funding_pnl": 0.08283262888071227,
+                  "price_pnl": -3.2063536243091733
+                },
+                "DOGE": {
+                  "funding_pnl": -0.09462479049187764,
+                  "price_pnl": -14.558257549062404
+                },
+                "ETH": {
+                  "funding_pnl": 0.10030187716530543,
+                  "price_pnl": 4.307113176456056
+                },
+                "LINK": {
+                  "funding_pnl": 0.1219344895325316,
+                  "price_pnl": -1.556870108045544
+                },
+                "SOL": {
+                  "funding_pnl": 0.010216019987780016,
+                  "price_pnl": -3.6771033258026193
+                },
+                "XRP": {
+                  "funding_pnl": 0.0,
+                  "price_pnl": 0.0
+                }
+              },
+              "rule": "H2 L=10d k=2 H=3d",
+              "stop_events": 3,
+              "total_return": -0.10982167088189332,
+              "traded_notional": 3579.550764206167,
+              "trades": 48
+            }
+          }
+        ],
+        "gates": {
+          "asset_contribution": true,
+          "expectancy_positive": false,
+          "fold_contribution": false,
+          "max_drawdown": false,
+          "pbo": false,
+          "positive_folds": false,
+          "profit_factor": false
+        },
+        "passed": false,
+        "pbo": {
+          "median_logit": 1.2039728043259361,
+          "pbo": 0.20396270396270397,
+          "rows": 437,
+          "splits": 12870,
+          "strategies": 12
+        },
+        "positive_folds": 2,
+        "trades": 376
+      }
+    }
+  },
+  "panel": {
+    "end": "2026-09-16T13:00:00+00:00",
+    "hours": 10814,
+    "settlements": 1352,
+    "start": "2025-06-23T00:00:00+00:00"
+  },
+  "promoted": [],
+  "registration": "docs/PHASE2_PREREGISTRATION.md",
+  "schema_version": 1,
+  "universe": [
+    "BTC",
+    "ETH",
+    "SOL",
+    "BNB",
+    "XRP",
+    "DOGE",
+    "ADA",
+    "LINK"
+  ]
+}

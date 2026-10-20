@@ -1,0 +1,64 @@
+{
+  "captured_at": "2026-09-08T16:32:43.084509+00:00",
+  "funding": {
+    "funding_interval_minutes": 480,
+    "funding_rate": "0.00009029",
+    "settlement_at": "2026-09-08T16:00:00.001000+00:00",
+    "source": "fundingInfo",
+    "source_environment": "mainnet_public_usdm",
+    "symbol": "BTCUSDT"
+  },
+  "perp_instrument": {
+    "content_hash": "f8fe272f0ccef1eb77b732404228036e391ca704681ced2aa486fd0c5aa7353e",
+    "instrument_id": "BTCUSDT-PERP.BINANCE",
+    "lot_size": "0.0001",
+    "minimum_notional": "50",
+    "observed_at": "2026-09-08T16:32:42.675945+00:00",
+    "price_precision": 1,
+    "raw_symbol": "BTCUSDT",
+    "size_precision": 4,
+    "snapshot_id": "ae499e3d-a41f-5e88-b458-e940a0a94334",
+    "status": "TRADING",
+    "tick_size": "0.10",
+    "venue": "binance"
+  },
+  "perp_quote": {
+    "ask": "78591.00",
+    "bid": "78590.90",
+    "collection_mode": "risk_decision",
+    "id": "854bddd8-ba7d-5d1b-a01b-841193b2b02c",
+    "instrument_snapshot_id": "ae499e3d-a41f-5e88-b458-e940a0a94334",
+    "market_age_ms": 1198,
+    "received_at": "2026-09-08T16:32:43.037558+00:00",
+    "source_environment": "demo_usdm",
+    "transport_rtt_ms": 13,
+    "venue_timestamp": "2026-09-08T16:32:41.840000+00:00"
+  },
+  "schema_version": 1,
+  "spot_instrument": {
+    "content_hash": "ffceb8d486be6ca00a87e3b7a792dcd35a6a310192659d1ba48d1139b2b8fc84",
+    "instrument_id": "BTCUSDT.BINANCE",
+    "lot_size": "0.00001000",
+    "minimum_notional": "5.00000000",
+    "observed_at": "2026-09-08T16:32:42.675945+00:00",
+    "price_precision": 2,
+    "raw_symbol": "BTCUSDT",
+    "size_precision": 5,
+    "snapshot_id": "fa178cb9-e572-5bf4-8418-706c8473e4ac",
+    "status": "TRADING",
+    "tick_size": "0.01000000",
+    "venue": "binance"
+  },
+  "spot_quote": {
+    "ask": "78682.91000000",
+    "bid": "78682.90000000",
+    "collection_mode": "risk_decision",
+    "id": "cd867e92-eb7d-504f-b0fa-e7afc5bdeb0b",
+    "instrument_snapshot_id": "fa178cb9-e572-5bf4-8418-706c8473e4ac",
+    "market_age_ms": null,
+    "received_at": "2026-09-08T16:32:43.024014+00:00",
+    "source_environment": "demo_spot",
+    "transport_rtt_ms": 13,
+    "venue_timestamp": null
+  }
+}

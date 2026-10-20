@@ -1,0 +1,226 @@
+{
+  "environment": "demo",
+  "economic_approval": false,
+  "manifest": {
+    "schema_version": 1,
+    "manifest_id": "9f134acdc9e571d1782872dbd1daae98888c9c04597ead71122a15048524113d",
+    "generated_at": "2026-09-15T11:00:00Z",
+    "source_dirty": false,
+    "dependencies_exact": true,
+    "git_commit_sha": "66bf69d8c998103c861d1fca1647d64ee45034b6",
+    "container_image_digest": "sha256:41fb5c6716fd7e609d7cd17fcfc9ada8593c762b02179956501782e255f90a3a",
+    "dependency_lock_sha256": "f83f893eb97e449a6dfd1f141093b9e54bd21588d8190cf03664ac6268256218",
+    "config_sha256": "db9331a2fa145caa6ebc1daf63c71b1af98b99bb663f58bb8c566361148833dd",
+    "model_artifact_sha256": "084b2710058127323cfb3c67206b8f89241a1c366d3cfaf92ffad1b51bc632ec",
+    "data_snapshot_id": "demo-engineering:2026-09-15T11:00:00+00:00",
+    "timerange": {
+      "start": "2026-09-15T11:00:00Z",
+      "end": "2026-09-15T11:00:01Z"
+    }
+  },
+  "run_bounds": {
+    "maximum_episodes": 2,
+    "episode_interval_seconds": 900,
+    "maximum_total_run_seconds": 3600,
+    "telegram_failure_pause_threshold": 3
+  },
+  "events": [
+    {
+      "at": "2026-09-15T11:37:23.103889+00:00",
+      "kind": "start",
+      "status": "RUNNING",
+      "strategy_started": true,
+      "hold_seconds": 300,
+      "maximum_episodes": 2,
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T11:37:24.110977+00:00",
+      "kind": "start",
+      "status": "RESUMING",
+      "intent_id": "7bc71b8a-299a-4ff3-88b6-051d9c908b5e",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T11:40:13.967709+00:00",
+      "kind": "trade",
+      "submitted": true,
+      "status": "ENQUEUED",
+      "command_id": "07b39c1e-c358-4a82-98c9-528e12db762c",
+      "client_order_id": "v3a5b2d718950694beab80d8b2b136d9",
+      "action": "close_perp_buy",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T11:40:16.982320+00:00",
+      "kind": "trade",
+      "fill_confirmed": true,
+      "instrument": "BTCUSDT-PERP.BINANCE_USDM_DEMO",
+      "quantity": "0.0028",
+      "price": "76907.10",
+      "side": "BUY",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T11:40:18.565184+00:00",
+      "kind": "trade",
+      "submitted": true,
+      "status": "ENQUEUED",
+      "command_id": "923cb03f-3145-40fb-83bf-e0c6b3c700de",
+      "client_order_id": "v3a0e52390d7f81434da8b4de670ed8f",
+      "action": "close_spot_sell",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T11:40:21.714603+00:00",
+      "kind": "trade",
+      "fill_confirmed": true,
+      "instrument": "BTCUSDT.BINANCE_SPOT_DEMO",
+      "quantity": "0.00284000",
+      "price": "76914.00000000",
+      "side": "SELL",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T11:40:23.703523+00:00",
+      "kind": "stop",
+      "submitted": false,
+      "status": "DUST_REMAINS",
+      "state": "CLOSED",
+      "reason": "Spot dust remains below sell lot or notional minimum",
+      "flat": false,
+      "residual_settled": true,
+      "orders_submitted": false,
+      "residual_base": "0.00000715",
+      "residual_mark_usdt": "0.5499349570",
+      "completed_episode": true,
+      "exact_flat": false,
+      "intent_id": "7bc71b8a-299a-4ff3-88b6-051d9c908b5e",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T11:55:23.993512+00:00",
+      "kind": "trade",
+      "submitted": true,
+      "status": "ENQUEUED",
+      "intent_id": "76182e88-1de4-4998-8504-2dbe53f6d538",
+      "command_id": "81dfb8f6-8791-4525-8ad6-16c6a2187b64",
+      "action": "spot_buy_ioc",
+      "episode_reason": "episode 2 of 2",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T11:55:26.945392+00:00",
+      "kind": "trade",
+      "fill_confirmed": true,
+      "instrument": "BTCUSDT.BINANCE_SPOT_DEMO",
+      "quantity": "0.00286000",
+      "price": "76901.69000000",
+      "side": "BUY",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T11:55:28.325028+00:00",
+      "kind": "trade",
+      "submitted": true,
+      "status": "ENQUEUED",
+      "command_id": "f7fa3070-2097-4c0d-8c2a-d8c589fe8eb5",
+      "client_order_id": "v3ab2e0e279054e42259dfa44a24ca1c",
+      "action": "hedge_perp_sell",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T11:55:31.334804+00:00",
+      "kind": "trade",
+      "fill_confirmed": true,
+      "instrument": "BTCUSDT-PERP.BINANCE_USDM_DEMO",
+      "quantity": "0.0028",
+      "price": "76845.90",
+      "side": "SELL",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T12:00:24.415708+00:00",
+      "kind": "trade",
+      "submitted": true,
+      "status": "ENQUEUED",
+      "command_id": "3010ef2f-e8ed-423f-9959-a0645e6fbf2c",
+      "client_order_id": "v3a870f6fc4d96f49a5a8e862478fa44",
+      "action": "close_perp_buy",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T12:00:27.376380+00:00",
+      "kind": "trade",
+      "fill_confirmed": true,
+      "instrument": "BTCUSDT-PERP.BINANCE_USDM_DEMO",
+      "quantity": "0.0028",
+      "price": "76908.00",
+      "side": "BUY",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T12:00:29.189095+00:00",
+      "kind": "trade",
+      "submitted": true,
+      "status": "ENQUEUED",
+      "command_id": "2e36ae5e-5229-4366-b8f9-89fb708a2684",
+      "client_order_id": "v3a284ab86a3b2a4eaba8db0bc36f1e5",
+      "action": "close_spot_sell",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T12:00:32.186205+00:00",
+      "kind": "trade",
+      "fill_confirmed": true,
+      "instrument": "BTCUSDT.BINANCE_SPOT_DEMO",
+      "quantity": "0.00285000",
+      "price": "76926.88000000",
+      "side": "SELL",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T12:00:34.513436+00:00",
+      "kind": "stop",
+      "submitted": false,
+      "status": "DUST_REMAINS",
+      "state": "CLOSED",
+      "reason": "Spot dust remains below sell lot or notional minimum",
+      "flat": false,
+      "residual_settled": true,
+      "orders_submitted": false,
+      "residual_base": "0.00000714",
+      "residual_mark_usdt": "0.5492579232",
+      "completed_episode": true,
+      "exact_flat": false,
+      "intent_id": "76182e88-1de4-4998-8504-2dbe53f6d538",
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    },
+    {
+      "at": "2026-09-15T12:00:35.535581+00:00",
+      "kind": "stop",
+      "status": "STOPPED",
+      "reason": "run_window_exhausted",
+      "episodes_closed": 2,
+      "continuous_auto_trading_running": false,
+      "telegram_delivered": true,
+      "telegram_error_type": null
+    }
+  ]
+}

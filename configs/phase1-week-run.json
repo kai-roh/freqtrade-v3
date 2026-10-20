@@ -1,0 +1,18 @@
+{
+  "economic_approval": false,
+  "environment": "demo",
+  "episode_interval_seconds": 7200,
+  "freshness_basis": "local_receive_gap",
+  "hold_seconds": 300,
+  "maximum_episodes": 60,
+  "maximum_ioc_slippage_bps": "10",
+  "maximum_leg_usdt": "300",
+  "maximum_receive_gap_ms": 2000,
+  "maximum_run_seconds": 900,
+  "maximum_total_run_seconds": 604800,
+  "purpose": "Phase 1E week observation run: bounded repetition of the synthetic engineering episode; not economic approval",
+  "real_capital": false,
+  "synthetic_trigger": true,
+  "target_leg_usdt": "220",
+  "telegram_failure_pause_threshold": 3
+}

@@ -1,0 +1,20 @@
+{
+  "calendar_day_count": 87,
+  "closed_trade_count": 194,
+  "counterfactual_fee": "52.9459916849999999310",
+  "counterfactual_net_pnl": "-67.6987118516000000114",
+  "database_sha256": "3d19d73c869b85532c03f2e33a3e56112371b4c69fa28a276b715cee8f4793e2",
+  "filled_order_count": 388,
+  "gross_pnl": "-14.7527201666000000804",
+  "original_net_pnl": "-183.83960848",
+  "restored_original_fee": "169.0868883133999999196",
+  "schema_version": 1,
+  "spec": {
+    "maker_fee_rate": "0.00015",
+    "original_fee_rate": "0.00067",
+    "reference_capital": "1000",
+    "reporting_timezone": "Asia/Seoul",
+    "scenario_id": "all-limit-maker-nonlimit-taker",
+    "taker_fee_rate": "0.00045"
+  }
+}

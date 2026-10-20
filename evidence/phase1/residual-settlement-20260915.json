@@ -1,0 +1,37 @@
+{
+  "account_after": {
+    "open_btc_orders": 0,
+    "perp_btc": "0",
+    "spot_total_btc": "0.00000715"
+  },
+  "account_before": {
+    "open_btc_orders": 0,
+    "perp_btc": "0",
+    "spot_total_btc": "0.00000715"
+  },
+  "captured_at": "2026-09-15T10:29:06.279231+00:00",
+  "economic_approval": false,
+  "environment": "demo",
+  "image_digest": "sha256:afed612e48e20971e51a173827a93799566096523a394158e9e5ce4f6ea0b3d4",
+  "intent_id": "09a7f1cf-51d1-43ab-b8a6-fa65041ba6ed",
+  "lifecycle_after": {
+    "flat": true,
+    "orders_submitted": false,
+    "state": "CLOSED"
+  },
+  "open_intents": 0,
+  "orders_submitted": false,
+  "passed": true,
+  "settlement": {
+    "flat": false,
+    "orders_submitted": false,
+    "residual_base": "0.00000715",
+    "residual_mark_usdt": "0.5498471550000000",
+    "residual_settled": true,
+    "state": "CLOSED"
+  },
+  "source_sha": "b6d3bbdad0e47b1a7d64514a472843e3273506fe",
+  "state_before": "ABORTING",
+  "telegram_delivered": true,
+  "telegram_error_type": null
+}

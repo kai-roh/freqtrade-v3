@@ -1,0 +1,16 @@
+{
+  "environment": "demo",
+  "source": "credentialed DemoInspector.account GET after close-only recovery",
+  "spot_total_btc": "0.00000715",
+  "perp_btc": "0",
+  "open_btc_orders": 0,
+  "verification_orders_submitted": false,
+  "ledger_filled_orders": 4,
+  "ledger_active_commands": 0,
+  "ledger_applied_fill_inbox": 4,
+  "ledger_unresolved_recovery_checks": 0,
+  "episode_state": "ABORTING",
+  "stop_reason": "DUST_REMAINS",
+  "continuous_auto_trading_running": false,
+  "phase1e_complete": false
+}

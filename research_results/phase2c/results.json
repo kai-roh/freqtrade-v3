@@ -1,0 +1,2250 @@
+{
+  "config": {
+    "bootstrap_block": 20,
+    "bootstrap_iterations": 10000,
+    "bootstrap_seed": 20261002,
+    "max_drawdown": 0.3,
+    "min_annual_return_stress": 0.08,
+    "min_positive_configs": 4,
+    "min_positive_windows": 5,
+    "pbo_max": 0.2,
+    "pbo_partitions": 16,
+    "sleeve": 500.0
+  },
+  "decision": "STOP_NO_EDGE",
+  "evaluation": {
+    "costs": {
+      "normal": {
+        "bootstrap": {
+          "alpha": 0.05,
+          "block_definition": "moving_contiguous_periods",
+          "block_length": 20,
+          "ci_high": 0.0006837207818720014,
+          "ci_low": -0.00013987777192475838,
+          "direction": "two-sided",
+          "iterations": 10000,
+          "observed_mean": 0.00026556687944372706,
+          "sample_unit": "daily_portfolio_pnl",
+          "seed": 20261002
+        },
+        "controls": {
+          "BH-VT": {
+            "annual_turnover_x_sleeve": 0.9994700693157124,
+            "annualized_return": 0.13226370677596044,
+            "best_episode_pnl": 216.40670839095515,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 1.0425978873752257,
+              "funding_pnl": -75.29245188500231,
+              "price_pnl": 416.35097325959117,
+              "slippage": 0.41703915495009036,
+              "total_pnl": 339.59888433226354
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 416.35097325959174,
+              "short_price_pnl": 0.0
+            },
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.00038449604963897936,
+              "max_drawdown": 0.24807650079327406,
+              "profit_factor": 1.1297560789288863,
+              "sharpe": 0.7806249502029993,
+              "total_return": 0.679197768664521
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -42.16073705563383,
+                "price_pnl": 259.473976690683
+              },
+              "ETH": {
+                "funding_pnl": -33.13171482936792,
+                "price_pnl": 156.876996568911
+              }
+            },
+            "pnl_by_year": {
+              "2022": -46.61880124987215,
+              "2023": 232.10701465547425,
+              "2024": 165.69558392230033,
+              "2025": -9.049746469023376,
+              "2026": -2.5351665266155123
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 2085.195774750452,
+            "trades": 34
+          },
+          "H0": {
+            "annual_turnover_x_sleeve": 0.0,
+            "annualized_return": 0.0,
+            "best_episode_pnl": 0.0,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 0.0,
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0,
+              "slippage": 0.0,
+              "total_pnl": 0.0
+            },
+            "episodes": 0,
+            "episodes_by_symbol": {
+              "BTC": 0,
+              "ETH": 0
+            },
+            "label": "H0",
+            "long_short": {
+              "long_price_pnl": 0.0,
+              "short_price_pnl": 0.0
+            },
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.0,
+              "max_drawdown": 0.0,
+              "profit_factor": 0.0,
+              "sharpe": 0.0,
+              "total_return": 0.0
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0
+              },
+              "ETH": {
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0
+              }
+            },
+            "pnl_by_year": {
+              "2022": 0.0,
+              "2023": 0.0,
+              "2024": 0.0,
+              "2025": 0.0,
+              "2026": 0.0
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.0,
+              "ETH": 0.0
+            },
+            "traded_notional": 0.0,
+            "trades": 0
+          },
+          "MA200": {
+            "annual_turnover_x_sleeve": 8.083526870627633,
+            "annualized_return": 0.13256798262208958,
+            "best_episode_pnl": 117.54719963240994,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 8.432336591757457,
+              "funding_pnl": -50.62257832498303,
+              "price_pnl": 402.968588599834,
+              "slippage": 3.372934636702983,
+              "total_pnl": 340.5407390463905
+            },
+            "episodes": 60,
+            "episodes_by_symbol": {
+              "BTC": 34,
+              "ETH": 26
+            },
+            "label": "MA200",
+            "long_short": {
+              "long_price_pnl": 419.14106341317625,
+              "short_price_pnl": -16.17247481335072
+            },
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.00038304164186576793,
+              "max_drawdown": 0.13414666181950097,
+              "profit_factor": 1.1351160274163725,
+              "sharpe": 0.7977638051070889,
+              "total_return": 0.6810814780927832
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -28.584551483168404,
+                "price_pnl": 228.29453640448853
+              },
+              "ETH": {
+                "funding_pnl": -22.038026841814425,
+                "price_pnl": 174.67405219534103
+              }
+            },
+            "pnl_by_year": {
+              "2022": 46.35736851196771,
+              "2023": 76.75311467973916,
+              "2024": 129.76428903883607,
+              "2025": -16.60427030164749,
+              "2026": 104.27023711749507
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 16864.673183514915,
+            "trades": 89
+          }
+        },
+        "full_period_configs": [
+          {
+            "annual_turnover_x_sleeve": 26.5495518925377,
+            "annualized_return": 0.06839357899875953,
+            "best_episode_pnl": 73.95376156036103,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 41.5336825496959,
+              "funding_pnl": -79.9693141696859,
+              "price_pnl": 394.5258496566056,
+              "slippage": 16.61347301987837,
+              "total_pnl": 256.4093799173454
+            },
+            "episodes": 360,
+            "episodes_by_symbol": {
+              "BTC": 185,
+              "ETH": 175
+            },
+            "label": "H4 L=20d binary",
+            "long_short": {
+              "long_price_pnl": 499.06598292797145,
+              "short_price_pnl": -104.54013327136711
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.0002070120558468837,
+              "max_drawdown": 0.22164726591124667,
+              "profit_factor": 1.1057119633784185,
+              "sharpe": 0.5504793818866605,
+              "total_return": 0.5128187598346903
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -38.17283566134003,
+                "price_pnl": 204.42156429092927
+              },
+              "ETH": {
+                "funding_pnl": -41.79647850834612,
+                "price_pnl": 190.1042853656764
+              }
+            },
+            "pnl_by_year": {
+              "2020": 210.52743309470543,
+              "2021": 34.55668027725346,
+              "2022": -59.888707075885804,
+              "2023": 3.8228352879267504,
+              "2024": 11.609018173932554,
+              "2025": -21.211868672390324,
+              "2026": 76.99398883180334
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.5673890834792761,
+              "ETH": 0.5608216579100992
+            },
+            "traded_notional": 83067.36509939193,
+            "trades": 732
+          },
+          {
+            "annual_turnover_x_sleeve": 8.309095973738344,
+            "annualized_return": 0.061378942659750635,
+            "best_episode_pnl": 53.74607550595633,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 12.998613153437258,
+              "funding_pnl": -56.958137523481334,
+              "price_pnl": 301.0203310621667,
+              "slippage": 5.199445261374896,
+              "total_pnl": 225.8641351238732
+            },
+            "episodes": 504,
+            "episodes_by_symbol": {
+              "BTC": 251,
+              "ETH": 253
+            },
+            "label": "H4 L=20d linear",
+            "long_short": {
+              "long_price_pnl": 302.4679144764829,
+              "short_price_pnl": -1.447583414301163
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.00017621822219464732,
+              "max_drawdown": 0.14942685084810714,
+              "profit_factor": 1.138951243702197,
+              "sharpe": 0.6592119781319358,
+              "total_return": 0.4517282702477441
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -30.213355568520416,
+                "price_pnl": 208.86282989691378
+              },
+              "ETH": {
+                "funding_pnl": -26.74478195496109,
+                "price_pnl": 92.15750116526056
+              }
+            },
+            "pnl_by_year": {
+              "2020": 110.7859837184983,
+              "2021": 15.363619492508292,
+              "2022": -10.388176202538375,
+              "2023": 29.86475519243902,
+              "2024": 9.804402477032795,
+              "2025": -5.701466018249107,
+              "2026": 76.13501646418229
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.988142148277875,
+              "ETH": 0.9903312901342674
+            },
+            "traded_notional": 25997.226306874487,
+            "trades": 727
+          },
+          {
+            "annual_turnover_x_sleeve": 14.534364951077178,
+            "annualized_return": 0.1482278337889411,
+            "best_episode_pnl": 155.596957100689,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 22.737321608397448,
+              "funding_pnl": -112.1044205116636,
+              "price_pnl": 831.3384890073746,
+              "slippage": 9.094928643358987,
+              "total_pnl": 687.4018182439545
+            },
+            "episodes": 191,
+            "episodes_by_symbol": {
+              "BTC": 98,
+              "ETH": 93
+            },
+            "label": "H4 L=60d binary",
+            "long_short": {
+              "long_price_pnl": 766.0001196339517,
+              "short_price_pnl": 65.33836937342997
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.0004022479861727768,
+              "max_drawdown": 0.12224268894991394,
+              "profit_factor": 1.215521113989983,
+              "sharpe": 1.120190812129285,
+              "total_return": 1.3748036364879073
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -55.25665452087343,
+                "price_pnl": 436.73891648549807
+              },
+              "ETH": {
+                "funding_pnl": -56.84776599079019,
+                "price_pnl": 394.59957252188235
+              }
+            },
+            "pnl_by_year": {
+              "2020": 179.56240043318735,
+              "2021": 110.17875312265755,
+              "2022": 36.48319258361312,
+              "2023": 97.52547924931639,
+              "2024": 109.96769427108154,
+              "2025": 77.58978791250911,
+              "2026": 76.09451067158943
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.7153750729713952,
+              "ETH": 0.7031158785755983
+            },
+            "traded_notional": 45474.643216794895,
+            "trades": 405
+          },
+          {
+            "annual_turnover_x_sleeve": 3.6303675560147624,
+            "annualized_return": 0.09375012209649891,
+            "best_episode_pnl": 157.64651636525693,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 5.679287327354594,
+              "funding_pnl": -83.54253158806085,
+              "price_pnl": 467.48815341075596,
+              "slippage": 2.2717149309418376,
+              "total_pnl": 375.9946195643987
+            },
+            "episodes": 190,
+            "episodes_by_symbol": {
+              "BTC": 97,
+              "ETH": 93
+            },
+            "label": "H4 L=60d linear",
+            "long_short": {
+              "long_price_pnl": 482.6020864881609,
+              "short_price_pnl": -15.11393307740154
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.0002599947587405747,
+              "max_drawdown": 0.08302042632975437,
+              "profit_factor": 1.190022273061584,
+              "sharpe": 0.9237771205788461,
+              "total_return": 0.7519892391287879
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -42.58370472726219,
+                "price_pnl": 287.3393770666792
+              },
+              "ETH": {
+                "funding_pnl": -40.958826860798204,
+                "price_pnl": 180.14877634407847
+              }
+            },
+            "pnl_by_year": {
+              "2020": 136.90490163489414,
+              "2021": 80.05756082730443,
+              "2022": 8.542085379260016,
+              "2023": 34.47686049186029,
+              "2024": 66.56078489543609,
+              "2025": 28.359970159586055,
+              "2026": 21.09245617605768
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.9868286631640397,
+              "ETH": 0.9960230589608874
+            },
+            "traded_notional": 11358.574654709202,
+            "trades": 313
+          },
+          {
+            "annual_turnover_x_sleeve": 12.457713885062786,
+            "annualized_return": 0.07635389997215292,
+            "best_episode_pnl": 217.7970100810213,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 19.4886428174544,
+              "funding_pnl": -113.51036611635986,
+              "price_pnl": 433.16819202652516,
+              "slippage": 7.795457126981757,
+              "total_pnl": 292.37372596572914
+            },
+            "episodes": 162,
+            "episodes_by_symbol": {
+              "BTC": 72,
+              "ETH": 90
+            },
+            "label": "H4 L=120d binary",
+            "long_short": {
+              "long_price_pnl": 634.3436055190894,
+              "short_price_pnl": -201.17541349256706
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.00022701599389294766,
+              "max_drawdown": 0.19285642683866414,
+              "profit_factor": 1.107487730387117,
+              "sharpe": 0.6082579742503074,
+              "total_return": 0.5847474519314642
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -58.148324593014344,
+                "price_pnl": 245.39961905442505
+              },
+              "ETH": {
+                "funding_pnl": -55.36204152334589,
+                "price_pnl": 187.7685729720904
+              }
+            },
+            "pnl_by_year": {
+              "2020": 241.81278724595848,
+              "2021": 62.21800035321883,
+              "2022": 13.866240600972787,
+              "2023": -33.27350498650844,
+              "2024": 73.91302958903646,
+              "2025": -35.394711999363835,
+              "2026": -30.76811483758513
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.7013645650904845,
+              "ETH": 0.739017805020432
+            },
+            "traded_notional": 38977.285634908774,
+            "trades": 349
+          },
+          {
+            "annual_turnover_x_sleeve": 2.296798737144524,
+            "annualized_return": 0.08301107037352673,
+            "best_episode_pnl": 147.37552660308336,
+            "cost": "normal",
+            "decomposition": {
+              "fees": 3.5930741887932167,
+              "funding_pnl": -96.88639139025744,
+              "price_pnl": 425.4601819107019,
+              "slippage": 1.4372296755172853,
+              "total_pnl": 323.54348665613395
+            },
+            "episodes": 106,
+            "episodes_by_symbol": {
+              "BTC": 61,
+              "ETH": 45
+            },
+            "label": "H4 L=120d linear",
+            "long_short": {
+              "long_price_pnl": 437.7381072530431,
+              "short_price_pnl": -12.277925342341138
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.00023305490767540463,
+              "max_drawdown": 0.12423625526391482,
+              "profit_factor": 1.1674464473755928,
+              "sharpe": 0.8248450309922936,
+              "total_return": 0.6470869733122637
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -53.50420536897513,
+                "price_pnl": 232.11834821695948
+              },
+              "ETH": {
+                "funding_pnl": -43.38218602128223,
+                "price_pnl": 193.3418336937425
+              }
+            },
+            "pnl_by_year": {
+              "2020": 196.27396502635122,
+              "2021": 64.88296793857933,
+              "2022": 26.19621372750828,
+              "2023": -23.504238716195914,
+              "2024": 56.55256487678491,
+              "2025": -41.611859973060405,
+              "2026": 44.75387377616653
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.9955852305896089,
+              "ETH": 0.9955852305896089
+            },
+            "traded_notional": 7186.148377586428,
+            "trades": 198
+          }
+        ],
+        "gates": {
+          "beats_bh_vt_drawdown": true,
+          "beats_bh_vt_sharpe": false,
+          "constrained_net_positive": true,
+          "max_drawdown": true,
+          "net_positive": true,
+          "pbo": false,
+          "positive_configs": true,
+          "positive_windows": true,
+          "without_best_episode": true,
+          "without_best_year": true
+        },
+        "passed": false,
+        "pbo": {
+          "median_logit": 0.9162907318741551,
+          "pbo": 0.3396270396270396,
+          "rows": 2284,
+          "splits": 12870,
+          "strategies": 6
+        },
+        "selections": [
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2020-07-02T00:00:00+00:00",
+              "2022-07-02T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 1.8250471479174923,
+                "train_total_return": 0.8030124141989221
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 1.7176479288417839,
+                "train_total_return": 0.5842183005426853
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 1.6915218757219144,
+                "train_total_return": 0.6999007781818893
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 1.623300306414469,
+                "train_total_return": 0.518457761212787
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 1.515627095850557,
+                "train_total_return": 0.5349506706575704
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 1.1333060963754575,
+                "train_total_return": 0.2728562425548826
+              }
+            ],
+            "validation": [
+              "2022-08-01T00:00:00+00:00",
+              "2023-01-30T00:00:00+00:00"
+            ],
+            "validation_pnl": 26.64829152592597,
+            "window": 0
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2020-12-31T00:00:00+00:00",
+              "2022-12-31T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.7985277655992649,
+                "train_total_return": 0.26719601166391427
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.7674444234618782,
+                "train_total_return": 0.19557710346355472
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.66916126323267,
+                "train_total_return": 0.18594921056961766
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.25414418868776384,
+                "train_total_return": 0.06294242084645418
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.24686255132589044,
+                "train_total_return": 0.045727566058940905
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": -0.0978766179953648,
+                "train_total_return": -0.06007439248087043
+              }
+            ],
+            "validation": [
+              "2023-01-30T00:00:00+00:00",
+              "2023-07-31T00:00:00+00:00"
+            ],
+            "validation_pnl": -47.65934395592069,
+            "window": 1
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2021-07-01T00:00:00+00:00",
+              "2023-07-01T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.3281438069297017,
+                "train_total_return": 0.09025171452769509
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.16239441958998593,
+                "train_total_return": 0.024839374962163596
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.09018054338020844,
+                "train_total_return": 0.008056924526232967
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": -0.06378698864379514,
+                "train_total_return": -0.021181352831896594
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": -0.28155920623987896,
+                "train_total_return": -0.16526757064745567
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": -0.5293480548240665,
+                "train_total_return": -0.21444559680607567
+              }
+            ],
+            "validation": [
+              "2023-07-31T00:00:00+00:00",
+              "2024-01-29T00:00:00+00:00"
+            ],
+            "validation_pnl": 57.834563704121365,
+            "window": 2
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2021-12-30T00:00:00+00:00",
+              "2023-12-30T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.7422470798666747,
+                "train_total_return": 0.26545891176166925
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.5359945157293073,
+                "train_total_return": 0.12216751911972734
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.25613464855558193,
+                "train_total_return": 0.045779809570755114
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.0023769458753840644,
+                "train_total_return": -0.007906696629738419
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.0006622308858471931,
+                "train_total_return": -0.0383482959278687
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": -0.20332427914263224,
+                "train_total_return": -0.11453438659845361
+              }
+            ],
+            "validation": [
+              "2024-01-29T00:00:00+00:00",
+              "2024-07-29T00:00:00+00:00"
+            ],
+            "validation_pnl": 13.881985688650275,
+            "window": 3
+          },
+          {
+            "selected": "H4 L=120d linear",
+            "train": [
+              "2022-06-30T00:00:00+00:00",
+              "2024-06-29T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.4508782274903329,
+                "train_total_return": 0.09570129813763106
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.42349235353243,
+                "train_total_return": 0.08383140688531165
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.252582768709915,
+                "train_total_return": 0.06560785048903583
+              },
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.24202352217482073,
+                "train_total_return": 0.06027562560634436
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.08434709517536981,
+                "train_total_return": 0.004287390033118843
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 0.015083151690071666,
+                "train_total_return": -0.03152179920078657
+              }
+            ],
+            "validation": [
+              "2024-07-29T00:00:00+00:00",
+              "2025-01-27T00:00:00+00:00"
+            ],
+            "validation_pnl": -3.392409233446074,
+            "window": 4
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2022-12-29T00:00:00+00:00",
+              "2024-12-28T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.9958990805503807,
+                "train_total_return": 0.4165040193028604
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.7052857271262779,
+                "train_total_return": 0.19124955059684057
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.3882813116329048,
+                "train_total_return": 0.08388706689908942
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.3524351920002436,
+                "train_total_return": 0.07234413229429504
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.2966494346295817,
+                "train_total_return": 0.08394204786791071
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 0.1774106696529013,
+                "train_total_return": 0.03202378921107929
+              }
+            ],
+            "validation": [
+              "2025-01-27T00:00:00+00:00",
+              "2025-07-28T00:00:00+00:00"
+            ],
+            "validation_pnl": 61.25758042911548,
+            "window": 5
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2023-06-29T00:00:00+00:00",
+              "2025-06-28T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.9891061584004329,
+                "train_total_return": 0.38950503230620814
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.6301231651833529,
+                "train_total_return": 0.16120145707281797
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.3426899385299355,
+                "train_total_return": 0.0678378227454648
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 0.2984147768984061,
+                "train_total_return": 0.07731335463043476
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.12502212711522387,
+                "train_total_return": 0.01563500010558161
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.03665076058625906,
+                "train_total_return": -0.01800801483822345
+              }
+            ],
+            "validation": [
+              "2025-07-28T00:00:00+00:00",
+              "2026-01-26T00:00:00+00:00"
+            ],
+            "validation_pnl": -10.179363300505088,
+            "window": 6
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2023-12-28T00:00:00+00:00",
+              "2025-12-27T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.9306103630945006,
+                "train_total_return": 0.3557661910030303
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.7016421962763174,
+                "train_total_return": 0.17409999898134765
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.2497624047155612,
+                "train_total_return": 0.059699546405751036
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.06169287102521339,
+                "train_total_return": 0.001406056378390197
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 0.056353921620535624,
+                "train_total_return": -0.012334086624118057
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.0374123518907033,
+                "train_total_return": -0.007503323613408774
+              }
+            ],
+            "validation": [
+              "2026-01-26T00:00:00+00:00",
+              "2026-07-27T00:00:00+00:00"
+            ],
+            "validation_pnl": 7.792030989355794,
+            "window": 7
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2024-06-27T00:00:00+00:00",
+              "2026-06-27T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 1.0971678523812245,
+                "train_total_return": 0.39416497064089207
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.8338842722990982,
+                "train_total_return": 0.19658508979962974
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.3613375491563172,
+                "train_total_return": 0.0803476580480127
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.2686693958281675,
+                "train_total_return": 0.0580766932326493
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.11274780372657063,
+                "train_total_return": 0.004132238221805196
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 0.061961805746617186,
+                "train_total_return": -0.020167320614837725
+              }
+            ],
+            "validation": [
+              "2026-07-27T00:00:00+00:00",
+              "2026-10-01T00:00:00+00:00"
+            ],
+            "validation_pnl": 94.44924702634057,
+            "window": 8
+          }
+        ],
+        "walk_forward": {
+          "annual_turnover_x_sleeve": 15.867706711382398,
+          "annualized_return": 0.08421360242750908,
+          "best_episode_pnl": 72.74053049096528,
+          "cost": "normal",
+          "decomposition": {
+            "fees": 16.552409124270827,
+            "funding_pnl": -37.05588986302971,
+            "price_pnl": 260.8618455106465,
+            "slippage": 6.620963649708331,
+            "total_pnl": 200.6325828736376
+          },
+          "episodes": 134,
+          "episodes_by_symbol": {
+            "BTC": 67,
+            "ETH": 67
+          },
+          "label": "H4 L=120d linear | H4 L=60d binary",
+          "long_short": {
+            "long_price_pnl": 340.48350847680496,
+            "short_price_pnl": -79.6216629661568
+          },
+          "metrics": {
+            "days": 1523,
+            "expectancy": 0.00026556687944372706,
+            "max_drawdown": 0.19228375289170657,
+            "profit_factor": 1.1000690079180988,
+            "sharpe": 0.5393866321055044,
+            "total_return": 0.4012651657472759
+          },
+          "per_symbol": {
+            "BTC": {
+              "funding_pnl": -21.231998285806828,
+              "price_pnl": 162.89991183526817
+            },
+            "ETH": {
+              "funding_pnl": -15.823891577222872,
+              "price_pnl": 97.96193367537744
+            }
+          },
+          "pnl_by_year": {
+            "2022": -42.49215859678645,
+            "2023": 97.52547924931775,
+            "2024": -16.87674399748039,
+            "2025": 86.38149554699612,
+            "2026": 76.09451067159057
+          },
+          "rounding_skips": 0,
+          "time_in_market": {
+            "BTC": 0.7294265703655066,
+            "ETH": 0.7313963668198731
+          },
+          "traded_notional": 33104.81824854163,
+          "trades": 284
+        },
+        "walk_forward_constrained": {
+          "annual_turnover_x_sleeve": 11.975139095863437,
+          "annualized_return": 0.10930507487205765,
+          "best_episode_pnl": 71.6188285209251,
+          "cost": "normal",
+          "decomposition": {
+            "fees": 12.49187455000001,
+            "funding_pnl": -38.19893997912574,
+            "price_pnl": 326.5021599999965,
+            "slippage": 4.996749819999999,
+            "total_pnl": 270.81459565087073
+          },
+          "episodes": 116,
+          "episodes_by_symbol": {
+            "BTC": 64,
+            "ETH": 52
+          },
+          "label": "H4 L=60d binary | H4 L=60d linear",
+          "long_short": {
+            "long_price_pnl": 368.8636799999972,
+            "short_price_pnl": -42.36151999999996
+          },
+          "metrics": {
+            "days": 1523,
+            "expectancy": 0.000317733795028546,
+            "max_drawdown": 0.1628198442837585,
+            "profit_factor": 1.1462695114627404,
+            "sharpe": 0.74012050807014,
+            "total_return": 0.5416291913017408
+          },
+          "per_symbol": {
+            "BTC": {
+              "funding_pnl": -20.499131472330177,
+              "price_pnl": 122.54779999999954
+            },
+            "ETH": {
+              "funding_pnl": -17.69980850679552,
+              "price_pnl": 203.95435999999992
+            }
+          },
+          "pnl_by_year": {
+            "2022": -40.083093679124374,
+            "2023": 92.49169531928607,
+            "2024": 103.81111307073445,
+            "2025": 75.4326336568513,
+            "2026": 39.16224728312329
+          },
+          "rounding_skips": 30,
+          "time_in_market": {
+            "BTC": 0.6670496826439046,
+            "ETH": 0.6880608448238127
+          },
+          "traded_notional": 24983.74910000002,
+          "trades": 248
+        }
+      },
+      "stress": {
+        "bootstrap": {
+          "alpha": 0.05,
+          "block_definition": "moving_contiguous_periods",
+          "block_length": 20,
+          "ci_high": 0.0006786350722324671,
+          "ci_low": -0.0001525008673110068,
+          "direction": "two-sided",
+          "iterations": 10000,
+          "observed_mean": 0.0002569137952565879,
+          "sample_unit": "daily_portfolio_pnl",
+          "seed": 20261002
+        },
+        "controls": {
+          "BH-VT": {
+            "annual_turnover_x_sleeve": 0.9994700693157124,
+            "annualized_return": 0.13206147013756642,
+            "best_episode_pnl": 216.0181950006291,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 1.0425978873752257,
+              "funding_pnl": -75.29245188500231,
+              "price_pnl": 416.3509732595914,
+              "slippage": 1.0425978873752257,
+              "total_pnl": 338.97332559983863
+            },
+            "episodes": 2,
+            "episodes_by_symbol": {
+              "BTC": 1,
+              "ETH": 1
+            },
+            "label": "BH-VT",
+            "long_short": {
+              "long_price_pnl": 416.35097325959174,
+              "short_price_pnl": 0.0
+            },
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.0003840378839102219,
+              "max_drawdown": 0.24830989530554204,
+              "profit_factor": 1.1295412965906322,
+              "sharpe": 0.779417197356066,
+              "total_return": 0.6779466511996834
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -42.16073705563383,
+                "price_pnl": 259.473976690683
+              },
+              "ETH": {
+                "funding_pnl": -33.13171482936792,
+                "price_pnl": 156.876996568911
+              }
+            },
+            "pnl_by_year": {
+              "2022": -46.67482255085213,
+              "2023": 231.91616869407528,
+              "2024": 165.58332345220254,
+              "2025": -9.099999780036228,
+              "2026": -2.75134421555083
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 2085.195774750452,
+            "trades": 34
+          },
+          "H0": {
+            "annual_turnover_x_sleeve": 0.0,
+            "annualized_return": 0.0,
+            "best_episode_pnl": 0.0,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 0.0,
+              "funding_pnl": 0.0,
+              "price_pnl": 0.0,
+              "slippage": 0.0,
+              "total_pnl": 0.0
+            },
+            "episodes": 0,
+            "episodes_by_symbol": {
+              "BTC": 0,
+              "ETH": 0
+            },
+            "label": "H0",
+            "long_short": {
+              "long_price_pnl": 0.0,
+              "short_price_pnl": 0.0
+            },
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.0,
+              "max_drawdown": 0.0,
+              "profit_factor": 0.0,
+              "sharpe": 0.0,
+              "total_return": 0.0
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0
+              },
+              "ETH": {
+                "funding_pnl": 0.0,
+                "price_pnl": 0.0
+              }
+            },
+            "pnl_by_year": {
+              "2022": 0.0,
+              "2023": 0.0,
+              "2024": 0.0,
+              "2025": 0.0,
+              "2026": 0.0
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.0,
+              "ETH": 0.0
+            },
+            "traded_notional": 0.0,
+            "trades": 0
+          },
+          "MA200": {
+            "annual_turnover_x_sleeve": 8.083526870627633,
+            "annualized_return": 0.1309304353371279,
+            "best_episode_pnl": 117.40565751377522,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 8.432336591757457,
+              "funding_pnl": -50.62257832498303,
+              "price_pnl": 402.96858859983433,
+              "slippage": 8.432336591757457,
+              "total_pnl": 335.4813370913364
+            },
+            "episodes": 60,
+            "episodes_by_symbol": {
+              "BTC": 34,
+              "ETH": 26
+            },
+            "label": "MA200",
+            "long_short": {
+              "long_price_pnl": 419.14106341317625,
+              "short_price_pnl": -16.17247481335072
+            },
+            "metrics": {
+              "days": 1523,
+              "expectancy": 0.00037926531577424464,
+              "max_drawdown": 0.13503044888729707,
+              "profit_factor": 1.133348143476922,
+              "sharpe": 0.788126188378412,
+              "total_return": 0.6709626741826791
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -28.584551483168404,
+                "price_pnl": 228.29453640448853
+              },
+              "ETH": {
+                "funding_pnl": -22.038026841814425,
+                "price_pnl": 174.67405219534103
+              }
+            },
+            "pnl_by_year": {
+              "2022": 46.301347210987615,
+              "2023": 75.46051685464249,
+              "2024": 128.5137831808188,
+              "2025": -18.68969456880916,
+              "2026": 103.89538441369666
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.9999452834318232,
+              "ETH": 0.9999452834318232
+            },
+            "traded_notional": 16864.673183514915,
+            "trades": 89
+          }
+        },
+        "full_period_configs": [
+          {
+            "annual_turnover_x_sleeve": 26.5495518925377,
+            "annualized_return": 0.06268911278709122,
+            "best_episode_pnl": 73.84901921041981,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 41.5336825496959,
+              "funding_pnl": -79.9693141696859,
+              "price_pnl": 394.5258496566081,
+              "slippage": 41.5336825496959,
+              "total_pnl": 231.4891703875304
+            },
+            "episodes": 360,
+            "episodes_by_symbol": {
+              "BTC": 185,
+              "ETH": 175
+            },
+            "label": "H4 L=20d binary",
+            "long_short": {
+              "long_price_pnl": 499.06598292797145,
+              "short_price_pnl": -104.54013327136711
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.00019311389250156968,
+              "max_drawdown": 0.23659906383310786,
+              "profit_factor": 1.0967281570874898,
+              "sharpe": 0.50598362853189,
+              "total_return": 0.4629783407750687
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -38.17283566134003,
+                "price_pnl": 204.42156429092927
+              },
+              "ETH": {
+                "funding_pnl": -41.79647850834612,
+                "price_pnl": 190.1042853656764
+              }
+            },
+            "pnl_by_year": {
+              "2020": 209.43404683746235,
+              "2021": 32.332668212081444,
+              "2022": -62.91875887647882,
+              "2023": -1.8501449869190765,
+              "2024": 7.342605592556879,
+              "2025": -26.215031806779734,
+              "2026": 73.36378541560737
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.5673890834792761,
+              "ETH": 0.5608216579100992
+            },
+            "traded_notional": 83067.36509939193,
+            "trades": 732
+          },
+          {
+            "annual_turnover_x_sleeve": 8.309095973738344,
+            "annualized_return": 0.059548192718534176,
+            "best_episode_pnl": 53.59998903519574,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 12.998613153437258,
+              "funding_pnl": -56.958137523481334,
+              "price_pnl": 301.02033106216663,
+              "slippage": 12.998613153437258,
+              "total_pnl": 218.06496723181078
+            },
+            "episodes": 504,
+            "episodes_by_symbol": {
+              "BTC": 251,
+              "ETH": 253
+            },
+            "label": "H4 L=20d linear",
+            "long_short": {
+              "long_price_pnl": 302.4679144764829,
+              "short_price_pnl": -1.447583414301163
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.0001716107143228863,
+              "max_drawdown": 0.15156089614655727,
+              "profit_factor": 1.1343910740108871,
+              "sharpe": 0.6389541895329008,
+              "total_return": 0.4361299344636256
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -30.213355568520416,
+                "price_pnl": 208.86282989691378
+              },
+              "ETH": {
+                "funding_pnl": -26.74478195496109,
+                "price_pnl": 92.15750116526056
+              }
+            },
+            "pnl_by_year": {
+              "2020": 110.28957401472462,
+              "2021": 14.726378624517565,
+              "2022": -11.175775547642615,
+              "2023": 28.139718386845743,
+              "2024": 8.419138251933305,
+              "2025": -7.2547625292837665,
+              "2026": 74.92069603071593
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.988142148277875,
+              "ETH": 0.9903312901342674
+            },
+            "traded_notional": 25997.226306874487,
+            "trades": 727
+          },
+          {
+            "annual_turnover_x_sleeve": 14.534364951077178,
+            "annualized_return": 0.14610935739805786,
+            "best_episode_pnl": 155.46411919942508,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 22.737321608397448,
+              "funding_pnl": -112.1044205116636,
+              "price_pnl": 831.3384890073755,
+              "slippage": 22.737321608397448,
+              "total_pnl": 673.759425278917
+            },
+            "episodes": 191,
+            "episodes_by_symbol": {
+              "BTC": 98,
+              "ETH": 93
+            },
+            "label": "H4 L=60d binary",
+            "long_short": {
+              "long_price_pnl": 766.0001196339517,
+              "short_price_pnl": 65.33836937342997
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.0003974044690440567,
+              "max_drawdown": 0.12323845781147186,
+              "profit_factor": 1.2113811478384182,
+              "sharpe": 1.1016008722425807,
+              "total_return": 1.34751885055783
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -55.25665452087343,
+                "price_pnl": 436.73891648549807
+              },
+              "ETH": {
+                "funding_pnl": -56.84776599079019,
+                "price_pnl": 394.59957252188235
+              }
+            },
+            "pnl_by_year": {
+              "2020": 178.57307380989528,
+              "2021": 108.8450626089741,
+              "2022": 34.66497255090735,
+              "2023": 94.59826250185915,
+              "2024": 107.6130168942675,
+              "2025": 75.10613792722575,
+              "2026": 74.35889898578785
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.7153750729713952,
+              "ETH": 0.7031158785755983
+            },
+            "traded_notional": 45474.643216794895,
+            "trades": 405
+          },
+          {
+            "annual_turnover_x_sleeve": 3.6303675560147624,
+            "annualized_return": 0.0930690872224087,
+            "best_episode_pnl": 157.49327163679595,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 5.679287327354594,
+              "funding_pnl": -83.54253158806085,
+              "price_pnl": 467.488153410757,
+              "slippage": 5.679287327354594,
+              "total_pnl": 372.58704716798695
+            },
+            "episodes": 190,
+            "episodes_by_symbol": {
+              "BTC": 97,
+              "ETH": 93
+            },
+            "label": "H4 L=60d linear",
+            "long_short": {
+              "long_price_pnl": 482.6020864881609,
+              "short_price_pnl": -15.11393307740154
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.00025832435857352275,
+              "max_drawdown": 0.08347229626691365,
+              "profit_factor": 1.1883759246585577,
+              "sharpe": 0.9166861994950869,
+              "total_return": 0.7451740943359797
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -42.58370472726219,
+                "price_pnl": 287.3393770666792
+              },
+              "ETH": {
+                "funding_pnl": -40.958826860798204,
+                "price_pnl": 180.14877634407847
+              }
+            },
+            "pnl_by_year": {
+              "2020": 136.67581282988488,
+              "2021": 79.78434505450548,
+              "2022": 8.236431211551121,
+              "2023": 33.5578147023366,
+              "2024": 66.02121719329978,
+              "2025": 27.839890187179208,
+              "2026": 20.471535989229892
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.9868286631640397,
+              "ETH": 0.9960230589608874
+            },
+            "traded_notional": 11358.574654709202,
+            "trades": 313
+          },
+          {
+            "annual_turnover_x_sleeve": 12.457713885062786,
+            "annualized_return": 0.07379965129466881,
+            "best_episode_pnl": 217.66602510348656,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 19.4886428174544,
+              "funding_pnl": -113.51036611635986,
+              "price_pnl": 433.16819202652465,
+              "slippage": 19.4886428174544,
+              "total_pnl": 280.680540275256
+            },
+            "episodes": 162,
+            "episodes_by_symbol": {
+              "BTC": 72,
+              "ETH": 90
+            },
+            "label": "H4 L=120d binary",
+            "long_short": {
+              "long_price_pnl": 634.3436055190894,
+              "short_price_pnl": -201.17541349256706
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.00022074933847337458,
+              "max_drawdown": 0.19943305209078718,
+              "profit_factor": 1.1037878354529223,
+              "sharpe": 0.5886565876080583,
+              "total_return": 0.5613610805505107
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -58.148324593014344,
+                "price_pnl": 245.39961905442505
+              },
+              "ETH": {
+                "funding_pnl": -55.36204152334589,
+                "price_pnl": 187.7685729720904
+              }
+            },
+            "pnl_by_year": {
+              "2020": 241.45925079061647,
+              "2021": 61.08749801327497,
+              "2022": 12.278278560065928,
+              "2023": -36.722034524692845,
+              "2024": 72.74595065418782,
+              "2025": -37.195596823691176,
+              "2026": -32.97280639450514
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.7013645650904845,
+              "ETH": 0.739017805020432
+            },
+            "traded_notional": 38977.285634908774,
+            "trades": 349
+          },
+          {
+            "annual_turnover_x_sleeve": 2.296798737144524,
+            "annualized_return": 0.08255750628259739,
+            "best_episode_pnl": 147.26101600757303,
+            "cost": "stress",
+            "decomposition": {
+              "fees": 3.5930741887932167,
+              "funding_pnl": -96.88639139025744,
+              "price_pnl": 425.46018191070186,
+              "slippage": 3.5930741887932167,
+              "total_pnl": 321.387642142858
+            },
+            "episodes": 106,
+            "episodes_by_symbol": {
+              "BTC": 61,
+              "ETH": 45
+            },
+            "label": "H4 L=120d linear",
+            "long_short": {
+              "long_price_pnl": 437.7381072530431,
+              "short_price_pnl": -12.277925342341138
+            },
+            "metrics": {
+              "days": 2284,
+              "expectancy": 0.00023193306154340885,
+              "max_drawdown": 0.12512215214024844,
+              "profit_factor": 1.1663836193891457,
+              "sharpe": 0.8201410629500876,
+              "total_return": 0.6427752842857071
+            },
+            "per_symbol": {
+              "BTC": {
+                "funding_pnl": -53.50420536897513,
+                "price_pnl": 232.11834821695948
+              },
+              "ETH": {
+                "funding_pnl": -43.38218602128223,
+                "price_pnl": 193.3418336937425
+              }
+            },
+            "pnl_by_year": {
+              "2020": 196.0396607130275,
+              "2021": 64.70128379595485,
+              "2022": 26.043999507652984,
+              "2023": -24.0645308113219,
+              "2024": 56.27550628411427,
+              "2025": -41.981394790931176,
+              "2026": 44.37311744436147
+            },
+            "rounding_skips": 0,
+            "time_in_market": {
+              "BTC": 0.9955852305896089,
+              "ETH": 0.9955852305896089
+            },
+            "traded_notional": 7186.148377586428,
+            "trades": 198
+          }
+        ],
+        "gates": {
+          "annual_return_stress": true,
+          "beats_bh_vt_drawdown": true,
+          "beats_bh_vt_sharpe": false,
+          "constrained_net_positive": true,
+          "max_drawdown": true,
+          "net_positive": true
+        },
+        "passed": false,
+        "pbo": {
+          "median_logit": 0.9162907318741551,
+          "pbo": 0.3401709401709402,
+          "rows": 2284,
+          "splits": 12870,
+          "strategies": 6
+        },
+        "selections": [
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2020-07-02T00:00:00+00:00",
+              "2022-07-02T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 1.8121791421949667,
+                "train_total_return": 0.7967450110747942
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 1.714827854567135,
+                "train_total_return": 0.5832028559651257
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 1.6808224917567052,
+                "train_total_return": 0.6946617586298041
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 1.6192241700404089,
+                "train_total_return": 0.5170064640635101
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 1.4906952811237497,
+                "train_total_return": 0.5251211481625155
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 1.120771871989593,
+                "train_total_return": 0.2696516397674167
+              }
+            ],
+            "validation": [
+              "2022-08-01T00:00:00+00:00",
+              "2023-01-30T00:00:00+00:00"
+            ],
+            "validation_pnl": 25.372815141415913,
+            "window": 0
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2020-12-31T00:00:00+00:00",
+              "2022-12-31T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.7821804018808268,
+                "train_total_return": 0.2607478208660192
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.7630014621985436,
+                "train_total_return": 0.19428834825392616
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.6667685820749801,
+                "train_total_return": 0.1851737456505831
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.2405587947566259,
+                "train_total_return": 0.05739527595592975
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.23481974615807694,
+                "train_total_return": 0.04275188020931453
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": -0.12981696191097586,
+                "train_total_return": -0.0706521696195418
+              }
+            ],
+            "validation": [
+              "2023-01-30T00:00:00+00:00",
+              "2023-07-31T00:00:00+00:00"
+            ],
+            "validation_pnl": -49.09449393918453,
+            "window": 1
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2021-07-01T00:00:00+00:00",
+              "2023-07-01T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.30685552291429224,
+                "train_total_return": 0.0820023643439245
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.15591592628187373,
+                "train_total_return": 0.023264206934646703
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.07222164092500126,
+                "train_total_return": 0.00431377916838227
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": -0.06860253989442715,
+                "train_total_return": -0.02210200125311712
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": -0.30190428769999406,
+                "train_total_return": -0.1739773840926827
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": -0.5740336926369562,
+                "train_total_return": -0.22951560678449467
+              }
+            ],
+            "validation": [
+              "2023-07-31T00:00:00+00:00",
+              "2024-01-29T00:00:00+00:00"
+            ],
+            "validation_pnl": 56.2266698778393,
+            "window": 2
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2021-12-30T00:00:00+00:00",
+              "2023-12-30T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.7185943887990536,
+                "train_total_return": 0.25567439109274637
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.5262221703087349,
+                "train_total_return": 0.11961581493863127
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.23431123187574324,
+                "train_total_return": 0.04076533852411601
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": -0.005634707016842961,
+                "train_total_return": -0.009373257229407517
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": -0.02536450785416703,
+                "train_total_return": -0.04858860830106315
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": -0.24878246022071296,
+                "train_total_return": -0.13199186309987054
+              }
+            ],
+            "validation": [
+              "2024-01-29T00:00:00+00:00",
+              "2024-07-29T00:00:00+00:00"
+            ],
+            "validation_pnl": 12.555014836021655,
+            "window": 3
+          },
+          {
+            "selected": "H4 L=120d linear",
+            "train": [
+              "2022-06-30T00:00:00+00:00",
+              "2024-06-29T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.44480163769468845,
+                "train_total_return": 0.09424200072246691
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.3990492678087239,
+                "train_total_return": 0.07828311040270819
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.23536780845508698,
+                "train_total_return": 0.057238405951268945
+              },
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.21996039949816282,
+                "train_total_return": 0.049937840434909786
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.07491842793001847,
+                "train_total_return": 0.001651303557338002
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": -0.03140181384992773,
+                "train_total_return": -0.04985561134281491
+              }
+            ],
+            "validation": [
+              "2024-07-29T00:00:00+00:00",
+              "2025-01-27T00:00:00+00:00"
+            ],
+            "validation_pnl": -3.640028479501666,
+            "window": 4
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2022-12-29T00:00:00+00:00",
+              "2024-12-28T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.9727006303881547,
+                "train_total_return": 0.4056992999385889
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.6950743441777443,
+                "train_total_return": 0.1881827201883779
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.36393492214661544,
+                "train_total_return": 0.07760095537410039
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.34520004221240574,
+                "train_total_return": 0.07055790118431471
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.27548924983637696,
+                "train_total_return": 0.07451702989199283
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 0.12645941898859664,
+                "train_total_return": 0.012094530867142295
+              }
+            ],
+            "validation": [
+              "2025-01-27T00:00:00+00:00",
+              "2025-07-28T00:00:00+00:00"
+            ],
+            "validation_pnl": 60.120089716685925,
+            "window": 5
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2023-06-29T00:00:00+00:00",
+              "2025-06-28T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.9670669990808995,
+                "train_total_return": 0.3798285506251444
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.6205549411184227,
+                "train_total_return": 0.15845258223252223
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.31817049099252975,
+                "train_total_return": 0.061974419505353984
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 0.25117013265455346,
+                "train_total_return": 0.05968248269449217
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.11804903883875544,
+                "train_total_return": 0.014043629282623371
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.013755273589301155,
+                "train_total_return": -0.026113030581242813
+              }
+            ],
+            "validation": [
+              "2025-07-28T00:00:00+00:00",
+              "2026-01-26T00:00:00+00:00"
+            ],
+            "validation_pnl": -11.650958225278032,
+            "window": 6
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2023-12-28T00:00:00+00:00",
+              "2025-12-27T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 0.9077242111843361,
+                "train_total_return": 0.34582907047619726
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.6933841491391134,
+                "train_total_return": 0.17180253502220122
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.2336265159618367,
+                "train_total_return": 0.05349837616053055
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.035460678017611866,
+                "train_total_return": -0.0044499939108225695
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.03182410362341364,
+                "train_total_return": -0.008982355307242562
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 0.006094548212305944,
+                "train_total_return": -0.030724454730810535
+              }
+            ],
+            "validation": [
+              "2026-01-26T00:00:00+00:00",
+              "2026-07-27T00:00:00+00:00"
+            ],
+            "validation_pnl": 6.732546473867274,
+            "window": 7
+          },
+          {
+            "selected": "H4 L=60d binary",
+            "train": [
+              "2024-06-27T00:00:00+00:00",
+              "2026-06-27T00:00:00+00:00"
+            ],
+            "training_table": [
+              {
+                "rule": "H4 L=60d binary",
+                "train_sharpe": 1.07175748143062,
+                "train_total_return": 0.38412350526726624
+              },
+              {
+                "rule": "H4 L=60d linear",
+                "train_sharpe": 0.8245689421730299,
+                "train_total_return": 0.19417074124109113
+              },
+              {
+                "rule": "H4 L=20d linear",
+                "train_sharpe": 0.33899916103833383,
+                "train_total_return": 0.07427823717078796
+              },
+              {
+                "rule": "H4 L=120d linear",
+                "train_sharpe": 0.2636594625854058,
+                "train_total_return": 0.056597162919652
+              },
+              {
+                "rule": "H4 L=120d binary",
+                "train_sharpe": 0.09438620745172473,
+                "train_total_return": -0.003609459148542493
+              },
+              {
+                "rule": "H4 L=20d binary",
+                "train_sharpe": 0.019320730035018913,
+                "train_total_return": -0.039165350874041716
+              }
+            ],
+            "validation": [
+              "2026-07-27T00:00:00+00:00",
+              "2026-10-01T00:00:00+00:00"
+            ],
+            "validation_pnl": 94.07948199720965,
+            "window": 8
+          }
+        ],
+        "walk_forward": {
+          "annual_turnover_x_sleeve": 15.867706711382398,
+          "annualized_return": 0.08051034768554377,
+          "best_episode_pnl": 72.59304035774979,
+          "cost": "stress",
+          "decomposition": {
+            "fees": 16.552409124270827,
+            "funding_pnl": -37.05588986302971,
+            "price_pnl": 260.86184551064684,
+            "slippage": 16.552409124270827,
+            "total_pnl": 190.7011373990755
+          },
+          "episodes": 134,
+          "episodes_by_symbol": {
+            "BTC": 67,
+            "ETH": 67
+          },
+          "label": "H4 L=120d linear | H4 L=60d binary",
+          "long_short": {
+            "long_price_pnl": 340.48350847680496,
+            "short_price_pnl": -79.6216629661568
+          },
+          "metrics": {
+            "days": 1523,
+            "expectancy": 0.0002569137952565879,
+            "max_drawdown": 0.19562596274115207,
+            "profit_factor": 1.0957697793877659,
+            "sharpe": 0.5175736798310681,
+            "total_return": 0.3814022747981469
+          },
+          "per_symbol": {
+            "BTC": {
+              "funding_pnl": -21.231998285806828,
+              "price_pnl": 162.89991183526817
+            },
+            "ETH": {
+              "funding_pnl": -15.823891577222872,
+              "price_pnl": 97.96193367537744
+            }
+          },
+          "pnl_by_year": {
+            "2022": -43.53748705443206,
+            "2023": 94.5982625018595,
+            "2024": -18.78205778443987,
+            "2025": 84.0635207502994,
+            "2026": 74.35889898578853
+          },
+          "rounding_skips": 0,
+          "time_in_market": {
+            "BTC": 0.7294265703655066,
+            "ETH": 0.7313963668198731
+          },
+          "traded_notional": 33104.81824854163,
+          "trades": 284
+        },
+        "walk_forward_constrained": {
+          "annual_turnover_x_sleeve": 11.975139095863437,
+          "annualized_return": 0.10671039038272134,
+          "best_episode_pnl": 71.4937820409251,
+          "cost": "stress",
+          "decomposition": {
+            "fees": 12.49187455000001,
+            "funding_pnl": -38.19893997912574,
+            "price_pnl": 326.5021599999959,
+            "slippage": 12.49187455000001,
+            "total_pnl": 263.3194709208701
+          },
+          "episodes": 116,
+          "episodes_by_symbol": {
+            "BTC": 64,
+            "ETH": 52
+          },
+          "label": "H4 L=60d binary | H4 L=60d linear",
+          "long_short": {
+            "long_price_pnl": 368.8636799999972,
+            "short_price_pnl": -42.36151999999996
+          },
+          "metrics": {
+            "days": 1523,
+            "expectancy": 0.000311679386670829,
+            "max_drawdown": 0.16497873097606702,
+            "profit_factor": 1.142398977353639,
+            "sharpe": 0.7221085312357787,
+            "total_return": 0.5266389418417436
+          },
+          "per_symbol": {
+            "BTC": {
+              "funding_pnl": -20.499131472330177,
+              "price_pnl": 122.54779999999954
+            },
+            "ETH": {
+              "funding_pnl": -17.69980850679552,
+              "price_pnl": 203.95435999999992
+            }
+          },
+          "pnl_by_year": {
+            "2022": -41.04763205812418,
+            "2023": 90.82538689328584,
+            "2024": 101.80547892873415,
+            "2025": 73.49041017585137,
+            "2026": 38.245826981122946
+          },
+          "rounding_skips": 30,
+          "time_in_market": {
+            "BTC": 0.6670496826439046,
+            "ETH": 0.6880608448238127
+          },
+          "traded_notional": 24983.74910000002,
+          "trades": 248
+        }
+      }
+    },
+    "decision": "STOP_NO_EDGE"
+  },
+  "generated_at": "2026-10-02T08:44:42Z",
+  "panel": {
+    "end": "2026-10-01T23:00:00+00:00",
+    "hours": 59184,
+    "settlements": 7398,
+    "start": "2020-01-01T00:00:00+00:00"
+  },
+  "registration": "docs/PHASE2C_PREREGISTRATION.md",
+  "schema_version": 1,
+  "windows": [
+    {
+      "train": [
+        "2020-07-02T00:00:00+00:00",
+        "2022-07-02T00:00:00+00:00"
+      ],
+      "validation": [
+        "2022-08-01T00:00:00+00:00",
+        "2023-01-30T00:00:00+00:00"
+      ],
+      "window": 0
+    },
+    {
+      "train": [
+        "2020-12-31T00:00:00+00:00",
+        "2022-12-31T00:00:00+00:00"
+      ],
+      "validation": [
+        "2023-01-30T00:00:00+00:00",
+        "2023-07-31T00:00:00+00:00"
+      ],
+      "window": 1
+    },
+    {
+      "train": [
+        "2021-07-01T00:00:00+00:00",
+        "2023-07-01T00:00:00+00:00"
+      ],
+      "validation": [
+        "2023-07-31T00:00:00+00:00",
+        "2024-01-29T00:00:00+00:00"
+      ],
+      "window": 2
+    },
+    {
+      "train": [
+        "2021-12-30T00:00:00+00:00",
+        "2023-12-30T00:00:00+00:00"
+      ],
+      "validation": [
+        "2024-01-29T00:00:00+00:00",
+        "2024-07-29T00:00:00+00:00"
+      ],
+      "window": 3
+    },
+    {
+      "train": [
+        "2022-06-30T00:00:00+00:00",
+        "2024-06-29T00:00:00+00:00"
+      ],
+      "validation": [
+        "2024-07-29T00:00:00+00:00",
+        "2025-01-27T00:00:00+00:00"
+      ],
+      "window": 4
+    },
+    {
+      "train": [
+        "2022-12-29T00:00:00+00:00",
+        "2024-12-28T00:00:00+00:00"
+      ],
+      "validation": [
+        "2025-01-27T00:00:00+00:00",
+        "2025-07-28T00:00:00+00:00"
+      ],
+      "window": 5
+    },
+    {
+      "train": [
+        "2023-06-29T00:00:00+00:00",
+        "2025-06-28T00:00:00+00:00"
+      ],
+      "validation": [
+        "2025-07-28T00:00:00+00:00",
+        "2026-01-26T00:00:00+00:00"
+      ],
+      "window": 6
+    },
+    {
+      "train": [
+        "2023-12-28T00:00:00+00:00",
+        "2025-12-27T00:00:00+00:00"
+      ],
+      "validation": [
+        "2026-01-26T00:00:00+00:00",
+        "2026-07-27T00:00:00+00:00"
+      ],
+      "window": 7
+    },
+    {
+      "train": [
+        "2024-06-27T00:00:00+00:00",
+        "2026-06-27T00:00:00+00:00"
+      ],
+      "validation": [
+        "2026-07-27T00:00:00+00:00",
+        "2026-10-01T00:00:00+00:00"
+      ],
+      "window": 8
+    }
+  ]
+}

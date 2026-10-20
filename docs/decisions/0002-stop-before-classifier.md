@@ -1,6 +1,6 @@
 # 0002 — Stop before classifier implementation
 
-- Status: Accepted
+- Status: Accepted; runtime-only exception recorded by Decision 0003
 - Date: 2026-08-10
 
 ## Context

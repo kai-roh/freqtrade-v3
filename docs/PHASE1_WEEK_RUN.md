@@ -1,0 +1,315 @@
+# Phase 1 Demo Week Run
+
+기준일: 2026-10-02 KST
+
+Status: **observation closed** (Decision 0010). The extension runner
+`phase1-demo-week-run-20260928-restart1` was stopped on user instruction at
+2026-10-02 03:38 UTC during the idle interval (last episode closed 02:32:26 UTC,
+no open intent; exit 137 because the process did not exit within the 10 s
+SIGTERM grace, harmless while idle). Totals: 67 week-run episodes (70 ledger
+intents), all `CLOSED`; Demo perp `0`, no open orders, Spot BTC equals the 69
+settled residuals (`0.00050308 BTC`).
+
+## Extension run — started 2026-09-28 07:03:08 UTC
+
+Started on explicit user instruction to reach the 50-episode gate (30 closed in
+the first run). Readiness (`readiness.json`, order-free): all six checks passed.
+
+- Container `phase1-demo-week-run-20260928`, image `freqtrade-v3-demo-auto:1a124d1`
+  (`sha256:5d2dd045…`), source `1a124d1`, config `configs/phase1-week-run.json`
+  (60 episodes, 2 h interval, 7-day window → expires 2026-10-05 07:03 UTC),
+  manifest `5a07e1536b9fa0da…`. Run identity in
+  `evidence/phase1/demo-week-run-20260928/started-at.txt`; events in `run.json`.
+- Episode 1 (07:03:15–07:08:25 UTC): Spot buy `0.00264 @ 83280.61`, perp sell
+  `0.0026 @ 83212.50`, perp buy `0.0026 @ 83215.70`, Spot sell `0.00263 @ 83123.32`,
+  residual `0.00000736 BTC` settled, `CLOSED`. All events delivered to Telegram.
+- Restart rule unchanged: same `--started-at 2026-09-28T07:03:08+00:00`, new
+  container name. No manual orders on the Demo BTCUSDT account while running.
+- Halted 2026-09-29 18:31:45 UTC after 17 closed episodes (cumulative 47). In
+  episode 18 (intent `b265fcf7…`) the closing perp IOC filled `0.0025` of `0.0026`;
+  the planner called the `0.0001 BTC` short remainder (about 8 USDT) dust because
+  it was under the 50 USDT minimum, the runner took the residual-settlement path,
+  and settlement refused because futures were not flat (exit 2, no bad orders).
+  Binance USD-M exempts reduce-only orders from MIN_NOTIONAL (-4164), Nautilus
+  1.231 skips notional checks for margin accounts, and Demo minQty is `0.0001`.
+  Fixed in `5e8afe1`; image `freqtrade-v3-demo-auto:5e8afe1` (`sha256:ef02aba8…`).
+- Recovery 2026-09-30 (user-approved), image `5e8afe1`:
+  `…-takeover1` 06:36:48 `RESUMING`, perp buy reduce-only `0.0001 @ 83088.60`,
+  Spot sell `0.00262 @ 83118.64`, residual `0.00000737 BTC` settled, `CLOSED`,
+  exit 0. Then `…-restart1` (same `--started-at`, manifest `41683c98…`, which also
+  owns the transferred episode) started 06:37:39; its first episode closed at
+  06:42:52 with four fills and a `0.00000736 BTC` residual. Cumulative CLOSED 49,
+  fills 210, rejected transitions 0.
+
+## First run — 2026-09-15 to 2026-09-25
+
+Status: **finished; window expired.** The runner halted 2026-09-17 16:41 UTC, the
+7-day window expired 2026-09-22 12:07 UTC, and the open episode was closed by a
+close-only takeover on 2026-09-25 11:01 UTC (no open intents). The run started 2026-09-15 12:07:24 UTC on explicit user
+instruction after Telegram notifications were confirmed on every event.
+
+- Outcome: 30 episodes closed (1 under manifest `20a581d`, 28 under `81999bd`,
+  1 transferred to `1a124d1` for its close), 128 fills, zero rejected
+  transitions, zero unresolved recovery, three forced-restart recoveries (see
+  "Deliberate restarts"). Gate item "50 episodes" is **not met**.
+- Halt cause: in episode 26 the Spot close IOC was denied by the action risk
+  worker with `quote transport stale` (receive gap over 2 s) and the runner
+  treated the denial as fatal (exit 2). Intent
+  `1fe50ea6-3e97-4fd8-b1dc-32f06384ef6b` is `ABORTING` with `0.00286713 BTC`
+  Spot long unhedged on the Demo account (futures flat). Telegram error events
+  were delivered at the time.
+- Resume attempt 2026-09-25 08:08 UTC (`…-resume4`, image `81999bd`, user-approved):
+  `RESUMING` was reached, then the unhedged notional-duration invariant fired
+  before any order because it integrates exposure over the eight stopped days
+  (budget 300 USDT × 900 s). Exit 2, zero orders, evidence `run-resume4.json`.
+- Fixes in `1a124d1`: transient freshness denials retry next tick with a cap of
+  five consecutive denials; in the closing phase a budget exceedance is recorded
+  as `episode_baselines.evidence->'unhedged_budget_exceeded'` and closing
+  continues. Image `freqtrade-v3-demo-auto:1a124d1` (`sha256:5d2dd045…`) is built.
+- Close-only takeover 2026-09-25 11:01 UTC (`…-resume5`, image `1a124d1`,
+  user-approved): same `--started-at`, `--resume-intent 1fe50ea6…`,
+  `--previous-manifest 8f3072d6…`. `RESUMING` 11:01:26, Spot sell IOC enqueued
+  11:01:29, filled `0.00286 BTC @ 84734.00` 11:01:32, residual `0.00000713 BTC`
+  (0.60 USDT) settled 11:01:35, intent `CLOSED`, exit 0, no new entry. The
+  budget exceedance was recorded once in the baseline evidence
+  (`unhedged_notional_milliseconds` 1.63e11 vs budget 2.7e8). Ledger after:
+  30 `CLOSED`, 128 fills, 30 settled residuals totalling `0.00021362 BTC`,
+  rejected transitions 0, unresolved recovery 0, active commands 0.
+  Evidence `run-resume5.json`.
+- Containers `phase1-demo-week-run-20260915-restart3`, `…-resume4` (exited 2) and
+  `…-resume5` (exited 0), config `configs/phase1-week-run.json`, run identity in
+  `evidence/phase1/demo-week-run-20260915/started-at.txt`.
+
+## Readiness — 2026-09-15
+
+- Residual ownership: implemented and exercised on the server (Decision 0007).
+- Repetition runner: `scripts/run_phase1_demo_auto.py --engineering-config
+  configs/phase1-week-run.json` runs bounded episodes (60 episodes, 2 h interval,
+  7-day window, Telegram pause after 3 consecutive delivery failures). An open
+  episode is always resumed; every notification records its delivery result.
+- Quote-age SLA: `maximum_quote_age_ms=96` adopted from 259 USD-M exchange-age
+  samples (p99 47.68 ms, rule ceil(2 x p99)). Spot bookTicker stays unmeasured.
+- Forced-restart and two-episode repetition verification on Demo: see
+  `docs/PHASE1_DEMO_AUTO_RUNBOOK.md` ("반복·재시작 검증").
+
+The 2026-09-15 engineering run produced four actual fills in one episode, with
+a timestamp fix and close-only takeover between the futures and Spot exits.
+It stopped with `0.00000715 BTC` residual inventory. Futures and open orders
+were zero at the final account check. This is not an uninterrupted completed
+episode, a week-run start, or four episodes toward the count below.
+
+Before starting the week run:
+
+1. ~~Define and implement residual ownership/accounting~~ Implemented on
+   2026-09-15 (Decision 0007): unsellable closing dust is settled as an audited
+   owned residual and inherited by the next baseline. The stuck episode was
+   settled on the server the same day (`residual-settlement-20260915.json`).
+2. ~~Complete bounded cancellation, partial-fill and restart recovery
+   verification.~~ Restart recovery was verified with a forced kill on Demo on
+   2026-09-15. The runner is IOC-only: an unfilled or partially filled IOC ends
+   as a terminal order, REST recovery deactivates its command, and the next tick
+   re-plans from confirmed inventory within the six-command cap. Cancellation of
+   resting orders is outside this runner and remains covered by the matching probe.
+3. ~~Record Telegram delivery results and implement the corresponding pause
+   rule.~~ Done: every event stores `telegram_delivered`; three consecutive
+   failures stop new entries after the open episode closes.
+4. ~~Explicitly revise the current one-episode engineering runner for bounded
+   repetition.~~ Done via run bounds; run identity (`--started-at`) is reused on
+   restart and the episode budget is per manifest.
+
+See [latest status](PHASE1_IMPLEMENTATION_STATUS.md) and
+[execution evidence and recovery](PHASE1_DEMO_AUTO_RUNBOOK.md).
+
+## Scope
+
+Phase 1 Demo week run is an operational observation period for the Binance Demo
+carry execution stack. It is not a profitability test, a Phase 3 promotion gate,
+or evidence that live fill quality has been measured.
+
+Allowed evidence:
+
+- Demo start, stop, trade, and error notifications.
+- State-machine correctness.
+- Intent, command, dispatch, fill inbox, and reconciliation persistence.
+- Restart recovery before new command admission.
+- Quote collection timestamps and transport health.
+
+Excluded evidence:
+
+- Real fill rate.
+- Queue priority.
+- Adverse selection.
+- Live hedge latency.
+- Actual slippage.
+- Profitability or expected return.
+
+## Telegram Notifications
+
+Runner notifications are short: `[DEMO][PHASE1][KIND] title` on the first line and
+a one-line summary with the KST time on the second. Full details stay in the
+evidence file. Example: `[DEMO][PHASE1][TRADE] 체결 현물 매수` / `0.00285 BTC @
+76950.16 · 09-15 21:26:01 KST`.
+
+Telegram is operational telemetry only. A notification failure must return a
+failed delivery result and must not retry orders, resubmit commands, unblock a
+blocked inbox receipt, or change risk approval.
+
+The Phase 1 notification helper reads only:
+
+- `TELEGRAM_TOKEN`
+- `TELEGRAM_CHAT_ID`
+
+Messages must mark Demo mode in the first line:
+
+```text
+[DEMO][PHASE1][TRADE] two-leg episode accepted
+```
+
+Do not include API keys, secrets, tokens, signatures, balances, raw exchange
+payloads, or account identifiers in notification details. Sensitive detail keys
+are redacted before formatting, but callers should still pass compact operational
+summaries instead of raw payloads.
+
+## Stop Conditions
+
+Stop the Demo runner and preserve evidence when any of these occur:
+
+- A fill inbox receipt becomes `BLOCKED`.
+- A dispatch remains unresolved after restart recovery.
+- A risk decision is stale, malformed, or disagrees with the current policy or
+  fee snapshot hash.
+- Either leg is partially filled and bounded cancel or hedge handling cannot
+  complete.
+- A timestamp required by the configured SLA path becomes unavailable. Spot
+  bookTicker has no exchange timestamp by design: retain NULL exchange age and
+  measure receive-gap separately. The engineering policy explicitly uses
+  receive-gap. The economic policy's `maximum_quote_age_ms=96` applies to USD-M
+  exchange age; the economic entry path still denies while Spot age is unmeasured.
+- Run bounds are exhausted (`episode_budget_complete`, `run_window_exhausted`) or
+  the Telegram pause rule fires (`telegram_pause`); both are recorded as `stop` events.
+- Telegram delivery repeatedly fails while the runner is otherwise healthy.
+
+The last condition is an observability failure, not a trading failure. It should
+pause unattended operation because the user expects Demo trade history through
+Telegram during this run.
+
+## Success Criteria
+
+The week run can support Phase 1E completion only if the final report includes:
+
+- At least 50 Demo episodes counted from accepted dispatch/fill evidence, not
+  fixture replay.
+- At least 3 restart recovery events with no duplicate command admission.
+- Zero unresolved dispatches.
+- Zero blocked fill inbox receipts at close.
+- Full state transition, order command, order, fill, transfer, incident, quote,
+  and cost evidence for each episode.
+- Explicit separation of Demo-observed fees from injected Mainnet fee policy.
+
+Passing this run means the Demo execution pipeline is operable enough for the
+next review. It does not mean the strategy is profitable or ready for Mainnet
+capital.
+
+
+## Starting the week run
+
+Only after the readiness items above are re-checked on the day of the run:
+
+```bash
+cd /home/kai/freqtrade-v3
+set -a; . ./.phase1-database.env; set +a
+IMG=freqtrade-v3-demo-auto:<short-sha>
+START=$(date -u +%Y-%m-%dT%H:%M:%S+00:00)   # keep this value for every restart
+mkdir -p evidence/phase1/demo-week-run-$(date +%Y%m%d)
+docker run -d --name phase1-demo-week-run-$(date +%Y%m%d) \
+  --network phase1-demo-evidence --read-only \
+  --tmpfs /tmp:rw,nosuid,nodev,size=128m --user 1002:1002 \
+  -e PHASE1_DATABASE_DSN -e PHASE1_BUILD_SOURCE_SHA=<full-sha> \
+  -e PHASE1_IMAGE_DIGEST="$(docker image inspect --format '{{.Id}}' "$IMG")" \
+  -v /home/kai/freqtrade-v3/.env:/run/phase1.env:ro \
+  -v /home/kai/freqtrade-v3/evidence/phase1/demo-week-run-$(date +%Y%m%d):/evidence \
+  --entrypoint /app/.venv/bin/python "$IMG" scripts/run_phase1_demo_auto.py \
+  --credentials-env-file /run/phase1.env --output /evidence/run.json \
+  --started-at "$START" --execute-demo-auto \
+  --engineering-config configs/phase1-week-run.json
+```
+
+The container does not auto-restart. Each deliberate restart uses the same
+`--started-at` and a new container name; the runner resumes any open episode
+first. Three or more such restarts are required for the Phase 1E gate.
+
+
+## Recovery after a fatal halt
+
+This is the documented human recovery required by the amended Phase 1 gate
+item 5 (Decision 0011). Target: the open episode is closed within **24 hours**
+of the Telegram error notification while any runner is active. The runner never
+unwinds by itself; it stops new orders and waits.
+
+1. **Read the cause, order-free.** The last `error` event in the run's JSON file
+   names the failing frame; the container exit code is in `docker ps -a`.
+2. **Read the account, order-free.** Compare the Demo account (Spot BTC, perp
+   quantity, open orders) with the open intent's fills. They must reconcile; if
+   not, stop and investigate instead of restarting.
+3. **Decide whether the cause blocks closing.** If the same image would fail
+   again on resume (a code defect on the closing path), fix it first: test
+   locally against PostgreSQL, commit, `git archive HEAD | ssh ft-tokyo 'cd
+   /home/kai/freqtrade-v3 && tar -xm'`, and build `freqtrade-v3-demo-auto:<short-sha>`.
+4. **Close the episode (Demo orders; user approval).**
+   - Same image: restart with the same `--started-at` and a new container name;
+     the runner resumes the open episode before anything else.
+   - New image: the manifest changes, so use the close-only takeover. Add
+     `--resume-intent <intent id> --previous-manifest <64-hex manifest id>` to the
+     start command. The runner transfers the intent, closes it, settles any
+     residual, and exits without a new entry.
+5. **Verify.** No open intent; rejected transitions, unresolved recovery checks,
+   unapplied inbox rows, and active commands all zero; account perp `0`, no open
+   orders, Spot BTC equal to the sum of settled residuals.
+6. **Resume the run only if wanted**, with the same `--started-at` (window and
+   episode budget continue), and record the incident in this file and
+   `PROGRESS.md`.
+
+Exercised on 2026-09-25 (`…-resume5`, takeover of `1fe50ea6…`) and 2026-09-30
+(`…-takeover1`, takeover of `b265fcf7…`); both closed with exit 0.
+
+
+## Telegram commands
+
+`scripts/run_phase1_telegram_bot.py` answers, for the configured chat only:
+
+- `/status` — run start, episodes closed vs budget, open episode state, last event, ledger integrity.
+- `/profit` — realized USDT cash flow per episode net of USDT fees; settled BTC residual listed separately and unvalued. Demo only, not a profitability claim.
+- `/balance` — Demo Spot USDT/BTC, futures available USDT, perp position, leverage, open orders.
+- `/daily` — today's (KST) episodes, fills, realized PnL, residual, errors, undelivered notifications.
+- `/help` — this list.
+
+The bot opens the ledger with `default_transaction_read_only=on`, mounts the
+evidence directory read-only, and has no order transport. Messages from any other
+chat are ignored without reply.
+
+
+## Deliberate restarts
+
+`scripts/phase1_deliberate_restart.sh <base-name> <label> <evidence-dir>` waits
+until the running week runner has an open episode with a filled perp leg, kills
+that container, and starts `<base-name>-<label>` with the same image, source
+hash, run identity, and config. The new container must resume the open episode
+(`RESUMING`) and close it without re-hedging. Each run appends to
+`<evidence-dir>/deliberate-restarts.log` and writes `run-<label>.json`.
+
+Executed on 2026-09-15 (UTC), each while the open episode was `HEDGE_REQUIRED`
+(Spot long held, perp short filled, sub-lot remainder unhedged by design):
+
+| Restart | Killed at | Resumed at | Outcome |
+|---|---|---|---|
+| 1 (version change, between episodes) | 12:25 | 12:25:56 | new manifest; started its own episode 1 |
+| 2 (`restart2`, mid-hold) | 14:31:18 | 14:31:27 `RESUMING` | perp closed in 3 IOC partial fills (0.0010+0.0010+0.0008), Spot sold, residual 0.00000712 settled, CLOSED |
+| 3 (`restart3`, mid-hold) | 16:36:43 | 16:36:52 `RESUMING` | perp closed in one fill, Spot sold, residual 0.00000713 settled, CLOSED |
+
+After restart 3 the ledger held 7 intents all `CLOSED`, 30 fills, zero rejected
+transitions, zero unresolved recovery checks, zero unapplied inbox rows, zero
+active commands. No re-hedge or duplicate entry occurred on any resume. Restart 2
+also exercised the IOC partial-fill re-plan path for real. This satisfies the
+"three forced-termination recoveries" item of the Phase 1E gate; the episode
+count (50) and the end-of-run aggregation remain.
+Log: `evidence/phase1/demo-week-run-20260915/deliberate-restarts.log`.
