@@ -70,9 +70,7 @@ def reduce_metrics_hourly(raw: bytes) -> pd.DataFrame:
 def _write(frame: pd.DataFrame, path: Path, hashes: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".part")
-    frame.sort_index().to_csv(
-        tmp, compression={"method": "gzip", "mtime": 0}, float_format="%.10g"
-    )
+    frame.sort_index().to_csv(tmp, compression={"method": "gzip", "mtime": 0}, float_format="%.10g")
     tmp.replace(path)
     path.with_suffix(".sha256").write_text("\n".join(hashes) + "\n")
 
@@ -88,7 +86,9 @@ def download_bars(
             return
         base = f"{MARKETS['um']}/{symbol}/{interval}"
         _, keys = _listing(base + "/")
-        found = sorted(set(re.findall(rf"-{interval}-(\d{{4}}-\d{{2}})\.zip$", "\n".join(keys), re.M)))
+        found = sorted(
+            set(re.findall(rf"-{interval}-(\d{{4}}-\d{{2}})\.zip$", "\n".join(keys), re.M))
+        )
         frames, hashes = [], []
         for month in (m for m in found if m in months):
             raw = _get(f"{ARCHIVE}/{base}/{symbol}-{interval}-{month}.zip")
@@ -136,7 +136,10 @@ def download_metrics_hourly(
 
 def load_bars(out_dir: Path, interval: str, symbol: str) -> pd.DataFrame:
     path = out_dir / f"bars-{interval}" / f"{symbol}.csv.gz"
-    frame = pd.read_csv(path, index_col="time", parse_dates=["time"])
+    frame = pd.read_csv(path)
+    if "time" not in frame.columns:  # no archive months in range: an empty file
+        return pd.DataFrame(columns=BAR_FIELDS, index=pd.DatetimeIndex([], tz="UTC", name="time"))
+    frame = frame.set_index(pd.to_datetime(frame.pop("time"), utc=True))
     if frame.index.tz is None:
         frame.index = frame.index.tz_localize("UTC")
     return frame.astype(float)
