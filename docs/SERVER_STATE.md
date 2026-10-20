@@ -1,5 +1,21 @@
 # Server state
 
+## Latest verified state — 2026-10-20 14:43 KST
+
+- Source `d416880` synced (`git archive | tar -xm`). Image `freqtrade-v3-live:current` = `freqtrade-v3-observe:current`
+  = `:d416880`, promoted after a smoke test: T1 targets for decision 2026-10-18 identical to the local run.
+- Crontab reinstalled from `deploy/freqtrade-v3.cron` (backup `/tmp/crontab.before.*`): MA200 observation 11:10,
+  **T1 Demo executor 09:05**, **T1 Demo guard every 10 minutes**. The MA200 Demo executor and guard jobs are removed.
+- MA200 Demo executor retired (Decision 0029) with `retire`: BTCUSDT 0.0034 and ETHUSDT 0.080 closed reduce-only (IOC filled),
+  halt reason `retired`. Final strategy equity **949.86 USDT** (realized −44.71, funding −3.81, commission −1.61).
+  The retire message said 994.45 because the income API had not yet booked the realized P&L; status a minute later was correct.
+- T1 Demo execution check in `evidence/t1-live-demo-verify/` (forced rebalance to the 2026-10-18 targets): 13 of 13 IOC orders
+  filled, no mismatch, BTW and PUMP skipped (not listed on Demo), guard `ok`; a test stop then flattened all 13 and halted.
+  Cost about 2.8 USDT. Two Telegram messages from this check were delivered.
+- T1 production state `evidence/t1-live-demo/` initialized 05:42 UTC: capital 1,000, stop 650, price cap 30 bps. Guard `ok`,
+  no positions. First rebalance Monday 2026-10-26 09:05 KST.
+- MA200 observation now runs without `--live-state-dir` (no Demo line).
+
 ## Latest verified state — 2026-10-09 11:30 KST
 
 - 7-day operational dry run passed (read-only review):
