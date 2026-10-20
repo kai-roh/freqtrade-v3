@@ -125,7 +125,7 @@ def _months(start: str, end: str) -> list[str]:
     return [p.strftime("%Y-%m") for p in pd.period_range(start, end, freq="M")]
 
 
-def _parse_klines(raw: bytes) -> pd.DataFrame:
+def _parse_klines(raw: bytes, extra: tuple[str, ...] = ()) -> pd.DataFrame:
     with zipfile.ZipFile(io.BytesIO(raw)) as archive:
         text = archive.read(archive.namelist()[0])
     frame = pd.read_csv(io.BytesIO(text), header=None)
@@ -136,7 +136,10 @@ def _parse_klines(raw: bytes) -> pd.DataFrame:
     ts = frame["open_time"].astype("int64")
     ts = np.where(ts > 10**14, ts // 1000, ts)  # microseconds (spot, 2025+)
     out = pd.DataFrame(
-        {c: frame[c].astype(float) for c in ("open", "high", "low", "close", "quote_volume")}
+        {
+            c: frame[c].astype(float)
+            for c in ("open", "high", "low", "close", "quote_volume", *extra)
+        }
     )
     out.index = pd.to_datetime(ts, unit="ms", utc=True).normalize()
     return out[~out.index.duplicated(keep="last")]
