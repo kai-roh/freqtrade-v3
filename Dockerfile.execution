@@ -24,6 +24,8 @@ COPY scripts/check_phase1_demo_readiness.py ./scripts/check_phase1_demo_readines
 COPY scripts/run_phase1_telegram_bot.py ./scripts/run_phase1_telegram_bot.py
 COPY scripts/run_ma200_observation.py ./scripts/run_ma200_observation.py
 COPY scripts/run_ma200_live.py ./scripts/run_ma200_live.py
+COPY scripts/__init__.py ./scripts/__init__.py
+COPY scripts/run_t1_live.py ./scripts/run_t1_live.py
 COPY configs/phase1-policy.json ./configs/phase1-policy.json
 COPY configs/phase1-engineering.json ./configs/phase1-engineering.json
 COPY configs/phase1-week-run.json ./configs/phase1-week-run.json
