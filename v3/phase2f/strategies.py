@@ -162,3 +162,20 @@ def weight_fn(config: Config, market: Market, signals: Signals | None = None) ->
         return p
 
     raise ValueError(f"unknown family {c.family}")
+
+
+T1_MEMBERS = tuple(Config("P3", lookback=lb, k=k) for lb in (3, 7, 14) for k in (3, 5))
+
+
+def ensemble_fn(members: tuple[Config, ...], market: Market, signals: Signals) -> WeightFn:
+    """Phase 2g T1: the simple average of the members' target weights."""
+    fns = [weight_fn(c, market, signals) for c in members]
+
+    def combined(m: Market, i: int) -> dict[int, float]:
+        total: dict[int, float] = {}
+        for fn in fns:
+            for j, w in fn(m, i).items():
+                total[j] = total.get(j, 0.0) + w / len(fns)
+        return total
+
+    return combined
